@@ -1,15 +1,14 @@
-import SmartTextInput from "@/app/lib/component/input/smart-textinput";
-import { IconInfoCircle } from "@tabler/icons-react";
+"use client";
 
-export default function SignIn() {
+import SigninForm from "@/app/lib/component/form/signinForm";
+import { Center, Container } from "@mantine/core";
+
+export default function SigninPage() {
   return (
-    <SmartTextInput
-      label="Email"
-      placeholder="Enter your email"
-      contain="tooltip"
-      tooltipLabel="test label"
-      icon={<IconInfoCircle size={18} stroke={1.5} />}
-      align="right"
-    />
+    <Container fluid h="100vh" bg="#f4effa">
+      <Center h="100%">
+        <SigninForm />
+      </Center>
+    </Container>
   );
 }

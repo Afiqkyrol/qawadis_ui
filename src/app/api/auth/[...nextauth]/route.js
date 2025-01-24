@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import jwt from "jsonwebtoken";
 
 const BASE_API_URL = process.env.BASE_API_URL;
-const API_SECRET_KEY = process.env.API_SECRET_KEY;
 const NEXTAUTH_SECRET_KEY = process.env.NEXTAUTH_SECRET_KEY;
 
 const authOptions = {
@@ -50,6 +49,7 @@ const authOptions = {
       if (user) {
         token.userId = user.userId;
         token.apiToken = user.apiToken;
+        token.expires = Date.now() + 3 * 24 * 60 * 60 * 1000;
       }
       return token;
     },
@@ -58,14 +58,20 @@ const authOptions = {
       if (token) {
         session.userId = token.userId;
         session.apiToken = token.apiToken;
+        session.expires = new Date(token.expires).toISOString();
       }
       return session;
     },
   },
+  session: {
+    strategy: "jwt",
+    maxAge: 3 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60,
+  },
   secret: NEXTAUTH_SECRET_KEY,
-  // pages: {
-  //     signIn: '/auth/signin'
-  // }
+  pages: {
+    signIn: "/auth/signin",
+  },
 };
 
 export async function GET(req, res) {

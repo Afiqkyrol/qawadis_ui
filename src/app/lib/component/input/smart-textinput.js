@@ -1,7 +1,7 @@
-import { TextInput, Tooltip, Text, Center } from "@mantine/core";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { TextInput, Tooltip, Text, Center, PasswordInput } from "@mantine/core";
 
 export default function SmartTextInput({
+  name,
   label,
   placeholder,
   type,
@@ -9,46 +9,64 @@ export default function SmartTextInput({
   icon,
   align,
   tooltipLabel,
+  error,
+  required,
+  value,
+  setValue,
+  valueValidator,
 }) {
-  let section;
-  if (contain === "tooltip") {
-    section = (
-      <Tooltip
-        label={tooltipLabel}
-        position="top-end"
-        withArrow
-        transitionProps={{ transition: "pop-bottom-right" }}
-      >
-        <Text component="div" c="dimmed" style={{ cursor: "help" }}>
-          <Center>{icon}</Center>
-        </Text>
-      </Tooltip>
-    );
-  } else if (contain === "icon") {
-    section = icon;
-  }
-
   if (type === "password") {
+    return (
+      <PasswordInput
+        name={name}
+        label={label}
+        placeholder={placeholder}
+        withAsterisk={required}
+        error={error}
+        value={value}
+        onChange={(event) => setValue(event.currentTarget.value)}
+        onBlur={valueValidator}
+      />
+    );
+  } else if (type === "textarea") {
   } else {
-    if (align === "right") {
-      return (
-        <TextInput
-          rightSection={section}
-          label={label}
-          placeholder={placeholder}
-        />
+    let section;
+    if (contain === "tooltip") {
+      section = (
+        <Tooltip
+          label={tooltipLabel}
+          position="top-end"
+          withArrow
+          transitionProps={{ transition: "pop-bottom-right" }}
+        >
+          <Text component="div" c="dimmed" style={{ cursor: "help" }}>
+            <Center>{icon}</Center>
+          </Text>
+        </Tooltip>
       );
-    } else if (align === "left") {
-      return (
-        <TextInput
-          leftSection={section}
-          label={label}
-          placeholder={placeholder}
-          type={type}
-        />
-      );
-    } else {
-      return <TextInput label={label} placeholder={placeholder} />;
+    } else if (contain === "icon") {
+      section = icon;
     }
+    const sectionProps =
+      align === "right"
+        ? { rightSection: section }
+        : align === "left"
+        ? { leftSection: section }
+        : {};
+
+    return (
+      <TextInput
+        {...sectionProps}
+        name={name}
+        label={label}
+        placeholder={placeholder}
+        type={type}
+        withAsterisk={required}
+        error={error}
+        value={value}
+        onChange={(event) => setValue(event.currentTarget.value)}
+        onBlur={valueValidator}
+      />
+    );
   }
 }
