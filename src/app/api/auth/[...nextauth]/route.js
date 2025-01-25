@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 const BASE_API_URL = process.env.BASE_API_URL;
 const NEXTAUTH_SECRET_KEY = process.env.NEXTAUTH_SECRET_KEY;
 
-const authOptions = {
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -32,7 +32,6 @@ const authOptions = {
 
           const token = response.data;
           const decodedToken = jwt.decode(token);
-          console.log(decodedToken);
 
           return {
             userId: decodedToken.sub,
