@@ -1,4 +1,5 @@
 import { TextInput, Tooltip, Text, Center, PasswordInput } from "@mantine/core";
+import "./smart-TextInput.css";
 
 export default function SmartTextInput({
   name,

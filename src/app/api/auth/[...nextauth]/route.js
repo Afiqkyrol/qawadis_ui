@@ -29,12 +29,19 @@ export const authOptions = {
 
         if (response.ok) {
           response = await response.json();
-
           const token = response.data;
-          const decodedToken = jwt.decode(token);
+
+          let user = await fetch(process.env.BASE_API_URL + `/user`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          user = await user.json();
 
           return {
-            userId: decodedToken.sub,
+            user: user.data,
             apiToken: token,
           };
         } else {
@@ -46,7 +53,7 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.userId = user.userId;
+        token.user = user.user;
         token.apiToken = user.apiToken;
         token.expires = Date.now() + 3 * 24 * 60 * 60 * 1000;
       }
@@ -55,7 +62,7 @@ export const authOptions = {
 
     async session({ session, token }) {
       if (token) {
-        session.userId = token.userId;
+        session.user = token.user;
         session.apiToken = token.apiToken;
         session.expires = new Date(token.expires).toISOString();
       }

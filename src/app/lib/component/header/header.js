@@ -1,4 +1,4 @@
-import { Group, Burger, Button, Box } from "@mantine/core";
+import { Group, Burger, Button } from "@mantine/core";
 import { MantineLogo } from "@mantinex/mantine-logo";
 
 export default function Header({ opened, toggle }) {

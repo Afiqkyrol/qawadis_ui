@@ -1,0 +1,13 @@
+.mantine-TextInput-input:focus {
+  border: 1px solid #ffcd00 !important;
+}
+
+.mantine-PasswordInput-input[data-variant="default"] {
+  --input-bd-focus: #ffcd00 !important;
+}
+
+.mantine-PasswordInput-wrapper[data-error]:not([data-variant="unstyled"])
+  .mantine-PasswordInput-section
+  button {
+  --ai-color: var(--mantine-color-error) !important;
+}

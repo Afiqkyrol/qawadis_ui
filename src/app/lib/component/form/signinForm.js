@@ -79,7 +79,7 @@ export default function SigninForm() {
       <Card shadow="xl" padding="lg" radius="md">
         <Text
           variant="gradient"
-          gradient={{ from: "violet", to: "grape", deg: 90 }}
+          gradient={{ from: "#ffa300", to: "#ffcd00", deg: 45 }}
           size="xl"
           fw={900}
           fz="lg"

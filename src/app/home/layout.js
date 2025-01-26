@@ -1,12 +1,13 @@
 "use client";
 
-import { AppShell, Burger, Group, Skeleton } from "@mantine/core";
+import { AppShell, Skeleton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { MantineLogo } from "@mantinex/mantine-logo";
 import Header from "../lib/component/header/header";
+import React, { useState } from "react";
 
-export default function homeLayout({ children }) {
+export default function HomeLayout({ children }) {
   const [opened, { toggle }] = useDisclosure();
+  const [user, setUser] = useState(null);
 
   return (
     <AppShell
@@ -18,18 +19,20 @@ export default function homeLayout({ children }) {
       }}
       padding="md"
     >
-      <AppShell.Header>
+      <AppShell.Header bg="">
         <Header opened={opened} toggle={toggle} />
       </AppShell.Header>
-      <AppShell.Navbar p="md">
-        Navbar
+      <AppShell.Navbar p="md" bg="">
+        {user}
         {Array(15)
           .fill(0)
           .map((_, index) => (
             <Skeleton key={index} h={28} mt="sm" animate={true} />
           ))}
       </AppShell.Navbar>
-      <AppShell.Main bg="#f4effa">{children}</AppShell.Main>
+      <AppShell.Main bg="">
+        {React.cloneElement(children, { setUser })}
+      </AppShell.Main>
     </AppShell>
   );
 }
