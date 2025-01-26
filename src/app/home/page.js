@@ -11,10 +11,5 @@ export function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    redirect("/auth/signin");
-  }
-
   return <HomeClient />;
 }
