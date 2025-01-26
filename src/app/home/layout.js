@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import InnerLayout from "../lib/component/layout/defaultLayout";
+import InnerLayout from "../lib/component/layout/innerLayout";
 import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
