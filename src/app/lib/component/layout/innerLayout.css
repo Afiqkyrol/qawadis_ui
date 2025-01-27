@@ -1,0 +1,9 @@
+.mantine-AppShell-navbar {
+  width: 300px;
+}
+
+@media (min-width: 768px) {
+  .mantine-AppShell-main {
+    filter: none !important;
+  }
+}

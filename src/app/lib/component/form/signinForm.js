@@ -2,13 +2,14 @@
 
 import SmartTextInput from "@/app/lib/component/input/smart-TextInput";
 import { validateEmail } from "@/app/lib/util/validator";
-import { IconAt } from "@tabler/icons-react";
+import { IconAt, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 import SmartButton from "../button/smart-Button";
 import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { nprogress } from "@mantine/nprogress";
+import { notifications } from "@mantine/notifications";
 
 export default function SigninForm() {
   const router = useRouter();
@@ -35,24 +36,36 @@ export default function SigninForm() {
   function emailValidator() {
     if (email === "") {
       setEmailError("Email is required");
+      return false;
     } else if (!validateEmail(email)) {
       setEmailError("Invalid email address");
+      return false;
     } else {
       setEmailError("");
+      return true;
     }
   }
 
   function passwordValidator() {
     if (password === "") {
       setPasswordError("Password is required");
+      return false;
+    } else {
+      return true;
     }
   }
 
-  async function submitHandler(e) {
-    nprogress.start();
+  function formValidator() {
+    emailValidator();
+    passwordValidator();
+    return emailValidator() && passwordValidator();
+  }
+
+  async function submitHandler() {
+    if (!formValidator()) return;
 
     setOvalLoading(true);
-
+    nprogress.start();
     nprogress.set(50);
     nprogress.stop();
 
@@ -67,6 +80,15 @@ export default function SigninForm() {
       router.push("/home");
     } else {
       nprogress.complete();
+      notifications.show({
+        title: "An error occurred!",
+        message: result.error,
+        position: "top-right",
+        withCloseButton: true,
+        autoClose: 5000,
+        color: "red",
+        loading: false,
+      });
       setOvalLoading(false);
     }
   }
@@ -79,7 +101,7 @@ export default function SigninForm() {
       <Card shadow="xl" padding="lg" radius="md">
         <Text
           variant="gradient"
-          gradient={{ from: "orange", to: "yellow", deg: 45 }}
+          gradient={{ from: "#a4133c", to: "#ff4d6d", deg: 90 }}
           size="xl"
           fw={900}
           fz="lg"

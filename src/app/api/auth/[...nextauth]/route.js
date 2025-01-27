@@ -45,11 +45,21 @@ export const authOptions = {
             apiToken: token,
           };
         } else {
-          return null;
+          response = await response.json();
+          throw new Error(response.detailMessage);
         }
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+    maxAge: 3 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60,
+  },
+  secret: NEXTAUTH_SECRET_KEY,
+  pages: {
+    signIn: "/auth/signin",
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -68,15 +78,6 @@ export const authOptions = {
       }
       return session;
     },
-  },
-  session: {
-    strategy: "jwt",
-    maxAge: 3 * 24 * 60 * 60,
-    updateAge: 24 * 60 * 60,
-  },
-  secret: NEXTAUTH_SECRET_KEY,
-  pages: {
-    signIn: "/auth/signin",
   },
 };
 

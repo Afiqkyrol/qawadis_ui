@@ -8,14 +8,12 @@ export default function Header({ opened, toggle }) {
         size="xl"
         fw={900}
         variant="gradient"
-        gradient={{ from: "orange", to: "yellow", deg: 90 }}
+        gradient={{ from: "#a4133c", to: "#ff4d6d", deg: 90 }}
       >
         Qawadi Sports
       </Text>
 
-      <Group>
-        <Button variant="default">Log in</Button>
-      </Group>
+      <div></div>
     </Group>
   );
 }

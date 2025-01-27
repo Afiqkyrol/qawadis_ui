@@ -1,5 +1,6 @@
 import "@mantine/core/styles.css";
 import "@mantine/nprogress/styles.css";
+import "@mantine/notifications/styles.css";
 
 import { Geist, Geist_Mono } from "next/font/google";
 import {
@@ -8,6 +9,7 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { NavigationProgress } from "@mantine/nprogress";
+import { Notifications } from "@mantine/notifications";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +39,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <MantineProvider>
+          <Notifications />
           <NavigationProgress />
           {children}
         </MantineProvider>
