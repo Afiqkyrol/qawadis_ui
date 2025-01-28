@@ -1,15 +1,15 @@
 "use client";
 
-import SmartTextInput from "@/app/lib/component/input/smart-TextInput";
+import SmartTextInput from "@/app/lib/component/smart/input/smart-TextInput";
 import { validateEmail } from "@/app/lib/util/validator";
-import { IconAt, IconX } from "@tabler/icons-react";
+import { notificationError } from "@/app/lib/util/notification";
+import { IconAt } from "@tabler/icons-react";
 import { useState } from "react";
-import SmartButton from "../button/smart-Button";
+import SmartButton from "../smart/button/smart-Button";
 import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { nprogress } from "@mantine/nprogress";
-import { notifications } from "@mantine/notifications";
 
 export default function SigninForm() {
   const router = useRouter();
@@ -80,15 +80,7 @@ export default function SigninForm() {
       router.push("/home");
     } else {
       nprogress.complete();
-      notifications.show({
-        title: "An error occurred!",
-        message: result.error,
-        position: "top-right",
-        withCloseButton: true,
-        autoClose: 5000,
-        color: "red",
-        loading: false,
-      });
+      notificationError("An error occurred!", result.error);
       setOvalLoading(false);
     }
   }
@@ -101,7 +93,7 @@ export default function SigninForm() {
       <Card shadow="xl" padding="lg" radius="md">
         <Text
           variant="gradient"
-          gradient={{ from: "#a4133c", to: "#ff4d6d", deg: 90 }}
+          gradient={{ from: "blue", to: "cyan", deg: 90 }}
           size="xl"
           fw={900}
           fz="lg"

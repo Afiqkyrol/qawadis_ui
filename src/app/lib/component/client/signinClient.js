@@ -5,7 +5,7 @@ import { Center, Container } from "@mantine/core";
 
 export default function SigninClient() {
   return (
-    <Container fluid h="100vh" bg="#fff0f3">
+    <Container fluid h="100vh">
       <Center h="100%">
         <SigninForm />
       </Center>

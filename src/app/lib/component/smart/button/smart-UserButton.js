@@ -1,8 +1,8 @@
 import { IconChevronRight } from "@tabler/icons-react";
 import { Avatar, Group, Text, UnstyledButton } from "@mantine/core";
-import classes from "./UserButton.module.css";
+import classes from "./smart-UserButton.module.css";
 
-export function UserButton({ session }) {
+export default function SmartUserButton({ session }) {
   return (
     <UnstyledButton className={classes.user}>
       <Group>

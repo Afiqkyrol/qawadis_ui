@@ -3,8 +3,8 @@
 import { AppShell, Skeleton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Header from "../header/header";
-import { NavbarNested } from "../../mantine/template/NavbarNested/NavbarNested";
 import "./innerLayout.css";
+import Navbar from "../navbar/navbar";
 
 export default function InnerLayout({ children, session }) {
   const [opened, { toggle }] = useDisclosure();
@@ -29,7 +29,7 @@ export default function InnerLayout({ children, session }) {
           .map((_, index) => (
             <Skeleton key={index} h={28} mt="sm" animate={true} />
           ))} */}
-        <NavbarNested session={session} />
+        <Navbar session={session} />
       </AppShell.Navbar>
       <AppShell.Main
         style={{

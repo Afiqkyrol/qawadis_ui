@@ -3,7 +3,8 @@
 import { nprogress } from "@mantine/nprogress";
 import { useEffect } from "react";
 import { userIdleSignout } from "../../hook/userIdleSignout";
-import { Container } from "@mantine/core";
+import { Container, Grid } from "@mantine/core";
+import { BadgeCard } from "../../mantine/template/BadgeCard/BadgeCard";
 
 export default function HomeClient() {
   // userIdleSignout(3 * 24 * 60 * 60 * 1000);
@@ -14,21 +15,26 @@ export default function HomeClient() {
 
   return (
     <Container fluid h="100%">
-      <p>
-        At vero eos et accusamus et iusto odio dignissimos ducimus qui
-        blanditiis praesentium voluptatum deleniti atque corrupti quos dolores
-        et quas molestias excepturi sint occaecati cupiditate non provident,
-        similique sunt in culpa qui officia deserunt mollitia animi, id est
-        laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
-        distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
-        cumque nihil impedit quo minus id quod maxime placeat facere possimus,
-        omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
-        quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet
-        ut et voluptates repudiandae sint et molestiae non recusandae. Itaque
-        earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-        voluptatibus maiores alias consequatur aut perferendis doloribus
-        asperiores repellat
-      </p>
+      <Grid>
+        <Grid.Col span="content">
+          <BadgeCard />
+        </Grid.Col>
+        <Grid.Col span="content">
+          <BadgeCard />
+        </Grid.Col>
+        <Grid.Col span="content">
+          <BadgeCard />
+        </Grid.Col>
+        <Grid.Col span="content">
+          <BadgeCard />
+        </Grid.Col>
+        <Grid.Col span="content">
+          <BadgeCard />
+        </Grid.Col>
+        <Grid.Col span="content">
+          <BadgeCard />
+        </Grid.Col>
+      </Grid>
     </Container>
   );
 }
