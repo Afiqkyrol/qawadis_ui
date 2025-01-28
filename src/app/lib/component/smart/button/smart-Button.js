@@ -6,7 +6,7 @@ export default function SmartButton({ buttonType, loading, submitHandler }) {
     return (
       <Button
         variant="gradient"
-        gradient={{ from: "blue", to: "cyan", deg: 90 }}
+        gradient={{ from: "blue", to: "cyan" }}
         rightSection={<IconArrowRight size={14} />}
         onClick={submitHandler}
         loading={loading}

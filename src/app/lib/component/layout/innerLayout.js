@@ -17,7 +17,6 @@ export default function InnerLayout({ children, session }) {
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
-      padding="md"
     >
       <AppShell.Header>
         <Header opened={opened} toggle={toggle} />
