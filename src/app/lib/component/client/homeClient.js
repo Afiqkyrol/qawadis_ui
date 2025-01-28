@@ -3,8 +3,7 @@
 import { nprogress } from "@mantine/nprogress";
 import { useEffect } from "react";
 import { userIdleSignout } from "../../hook/userIdleSignout";
-import { Container, Grid } from "@mantine/core";
-import { BadgeCard } from "../../mantine/template/BadgeCard/BadgeCard";
+import { Container } from "@mantine/core";
 
 export default function HomeClient() {
   // userIdleSignout(3 * 24 * 60 * 60 * 1000);
@@ -15,26 +14,7 @@ export default function HomeClient() {
 
   return (
     <Container fluid h="100%">
-      <Grid>
-        <Grid.Col span="content">
-          <BadgeCard />
-        </Grid.Col>
-        <Grid.Col span="content">
-          <BadgeCard />
-        </Grid.Col>
-        <Grid.Col span="content">
-          <BadgeCard />
-        </Grid.Col>
-        <Grid.Col span="content">
-          <BadgeCard />
-        </Grid.Col>
-        <Grid.Col span="content">
-          <BadgeCard />
-        </Grid.Col>
-        <Grid.Col span="content">
-          <BadgeCard />
-        </Grid.Col>
-      </Grid>
+      home
     </Container>
   );
 }

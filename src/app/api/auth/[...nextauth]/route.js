@@ -1,7 +1,5 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import jwt from "jsonwebtoken";
-
 const BASE_API_URL = process.env.BASE_API_URL;
 const NEXTAUTH_SECRET_KEY = process.env.NEXTAUTH_SECRET_KEY;
 
