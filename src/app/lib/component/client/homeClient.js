@@ -2,7 +2,6 @@
 
 import { nprogress } from "@mantine/nprogress";
 import { useEffect } from "react";
-import { userIdleSignout } from "../../hook/userIdleSignout";
 import { Container } from "@mantine/core";
 
 export default function HomeClient() {

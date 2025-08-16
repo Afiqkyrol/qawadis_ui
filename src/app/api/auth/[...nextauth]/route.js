@@ -29,7 +29,7 @@ export const authOptions = {
           response = await response.json();
           const token = response.data;
 
-          let user = await fetch(BASE_API_URL + `/user`, {
+          let user = await fetch(BASE_API_URL + `/findUserByToken`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -37,6 +37,7 @@ export const authOptions = {
             },
           });
           user = await user.json();
+          console.log(user);
 
           return {
             user: user.data,

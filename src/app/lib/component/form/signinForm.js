@@ -5,7 +5,7 @@ import { validateEmail } from "@/app/lib/util/validator";
 import { notificationError } from "@/app/lib/util/notification";
 import { IconAt } from "@tabler/icons-react";
 import { useState } from "react";
-import SmartButton from "../smart/button/smart-Button";
+import SmartButton from "../smart/button/smartButton";
 import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -129,6 +129,7 @@ export default function SigninForm() {
             buttonType="submit"
             loading={ovalLoading}
             submitHandler={submitHandler}
+            text="Sign In"
           />
         </Stack>
       </Card>

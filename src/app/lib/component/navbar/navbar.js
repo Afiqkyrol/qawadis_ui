@@ -1,7 +1,11 @@
 import { IconBulb, IconCheckbox, IconUser } from "@tabler/icons-react";
-import { Badge, UnstyledButton } from "@mantine/core";
+import { Badge, Box, UnstyledButton } from "@mantine/core";
 import classes from "./navbar.module.css";
-import SmartUserButton from "../smart/button/smart-UserButton";
+import SmartUserButton from "../smart/button/smartUserButton";
+import { nprogress } from "@mantine/nprogress";
+import { signOut } from "next-auth/react";
+import SmartButton from "../smart/button/smartButton";
+import SmartCenter from "../smart/center/smartCenter";
 
 const links = [
   { icon: IconBulb, label: "Activity", notifications: 3 },
@@ -10,6 +14,13 @@ const links = [
 ];
 
 export default function Navbar({ session }) {
+  async function submitHandler() {
+    nprogress.start();
+    nprogress.set(50);
+    await signOut({ callbackUrl: "/auth/signin" });
+    nprogress.complete();
+  }
+
   const mainLinks = links.map((link) => (
     <UnstyledButton key={link.label} className={classes.mainLink}>
       <div className={classes.mainLinkInner}>
@@ -34,7 +45,17 @@ export default function Navbar({ session }) {
           <div className={classes.mainLinks}>{mainLinks}</div>
         </div>
       </div>
-      <div className={classes.footer}>Footer</div>
+      <div className={classes.footer}>
+        <Box hiddenFrom="sm">
+        <SmartCenter style={{ padding: "5px" }}>
+          <SmartButton
+            style={{ width: "90%" }}
+            buttonType="cancel"
+            submitHandler={submitHandler}
+            text={"Sign Out"}
+          />
+        </SmartCenter></Box>
+      </div>
     </nav>
   );
 }

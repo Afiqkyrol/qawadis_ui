@@ -15,6 +15,11 @@
   align-items: center;
 }
 
+.group {
+  width: 100%;
+  justify-content: space-between;
+}
+
 .link {
   display: block;
   line-height: 1;
