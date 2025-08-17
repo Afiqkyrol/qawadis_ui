@@ -20,7 +20,7 @@ export default function SmartTableList({ dataList, columnList }) {
 
       <TableTbody>
         {dataList.map((item) => (
-          <TableTr key={item.id}>
+          <TableTr key={item.matchId}>
             {columnList.map((column) => (
               <TableTd key={column.field}>{item[column.field]}</TableTd>
             ))}

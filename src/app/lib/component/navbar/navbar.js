@@ -7,6 +7,7 @@ import { signOut } from "next-auth/react";
 import SmartButton from "../smart/button/smartButton";
 import SmartCenter from "../smart/center/smartCenter";
 import SmartLinkList from "../smart/linkList/smartList";
+import { useSession } from "../layout/innerLayout";
 
 const itemList = [
   { icon: IconHome, label: "Home", notifications: 3, link: "/" },
@@ -16,10 +17,11 @@ const itemList = [
     notifications: 4,
     link: "/activity",
   },
-  { icon: IconUser, label: "Contacts", link: "/#tiga" },
+  { icon: IconUser, label: "Contacts", link: "/test" },
 ];
 
-export default function Navbar({ session }) {
+export default function Navbar() {
+  const session = useSession();
   async function submitHandler() {
     nprogress.start();
     nprogress.set(50);
