@@ -5,7 +5,6 @@
 .mantine-AppShell-main {
   justify-content: center !important;
   align-items: center !important;
-  text-align: center !important;
 }
 
 @media (min-width: 768px) {

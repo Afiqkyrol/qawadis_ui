@@ -1,7 +1,7 @@
 "use client";
 
-import SigninForm from "../form/signinForm";
 import { Center, Container } from "@mantine/core";
+import SigninForm from "../../form/signinForm";
 
 export default function SigninClient() {
   return (

@@ -1,0 +1,50 @@
+.mainLinks {
+  padding-left: calc(var(--mantine-spacing-md) - var(--mantine-spacing-xs));
+  padding-right: calc(var(--mantine-spacing-md) - var(--mantine-spacing-xs));
+  padding: var(--mantine-spacing-xs);
+}
+
+.mainLink {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: var(--mantine-font-size-xs);
+  padding: 8px var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-sm);
+  font-weight: 500;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+
+  &:hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  }
+
+  &[data-active] {
+    &,
+    &:hover {
+      background-color: var(--mantine-color-blue-light);
+      color: var(--mantine-color-blue-light-color);
+    }
+  }
+}
+
+.mainLinkInner {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.mainLinkIcon {
+  margin-right: var(--mantine-spacing-sm);
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-2));
+}
+
+.mainLinkBadge {
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
