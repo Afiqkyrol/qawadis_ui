@@ -1,7 +1,4 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import HomeClient from "../lib/component/client/homeClient";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import HomeClient from "../lib/component/client/home/home.client";
 
 export function generateMetadata() {
   return {

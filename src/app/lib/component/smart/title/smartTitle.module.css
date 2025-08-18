@@ -1,0 +1,25 @@
+.card {
+  background: linear-gradient(
+    135deg,
+    var(--mantine-color-blue-6),
+    var(--mantine-color-green-6)
+  );
+  color: white;
+  margin-bottom: 1rem;
+  padding: var(--mantine-spacing-md);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+}
+
+.icon {
+  color: white;
+}
+
+.title {
+  color: white;
+  font-weight: 700;
+}

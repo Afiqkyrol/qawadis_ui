@@ -3,11 +3,32 @@ import { useEffect, useRef, useState } from "react";
 import SmartTableList from "../../smart/tableList/smartTableList";
 import { useSession } from "../../layout/innerLayout";
 import { getMatchListByStatus } from "./activity.service";
+import {
+  IconBallFootball,
+  IconCalendar,
+  IconMapPin,
+  IconUser,
+} from "@tabler/icons-react";
+import SmartTitle from "../../smart/title/smartTitle";
+
+const columnList = [
+  { field: "sport", name: "Sport", icon: IconBallFootball, iconColor: "blue" },
+  { field: "date", name: "Date", icon: IconCalendar, iconColor: "green" },
+  { field: "venue", name: "Venue", icon: IconMapPin, iconColor: "red" },
+  { field: "status", name: "Status" },
+  {
+    field: "createdBy",
+    name: "Created By",
+    icon: IconUser,
+    iconColor: "violet",
+  },
+];
 
 export default function ActivityClient() {
   const session = useSession();
   const fetchedRef = useRef(false);
-  const [matcheList, setMatcheList] = useState([]);
+  const [matchList, setMatchList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (fetchedRef.current) return;
@@ -21,26 +42,23 @@ export default function ActivityClient() {
         status: match.status.description,
         createdBy: match.createdBy.username,
       }));
-      setMatcheList(transformed);
+      setMatchList(transformed);
+
+      setIsLoading(false);
     }
 
     fetchData();
   }, [session]);
 
-  const columnList = [
-    { field: "matchId", name: "ID" },
-    { field: "sport", name: "Sport" },
-    { field: "date", name: "Date" },
-    { field: "venue", name: "Venue" },
-    { field: "status", name: "Status" },
-    { field: "createdBy", name: "Created By" },
-  ];
-
-  const dataList = [
-    { id: 1, name: "Activity 1", status: "Active" },
-    { id: 2, name: "Activity 2", status: "Inactive" },
-    { id: 3, name: "Activity 3", status: "Active" },
-  ];
-
-  return <SmartTableList columnList={columnList} dataList={matcheList} />;
+  return (
+    <div>
+      <SmartTitle title="Activity" Icon={IconBallFootball} />
+      <SmartTableList
+        columnList={columnList}
+        dataList={matchList}
+        rowsPerPage={5}
+        isLoading={isLoading}
+      />
+    </div>
+  );
 }
