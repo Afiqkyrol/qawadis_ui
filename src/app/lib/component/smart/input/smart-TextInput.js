@@ -15,6 +15,7 @@ export default function SmartTextInput({
   value,
   setValue,
   valueValidator,
+  style,
 }) {
   if (type === "password") {
     return (
@@ -24,6 +25,7 @@ export default function SmartTextInput({
         placeholder={placeholder}
         withAsterisk={required}
         error={error}
+        style={style}
         value={value}
         onChange={(event) => setValue(event.currentTarget.value)}
         onBlur={valueValidator}
@@ -64,6 +66,7 @@ export default function SmartTextInput({
         type={type}
         withAsterisk={required}
         error={error}
+        style={style}
         value={value}
         onChange={(event) => setValue(event.currentTarget.value)}
         onBlur={valueValidator}

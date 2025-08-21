@@ -131,6 +131,18 @@ export default function SigninForm() {
             submitHandler={submitHandler}
             text="Sign In"
           />
+          <Text ta="center" size="sm" mt="sm">
+            Don’t have an account?{" "}
+            <Text
+              component="a"
+              href="/auth/signup"
+              fw={500}
+              c="blue"
+              style={{ textDecoration: "none" }}
+            >
+              Sign Up
+            </Text>
+          </Text>
         </Stack>
       </Card>
     </Container>

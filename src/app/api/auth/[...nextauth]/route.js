@@ -9,21 +9,41 @@ export const authOptions = {
       name: "Credentials",
 
       credentials: {
+        email: { label: "Username", type: "username" },
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
 
       async authorize(credentials) {
-        let response = await fetch(BASE_API_URL + "/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            body: {
-              email: credentials.email,
-              password: credentials.password,
-            },
-          }),
-        });
+        let response;
+        if (
+          credentials.username === null ||
+          credentials.username === undefined ||
+          credentials.username === ""
+        ) {
+          response = await fetch(BASE_API_URL + "/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              body: {
+                email: credentials.email,
+                password: credentials.password,
+              },
+            }),
+          });
+        } else {
+          response = await fetch(BASE_API_URL + "/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              body: {
+                username: credentials.username,
+                email: credentials.email,
+                password: credentials.password,
+              },
+            }),
+          });
+        }
 
         if (response.ok) {
           response = await response.json();
