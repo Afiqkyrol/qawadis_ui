@@ -131,10 +131,10 @@ export default function SignupForm() {
   }
 
   return (
-    <Card w={"30%"} shadow="sm" padding="lg" radius="md" withBorder>
+    <Card w={"25%"} shadow="sm" padding="lg" radius="md" withBorder>
       <SmartCenter>
         <Text
-          style={{ width: "80%", marginBottom: "1rem" }}
+          style={{ width: "100%", marginBottom: "1rem" }}
           variant="gradient"
           gradient={{ from: "blue", to: "cyan", deg: 90 }}
           size="xl"
@@ -146,7 +146,7 @@ export default function SignupForm() {
       </SmartCenter>
       <SmartCenter>
         <SmartTextInput
-          style={{ width: "80%" }}
+          style={{ width: "100%" }}
           name="username"
           label="Username"
           type="text"
@@ -162,7 +162,7 @@ export default function SignupForm() {
       </SmartCenter>
       <SmartCenter>
         <SmartTextInput
-          style={{ width: "80%" }}
+          style={{ width: "100%" }}
           name="email"
           label="Email"
           type="email"
@@ -178,7 +178,7 @@ export default function SignupForm() {
       </SmartCenter>
       <SmartCenter>
         <SmartTextInput
-          style={{ width: "80%" }}
+          style={{ width: "100%" }}
           name="password"
           label="Password"
           type="password"
@@ -191,7 +191,7 @@ export default function SignupForm() {
       </SmartCenter>
       <SmartCenter>
         <SmartTextInput
-          style={{ width: "80%" }}
+          style={{ width: "100%" }}
           name="confirmPassword"
           label="Confirm Password"
           type="password"
@@ -204,7 +204,7 @@ export default function SignupForm() {
       </SmartCenter>
       <SmartCenter>
         <SmartButton
-          style={{ marginTop: "1rem", width: "80%" }}
+          style={{ marginTop: "1rem", width: "100%" }}
           buttonType="submit"
           loading={ovalLoading}
           submitHandler={submitHandler}
