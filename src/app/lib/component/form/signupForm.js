@@ -146,7 +146,7 @@ export default function SignupForm() {
       </SmartCenter>
       <SmartCenter>
         <SmartTextInput
-          style={{ width: "100%" }}
+          style={{ width: "100%", marginBottom: "1rem" }}
           name="username"
           label="Username"
           type="text"
@@ -162,7 +162,7 @@ export default function SignupForm() {
       </SmartCenter>
       <SmartCenter>
         <SmartTextInput
-          style={{ width: "100%" }}
+          style={{ width: "100%", marginBottom: "1rem" }}
           name="email"
           label="Email"
           type="email"
@@ -178,7 +178,7 @@ export default function SignupForm() {
       </SmartCenter>
       <SmartCenter>
         <SmartTextInput
-          style={{ width: "100%" }}
+          style={{ width: "100%", marginBottom: "1rem" }}
           name="password"
           label="Password"
           type="password"
@@ -191,7 +191,7 @@ export default function SignupForm() {
       </SmartCenter>
       <SmartCenter>
         <SmartTextInput
-          style={{ width: "100%" }}
+          style={{ width: "100%", marginBottom: "1rem" }}
           name="confirmPassword"
           label="Confirm Password"
           type="password"
@@ -204,11 +204,11 @@ export default function SignupForm() {
       </SmartCenter>
       <SmartCenter>
         <SmartButton
-          style={{ marginTop: "1rem", width: "100%" }}
+          style={{ width: "100%" }}
           buttonType="submit"
           loading={ovalLoading}
           submitHandler={submitHandler}
-          text="Sign In"
+          text="Sign Up"
         />
       </SmartCenter>
       <Text ta="center" size="sm" mt="sm">
