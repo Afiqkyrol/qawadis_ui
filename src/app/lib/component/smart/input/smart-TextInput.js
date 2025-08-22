@@ -2,7 +2,7 @@ import { TextInput, Tooltip, Text, Center, PasswordInput } from "@mantine/core";
 import "./smart-TextInput.css";
 
 export default function SmartTextInput({
-  name,
+  controlName,
   label,
   placeholder,
   type,
@@ -13,21 +13,26 @@ export default function SmartTextInput({
   error,
   required,
   value,
-  setValue,
+  onChange,
   valueValidator,
   style,
 }) {
   if (type === "password") {
     return (
       <PasswordInput
-        name={name}
+        name={controlName}
         label={label}
         placeholder={placeholder}
         withAsterisk={required}
         error={error}
         style={style}
         value={value}
-        onChange={(event) => setValue(event.currentTarget.value)}
+        onChange={(event) =>
+          onChange({
+            controlName: event.target.name,
+            value: event.currentTarget.value,
+          })
+        }
         onBlur={valueValidator}
       />
     );
@@ -60,7 +65,7 @@ export default function SmartTextInput({
     return (
       <TextInput
         {...sectionProps}
-        name={name}
+        name={controlName}
         label={label}
         placeholder={placeholder}
         type={type}
@@ -68,7 +73,12 @@ export default function SmartTextInput({
         error={error}
         style={style}
         value={value}
-        onChange={(event) => setValue(event.currentTarget.value)}
+        onChange={(event) =>
+          onChange({
+            controlName: event.target.name,
+            value: event.currentTarget.value,
+          })
+        }
         onBlur={valueValidator}
       />
     );

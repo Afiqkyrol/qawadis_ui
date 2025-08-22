@@ -13,76 +13,78 @@ import { nprogress } from "@mantine/nprogress";
 
 export default function SigninForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [ovalLoading, setOvalLoading] = useState(false);
 
-  function emailHandler(input) {
-    setEmail(input);
-    if (validateEmail(input)) {
-      setEmailError("");
-    }
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  function inputHandler({ controlName, value }) {
+    setForm((prev) => ({
+      ...prev,
+      [controlName]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [controlName]: "",
+    }));
   }
 
-  function passwordHandler(input) {
-    setPassword(input);
-    if (input != "") {
-      setPasswordError("");
+  // field validator
+  function validateField(controlName, value) {
+    let error = "";
+
+    if (controlName === "email") {
+      if (!value) error = "Email is required";
+      else if (!validateEmail(value)) error = "Invalid email address";
     }
+
+    if (controlName === "password") {
+      if (!value) error = "Password is required";
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      [controlName]: error,
+    }));
+
+    return error === "";
   }
 
-  function emailValidator() {
-    if (email === "") {
-      setEmailError("Email is required");
-      return false;
-    } else if (!validateEmail(email)) {
-      setEmailError("Invalid email address");
-      return false;
-    } else {
-      setEmailError("");
-      return true;
-    }
-  }
-
-  function passwordValidator() {
-    if (password === "") {
-      setPasswordError("Password is required");
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  function formValidator() {
-    emailValidator();
-    passwordValidator();
-    return emailValidator() && passwordValidator();
+  function validateForm() {
+    const emailValid = validateField("email", form.email);
+    const passwordValid = validateField("password", form.password);
+    return emailValid && passwordValid;
   }
 
   async function submitHandler() {
-    if (!formValidator()) return;
+    if (!validateForm()) return;
 
-    setOvalLoading(true);
+    setLoading(true);
     nprogress.start();
-    nprogress.set(50);
-    nprogress.stop();
 
     const result = await signIn("credentials", {
-      email,
-      password,
+      email: form.email,
+      password: form.password,
       redirect: false,
     });
 
     if (result?.ok) {
-      nprogress.start();
       router.push("/home");
     } else {
-      nprogress.complete();
       notificationError("An error occurred!", result.error);
-      setOvalLoading(false);
+      setLoading(false);
     }
+
+    nprogress.complete();
   }
 
   return (
@@ -103,31 +105,31 @@ export default function SigninForm() {
         <Space h="sm" />
         <Stack align="stretch" justify="center" gap="sm">
           <SmartTextInput
-            name="email"
+            controlName="email"
             label="Email"
             type="email"
             contain="icon"
             icon={<IconAt size={18} stroke={1.5} />}
             align="right"
-            required={true}
-            error={emailError}
-            value={email}
-            setValue={emailHandler}
-            valueValidator={emailValidator}
+            required
+            error={errors.email}
+            value={form.email}
+            onChange={inputHandler}
+            valueValidator={() => validateField("email", form.email)}
           />
           <SmartTextInput
-            name="password"
+            controlName="password"
             label="Password"
             type="password"
-            required={true}
-            error={passwordError}
-            value={password}
-            setValue={passwordHandler}
-            valueValidator={passwordValidator}
+            required
+            error={errors.password}
+            value={form.password}
+            onChange={inputHandler}
+            valueValidator={() => validateField("password", form.password)}
           />
           <SmartButton
             buttonType="submit"
-            loading={ovalLoading}
+            loading={loading}
             submitHandler={submitHandler}
             text="Sign In"
           />

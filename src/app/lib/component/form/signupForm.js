@@ -1,12 +1,11 @@
 "use client";
 
-import { Card, Text } from "@mantine/core";
+import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
 import SmartTextInput from "../smart/input/smart-TextInput";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 import { IconAbc, IconAt } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { validateEmail } from "../../util/validator";
-import SmartCenter from "../smart/center/smartCenter";
 import { nprogress } from "@mantine/nprogress";
 import SmartButton from "../smart/button/smartButton";
 import { signIn } from "next-auth/react";
@@ -14,127 +13,110 @@ import { notificationError } from "../../util/notification";
 
 export default function SignupForm() {
   const router = useRouter();
-  const [ovalLoading, setOvalLoading] = useState(false);
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  const [usernameError, setUsernameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [errors, setErrors] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  function usernameHandler(input) {
-    setUsername(input);
-    if (input !== "") setUsernameError("");
-  }
+  const [loading, setLoading] = useState(false);
 
-  function emailHandler(input) {
-    setEmail(input);
-    if (validateEmail(input)) setEmailError("");
-  }
+  function validateField(controlName, value, currentForm = form) {
+    let error = "";
 
-  function passwordHandler(input) {
-    setPassword(input);
-    if (input !== "") setPasswordError("");
-  }
-
-  function confirmPasswordHandler(input) {
-    setConfirmPassword(input);
-  }
-
-  function usernameValidator() {
-    if (username === "") {
-      setUsernameError("Username is required");
-      return false;
-    } else if (username.length < 3) {
-      setUsernameError("Username must be at least 3 characters long");
-      return false;
+    if (controlName === "username") {
+      if (!value) error = "Username is required";
+      else if (value.length < 3)
+        error = "Username must be at least 3 characters long";
     }
-    setUsernameError("");
-    return true;
+
+    if (controlName === "email") {
+      if (!value) error = "Email is required";
+      else if (!validateEmail(value)) error = "Invalid email address";
+    }
+
+    if (controlName === "password") {
+      if (!value) error = "Password is required";
+    }
+
+    if (controlName === "confirmPassword") {
+      if (!value) error = "Confirm Password is required";
+      else if (value !== currentForm.password) error = "Passwords do not match";
+    }
+
+    setErrors((prev) => ({ ...prev, [controlName]: error }));
+    return error === "";
   }
 
-  function emailValidator() {
-    if (email === "") {
-      setEmailError("Email is required");
-      return false;
-    } else if (!validateEmail(email)) {
-      setEmailError("Invalid email address");
-      return false;
-    }
-    setEmailError("");
-    return true;
+  function inputHandler({ controlName, value }) {
+    setForm((prev) => {
+      const next = { ...prev, [controlName]: value };
+
+      validateField(controlName, next[controlName], next);
+
+      if (controlName === "password" && next.confirmPassword !== "") {
+        validateField("confirmPassword", next.confirmPassword, next);
+      }
+
+      if (controlName === "confirmPassword") {
+        validateField("confirmPassword", next.confirmPassword, next);
+      }
+
+      return next;
+    });
   }
 
-  function passwordValidator() {
-    if (password === "") {
-      setPasswordError("Password is required");
-      return false;
-    }
-    setPasswordError("");
-    return true;
-  }
-
-  function confirmPasswordValidator() {
-    if (confirmPassword === "") {
-      setConfirmPasswordError("Confirm Password is required");
-      return false;
-    } else if (confirmPassword !== password) {
-      setConfirmPasswordError("Passwords do not match");
-      return false;
-    }
-    setConfirmPasswordError("");
-    return true;
-  }
-
-  useEffect(() => {
-    if (confirmPassword !== "") {
-      confirmPasswordValidator();
-    }
-  }, [password, confirmPassword]);
-
-  function formValidator() {
-    return (
-      usernameValidator() &&
-      emailValidator() &&
-      passwordValidator() &&
-      confirmPasswordValidator()
+  function validateForm() {
+    const usernameValid = validateField("username", form.username, form);
+    const emailValid = validateField("email", form.email, form);
+    const passwordValid = validateField("password", form.password, form);
+    const confirmPasswordValid = validateField(
+      "confirmPassword",
+      form.confirmPassword,
+      form
     );
+    return usernameValid && emailValid && passwordValid && confirmPasswordValid;
   }
 
   async function submitHandler() {
-    if (formValidator()) {
-      setOvalLoading(true);
-      nprogress.start();
-      nprogress.set(50);
-      nprogress.stop();
+    if (!validateForm()) return;
 
-      const result = await signIn("credentials", {
-        username,
-        email,
-        password,
-        redirect: false,
-      });
+    setLoading(true);
+    nprogress.start();
 
-      if (result?.ok) {
-        nprogress.start();
-        router.push("/home");
-      } else {
-        nprogress.complete();
-        notificationError("An error occurred!", result.error);
-        setOvalLoading(false);
-      }
+    const result = await signIn("credentials", {
+      username: form.username,
+      email: form.email,
+      password: form.password,
+      redirect: false,
+    });
+
+    if (result?.ok) {
+      router.push("/home");
+    } else {
+      notificationError("An error occurred!", result.error);
+      setLoading(false);
     }
+
+    nprogress.complete();
   }
 
   return (
-    <Card w={"25%"} shadow="sm" padding="lg" radius="md" withBorder>
-      <SmartCenter>
+    <Container w="40vw" miw="300px" maw="500px">
+      <Title order={1} ta="center" mb={30}>
+        Qawadi Sports
+      </Title>
+      <Card shadow="xl" padding="lg" radius="md">
         <Text
-          style={{ width: "100%", marginBottom: "1rem" }}
           variant="gradient"
           gradient={{ from: "blue", to: "cyan", deg: 90 }}
           size="xl"
@@ -143,86 +125,76 @@ export default function SignupForm() {
         >
           Sign Up
         </Text>
-      </SmartCenter>
-      <SmartCenter>
-        <SmartTextInput
-          style={{ width: "100%", marginBottom: "1rem" }}
-          name="username"
-          label="Username"
-          type="text"
-          contain="icon"
-          icon={<IconAbc size={18} stroke={1.5} />}
-          align="right"
-          required={true}
-          error={usernameError}
-          value={username}
-          setValue={usernameHandler}
-          valueValidator={usernameValidator}
-        />
-      </SmartCenter>
-      <SmartCenter>
-        <SmartTextInput
-          style={{ width: "100%", marginBottom: "1rem" }}
-          name="email"
-          label="Email"
-          type="email"
-          contain="icon"
-          icon={<IconAt size={18} stroke={1.5} />}
-          align="right"
-          required={true}
-          error={emailError}
-          value={email}
-          setValue={emailHandler}
-          valueValidator={emailValidator}
-        />
-      </SmartCenter>
-      <SmartCenter>
-        <SmartTextInput
-          style={{ width: "100%", marginBottom: "1rem" }}
-          name="password"
-          label="Password"
-          type="password"
-          required={true}
-          error={passwordError}
-          value={password}
-          setValue={passwordHandler}
-          valueValidator={passwordValidator}
-        />
-      </SmartCenter>
-      <SmartCenter>
-        <SmartTextInput
-          style={{ width: "100%", marginBottom: "1rem" }}
-          name="confirmPassword"
-          label="Confirm Password"
-          type="password"
-          required={true}
-          error={confirmPasswordError}
-          value={confirmPassword}
-          setValue={confirmPasswordHandler}
-          valueValidator={confirmPasswordValidator}
-        />
-      </SmartCenter>
-      <SmartCenter>
-        <SmartButton
-          style={{ width: "100%" }}
-          buttonType="submit"
-          loading={ovalLoading}
-          submitHandler={submitHandler}
-          text="Sign Up"
-        />
-      </SmartCenter>
-      <Text ta="center" size="sm" mt="sm">
-        Already have an account?{" "}
-        <Text
-          component="a"
-          href="/auth/signin"
-          fw={500}
-          c="blue"
-          style={{ textDecoration: "none" }}
-        >
-          Sign In
-        </Text>
-      </Text>
-    </Card>
+        <Space h="sm" />
+        <Stack align="stretch" justify="center" gap="sm">
+          <SmartTextInput
+            controlName="username"
+            label="Username"
+            type="text"
+            contain="icon"
+            icon={<IconAbc size={18} stroke={1.5} />}
+            align="right"
+            required
+            error={errors.username}
+            value={form.username}
+            onChange={inputHandler}
+            valueValidator={() => validateField("username", form.username)}
+          />
+          <SmartTextInput
+            controlName="email"
+            label="Email"
+            type="email"
+            contain="icon"
+            icon={<IconAt size={18} stroke={1.5} />}
+            align="right"
+            required
+            error={errors.email}
+            value={form.email}
+            onChange={inputHandler}
+            valueValidator={() => validateField("email", form.email)}
+          />
+          <SmartTextInput
+            controlName="password"
+            label="Password"
+            type="password"
+            required
+            error={errors.password}
+            value={form.password}
+            onChange={inputHandler}
+            valueValidator={() => validateField("password", form.password)}
+          />
+          <SmartTextInput
+            controlName="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            required
+            error={errors.confirmPassword}
+            value={form.confirmPassword}
+            onChange={inputHandler}
+            valueValidator={() =>
+              validateField("confirmPassword", form.confirmPassword)
+            }
+          />
+          <SmartButton
+            buttonType="submit"
+            loading={loading}
+            submitHandler={submitHandler}
+            text="Sign Up"
+          />
+          <Text ta="center" size="sm" mt="sm">
+            Already have an account?{" "}
+            <Text
+              component="a"
+              href="/auth/signin"
+              fw={500}
+              c="blue"
+              style={{ textDecoration: "none" }}
+            >
+              Sign In
+            </Text>
+          </Text>
+        </Stack>
+      </Card>
+    </Container>
   );
 }
