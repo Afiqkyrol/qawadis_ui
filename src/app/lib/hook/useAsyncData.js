@@ -38,7 +38,7 @@ export function useAsyncData(fetcher, { interval, deps = [] } = {}) {
     }
 
     return () => stopPolling();
-  }, deps); // eslint-disable-line react-hooks/exhaustive-deps
+  }, deps);
 
   return { data, isLoading, stopPolling };
 }
