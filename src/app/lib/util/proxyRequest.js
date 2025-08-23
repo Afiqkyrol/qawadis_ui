@@ -8,7 +8,7 @@ import { notificationError } from "@/app/lib/util/notification";
  * @param {object} [options.query] - Query parameters
  * @param {object} [options.body] - Body for POST/PUT/PATCH
  * @param {string} [options.token] - Authorization token
- * @returns {Promise<any[]>} - Returns data array or empty array on error
+ * @returns {Promise<any[]>} Resolves with data, rejects on error
  */
 export async function proxyRequest(
   path,
@@ -35,19 +35,14 @@ export async function proxyRequest(
     const result = await res.json();
 
     if (!res.ok || !result || typeof result !== "object") {
-      notificationError(
-        "An error occurred!",
-        result?.detailMessage || "Invalid data received from API."
+      throw new Error(
+        result?.detailMessage || "Unable to load data. Please try again later."
       );
-      return [];
     }
 
     return result.data || [];
   } catch (err) {
-    notificationError(
-      "An error occurred!",
-      "Unable to load data. Please try again later."
-    );
-    return [];
+    notificationError("An error occurred!", err.message);
+    throw err;
   }
 }

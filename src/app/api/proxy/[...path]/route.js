@@ -2,20 +2,17 @@
 
 export async function GET(req) {
   try {
-    // Get the Authorization header
     const authHeader = req.headers.get("authorization");
 
-    // Extract the path after /api/proxy/
     const path = req.url.split("/api/proxy/")[1].split("?")[0];
 
-    // Build backend URL with query params
     const url = new URL(`${process.env.BASE_API_URL}/${path}`);
-    const reqUrl = new URL(req.url, "http://localhost"); // dummy base for parsing
+    const reqUrl = new URL(req.url, "http://localhost");
+
     reqUrl.searchParams.forEach((value, key) => {
       if (key !== "path") url.searchParams.append(key, value);
     });
 
-    // Forward the GET request to backend
     const backendRes = await fetch(url.toString(), {
       method: "GET",
       headers: {
