@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
 import SmartTableList from "../../smart/tableList/smartTableList";
 import { useSession } from "../../layout/innerLayout";
 import { getMatchListByStatus } from "./activity.service";
@@ -7,12 +6,19 @@ import {
   IconBallFootball,
   IconCalendar,
   IconMapPin,
+  IconTrophy,
   IconUser,
 } from "@tabler/icons-react";
 import SmartTitle from "../../smart/title/smartTitle";
+import { useAsyncData } from "@/app/lib/hook/useAsyncData";
 
 const columnList = [
-  { field: "sport", name: "Sport", icon: IconBallFootball, iconColor: "blue" },
+  {
+    field: "sport",
+    name: "Sport",
+    icon: IconTrophy,
+    iconColor: "blue",
+  },
   { field: "date", name: "Date", icon: IconCalendar, iconColor: "green" },
   { field: "venue", name: "Venue", icon: IconMapPin, iconColor: "red" },
   { field: "status", name: "Status" },
@@ -26,29 +32,19 @@ const columnList = [
 
 export default function ActivityClient() {
   const session = useSession();
-  const fetchedRef = useRef(false);
-  const [matchList, setMatchList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (fetchedRef.current) return;
-    fetchedRef.current = true;
-
-    async function fetchData() {
+  const { data: matchList, isLoading } = useAsyncData(
+    async () => {
       const response = await getMatchListByStatus(1, true, session?.apiToken);
-      const transformed = response.map((match) => ({
+      return response.map((match) => ({
         ...match,
         sport: match.sport.description,
         status: match.status.description,
         createdBy: match.createdBy.username,
       }));
-      setMatchList(transformed);
-
-      setIsLoading(false);
-    }
-
-    fetchData();
-  }, [session]);
+    },
+    { interval: 5000, deps: [session] }
+  );
 
   return (
     <div>
