@@ -7,6 +7,10 @@
   color: white;
   margin-bottom: 1rem;
   padding: var(--mantine-spacing-md);
+
+  position: sticky;
+  top: 4rem; /* sticks to the top of its container */
+  z-index: 10; /* ensure it stays above other content */
 }
 
 .header {

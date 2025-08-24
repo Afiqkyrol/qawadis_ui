@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
-export function useAsyncData(fetcher, { interval, deps = [] } = {}) {
+export function useAsyncData(
+  fetcher,
+  { interval, deps = [], autoFetch = true } = {}
+) {
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(autoFetch);
   const intervalRef = useRef(null);
   const isFetchingRef = useRef(false);
+  const hasLoadedOnceRef = useRef(false); // track first fetch
 
   const stopPolling = useCallback(() => {
     if (intervalRef.current) {
@@ -13,23 +17,31 @@ export function useAsyncData(fetcher, { interval, deps = [] } = {}) {
     }
   }, []);
 
-  useEffect(() => {
-    async function fetchData() {
+  const fetchData = useCallback(
+    async (...args) => {
       if (isFetchingRef.current) return;
       isFetchingRef.current = true;
 
+      if (interval && !hasLoadedOnceRef.current) setIsLoading(true);
+      else if (!interval) setIsLoading(true);
+
       try {
-        const result = await fetcher();
+        const result = await fetcher(...args);
         setData(result);
-        setIsLoading(false);
+        hasLoadedOnceRef.current = true;
       } catch (err) {
         stopPolling();
         setData([]);
-        setIsLoading(false);
       } finally {
         isFetchingRef.current = false;
+        setIsLoading(false);
       }
-    }
+    },
+    [fetcher, interval, stopPolling]
+  );
+
+  useEffect(() => {
+    if (!autoFetch) return;
 
     fetchData();
 
@@ -40,5 +52,5 @@ export function useAsyncData(fetcher, { interval, deps = [] } = {}) {
     return () => stopPolling();
   }, deps);
 
-  return { data, isLoading, stopPolling };
+  return { data, isLoading, fetchData, stopPolling };
 }
