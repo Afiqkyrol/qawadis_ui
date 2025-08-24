@@ -18,9 +18,12 @@ import { useState } from "react";
 import classes from "./smartTableList.module.css";
 
 export default function SmartTableList({
+  primaryKey = "id",
   dataList = [],
   columnList = [],
+  tableType = "Default",
   rowsPerPage = 5,
+  onClickRow = () => {},
   isLoading = false,
 }) {
   const [activePage, setActivePage] = useState(1);
@@ -31,7 +34,13 @@ export default function SmartTableList({
   const emptyRows = rowsPerPage - paginatedData.length;
 
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card
+      style={{ marginBottom: "1rem" }}
+      shadow="sm"
+      padding="lg"
+      radius="md"
+      withBorder
+    >
       <ScrollArea>
         <Table
           highlightOnHover
@@ -77,8 +86,14 @@ export default function SmartTableList({
               <>
                 {paginatedData.map((item, rowIndex) => (
                   <TableTr
-                    key={item.matchId ?? start + rowIndex}
+                    key={item[primaryKey] ?? start + rowIndex}
                     className={classes.row}
+                    style={tableType === "Details" ? {} : { cursor: "default" }}
+                    onClick={
+                      tableType === "Details"
+                        ? () => onClickRow(item[primaryKey])
+                        : undefined
+                    }
                   >
                     {extendedColumns.map((column) => {
                       if (column.field === "__index") {
@@ -175,13 +190,14 @@ export default function SmartTableList({
       </ScrollArea>
 
       <div style={{ marginTop: "6px" }} className="flex justify-center mt-4">
-        {isLoading ? (
-          <Skeleton height={32} width={200} radius="md" />
+        {isLoading || dataList == null ? (
+          <Skeleton height={21} width={200} radius="md" />
         ) : dataList.length > 0 ? (
           <Pagination
             total={Math.ceil(dataList.length / rowsPerPage)}
             value={activePage}
             onChange={setActivePage}
+            size="xs"
           />
         ) : null}
       </div>
