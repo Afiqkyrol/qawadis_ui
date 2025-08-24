@@ -15,3 +15,11 @@ export async function findMatchById(matchId, init, token) {
     token,
   });
 }
+
+export async function getPlayerListByMatchId(matchId, status, init, token) {
+  return await proxyRequest("match/getPlayerListByMatchId", {
+    method: "GET",
+    query: { matchId, status, init },
+    token,
+  });
+}

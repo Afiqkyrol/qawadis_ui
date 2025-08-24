@@ -1,17 +1,18 @@
-import { Card } from "@mantine/core";
+import { Card, Skeleton } from "@mantine/core";
 import classes from "./smartCard.module.css";
 
-export default function SmartCard({ children }) {
+export default function SmartCard({ children, isLoading, style, id = "" }) {
   return (
     <Card
+      id={id}
       className={classes.card}
-      style={{ marginBottom: "1rem" }}
+      style={{ marginBottom: "1rem", ...style }}
       shadow="sm"
-      padding="lg"
+      padding={isLoading ? 0 : "lg"}
       radius="md"
       withBorder
     >
-      {children}
+      {isLoading ? <Skeleton height={200} radius="md" animate /> : children}
     </Card>
   );
 }

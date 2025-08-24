@@ -1,7 +1,11 @@
 "use client";
 import SmartTableList from "../../smart/tableList/smartTableList";
 import { useSession } from "../../layout/innerLayout";
-import { findMatchById, getMatchListByStatus } from "./activity.service";
+import {
+  findMatchById,
+  getMatchListByStatus,
+  getPlayerListByMatchId,
+} from "./activity.service";
 import {
   IconBallFootball,
   IconCalendar,
@@ -14,12 +18,13 @@ import { useAsyncData } from "@/app/lib/hook/useAsyncData";
 import { AppConstant } from "@/app/lib/constant/AppConstant";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, RingProgress, Text } from "@mantine/core";
+import { Card, Container, Grid, RingProgress, Text } from "@mantine/core";
 import classes from "./activity.module.css";
 import SmartRingProgress from "../../smart/ringProgress/smartRingProgress";
 import SmartCard from "../../smart/card/smartCard";
 import SmartTextView from "../../smart/textView/smartTextView";
 import { DataFormatter } from "@/app/lib/util/dataFormatter";
+import { nprogress } from "@mantine/nprogress";
 
 const columnList = [
   {
@@ -42,6 +47,7 @@ const columnList = [
 export default function ActivityClient() {
   const session = useSession();
   const router = useRouter();
+  const [showDetails, setShowDetails] = useState(false);
 
   const { data: matchList, isLoading: isLoadingMatchList } = useAsyncData(
     async () => {
@@ -78,18 +84,36 @@ export default function ActivityClient() {
     { autoFetch: false, deps: [session] }
   );
 
+  const {
+    data: playerList,
+    isLoading: isLoadingPlayerList,
+    fetchData: fetchPlayerList,
+  } = useAsyncData(
+    async (matchId) => {
+      const response = await getPlayerListByMatchId(
+        matchId,
+        AppConstant.GSTS_ACTIVE,
+        true,
+        session?.apiToken
+      );
+      return response;
+    },
+    { interval: 5000, autoFetch: false, deps: [session] }
+  );
+
   const textViewData = [
     { label: "Sport", value: matchDetails?.sport ?? "-" },
     { label: "Venue", value: matchDetails?.venue ?? "-" },
     { label: "Created By", value: matchDetails?.createdBy ?? "-" },
     { label: "Date", value: matchDetails?.date ?? "-" },
-    { label: "Date", value: matchDetails?.date ?? "-" },
     { label: "Time", value: matchDetails?.time ?? "-" },
     { label: "Status", value: matchDetails?.status ?? "-" },
   ];
 
-  const onClickRow = async (matchId) => {
-    await fetchMatchDetails(matchId);
+  const onClickRow = (matchId) => {
+    setShowDetails(true);
+    fetchMatchDetails(matchId);
+    fetchPlayerList(matchId);
     router.push(`/home/activity#details`);
   };
 
@@ -105,37 +129,33 @@ export default function ActivityClient() {
         rowsPerPage={5}
         isLoading={isLoadingMatchList}
       />
-      {!isLoadingMatchDetails && matchDetails?.matchId ? (
-        <div
-          id="details"
-          style={{
-            minHeight: "82vh",
-            scrollMarginTop: "9rem",
-          }}
-        >
-          <SmartCard>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: "1rem",
-              }}
-            >
-              <SmartRingProgress
-                progressLabel="7/20"
-                nameLabel="Player"
-                currentValue={7}
-                totalValue={20}
-              />
+      {showDetails && (
+        <div id="details" style={{ height: "82vh" }}>
+          <SmartCard isLoading={isLoadingMatchDetails && isLoadingPlayerList}>
+            <Grid gutter="sm" justify="center">
+              <Grid.Col
+                style={{ justifyItems: "center" }}
+                span={{ sm: 12, base: 12, md: 4, lg: 3 }}
+              >
+                <SmartRingProgress
+                  progressLabel={`${playerList?.length ?? 0}/${
+                    matchDetails?.maxPlayer ?? 0
+                  }`}
+                  nameLabel="Player"
+                  currentValue={playerList?.length ?? 0}
+                  totalValue={matchDetails?.maxPlayer ?? 0}
+                />
+              </Grid.Col>
 
-              <div className={classes.textView} style={{ width: "100%" }}>
-                <SmartTextView data={textViewData} columns={3} />
-              </div>
-            </div>
+              <Grid.Col
+                style={{ alignContent: "center" }}
+                span={{ sm: 12, base: 12, md: 8, lg: 9 }}
+              >
+                <SmartTextView data={textViewData} />
+              </Grid.Col>
+            </Grid>
           </SmartCard>
         </div>
-      ) : (
-        <div>Loading...</div>
       )}
     </div>
   );

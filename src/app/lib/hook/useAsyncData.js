@@ -8,7 +8,7 @@ export function useAsyncData(
   const [isLoading, setIsLoading] = useState(autoFetch);
   const intervalRef = useRef(null);
   const isFetchingRef = useRef(false);
-  const hasLoadedOnceRef = useRef(false); // track first fetch
+  const hasLoadedOnceRef = useRef(false);
 
   const stopPolling = useCallback(() => {
     if (intervalRef.current) {
@@ -22,16 +22,21 @@ export function useAsyncData(
       if (isFetchingRef.current) return;
       isFetchingRef.current = true;
 
-      if (interval && !hasLoadedOnceRef.current) setIsLoading(true);
-      else if (!interval) setIsLoading(true);
+      if (!hasLoadedOnceRef.current) setIsLoading(true);
 
       try {
         const result = await fetcher(...args);
         setData(result);
         hasLoadedOnceRef.current = true;
+
+        // Start polling AFTER first fetch
+        if (interval && !intervalRef.current) {
+          intervalRef.current = setInterval(() => fetchData(...args), interval);
+        }
       } catch (err) {
         stopPolling();
         setData([]);
+        console.error(err);
       } finally {
         isFetchingRef.current = false;
         setIsLoading(false);
@@ -41,14 +46,7 @@ export function useAsyncData(
   );
 
   useEffect(() => {
-    if (!autoFetch) return;
-
-    fetchData();
-
-    if (interval) {
-      intervalRef.current = setInterval(fetchData, interval);
-    }
-
+    if (autoFetch) fetchData();
     return () => stopPolling();
   }, deps);
 

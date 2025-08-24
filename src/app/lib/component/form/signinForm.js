@@ -71,6 +71,7 @@ export default function SigninForm() {
     setLoading(true);
     nprogress.start();
 
+    nprogress.set(50);
     const result = await signIn("credentials", {
       email: form.email,
       password: form.password,
