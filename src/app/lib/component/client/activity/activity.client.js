@@ -111,8 +111,6 @@ export default function ActivityClient() {
   ];
 
   const onClickRow = (matchId) => {
-    console.log(matchId);
-
     setShowDetails(true);
     fetchMatchDetails(matchId);
     fetchPlayerList(matchId);
