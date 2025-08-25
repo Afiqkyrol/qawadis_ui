@@ -158,7 +158,7 @@ export default function ActivityClient() {
         theme="primary"
       />
       {showDetails && (
-        <div id="details" style={{ height: "82vh" }}>
+        <div id="details" style={{ minHeight: "82vh" }}>
           <SmartCard
             isLoading={isLoadingMatchDetails && isLoadingPlayerList}
             theme="secondary"
@@ -185,6 +185,15 @@ export default function ActivityClient() {
                 <SmartTextView data={textViewData} />
               </Grid.Col>
             </Grid>
+          </SmartCard>
+          <SmartCard
+            theme="secondary"
+            isLoading={isLoadingMatchDetails && isLoadingPlayerList}
+          >
+            <SmartTextView
+              data={[{ label: "Address", value: matchDetails?.address ?? "-" }]}
+              columns={1}
+            />
           </SmartCard>
           <SmartTableList
             primaryKey="userMatchId"
