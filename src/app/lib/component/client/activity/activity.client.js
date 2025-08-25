@@ -110,10 +110,16 @@ export default function ActivityClient() {
     { label: "Status", value: matchDetails?.status ?? "-" },
   ];
 
-  const onClickRow = (matchId) => {
+  const onClickRow = async (matchId) => {
+    nprogress.start();
+    nprogress.set(50);
+
     setShowDetails(true);
-    fetchMatchDetails(matchId);
-    fetchPlayerList(matchId);
+    await fetchMatchDetails(matchId);
+    await fetchPlayerList(matchId);
+
+    nprogress.complete();
+
     router.push(`/home/activity#details`);
   };
 
