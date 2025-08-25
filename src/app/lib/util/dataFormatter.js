@@ -1,19 +1,12 @@
 export const DataFormatter = {
-  /**
-   * Format a time string or Date object to 12-hour format HH:MM AM/PM
-   * @param {string|Date} time - e.g. "23:15:01.576" or Date object
-   * @returns {string} formatted time
-   */
   formatTime: (time) => {
     if (!time) return "-";
 
-    // Helper to pad numbers
     const pad = (num) => String(num).padStart(2, "0");
 
     let hours, minutes, period;
 
     if (typeof time === "string") {
-      // Handle string like "23:15:01.576"
       const [hms] = time.split("."); // remove milliseconds
       [hours, minutes] = hms.split(":").map(Number);
     } else if (time instanceof Date) {
@@ -24,8 +17,42 @@ export const DataFormatter = {
     }
 
     period = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12; // convert 0 → 12
+    hours = hours % 12 || 12;
 
     return `${pad(hours)}:${pad(minutes)} ${period}`;
+  },
+
+  dateTimeToDate: (dateTime) => {
+    if (!dateTime) return "-";
+
+    const dateObj = dateTime instanceof Date ? dateTime : new Date(dateTime);
+    if (isNaN(dateObj)) return "-";
+
+    const pad = (num) => String(num).padStart(2, "0");
+    const year = dateObj.getFullYear();
+    const month = pad(dateObj.getMonth() + 1);
+    const day = pad(dateObj.getDate());
+
+    return `${year}-${month}-${day}`;
+  },
+
+  dateTimeToTime: (dateTime) => {
+    if (!dateTime) return "-";
+
+    const dateObj = dateTime instanceof Date ? dateTime : new Date(dateTime);
+    if (isNaN(dateObj)) return "-";
+
+    return DataFormatter.formatTime(dateObj);
+  },
+
+  formatDateTime: (dateTime) => {
+    if (!dateTime) return "-";
+
+    const date = DataFormatter.dateTimeToDate(dateTime);
+    const time = DataFormatter.dateTimeToTime(dateTime);
+
+    if (date === "-" || time === "-") return "-";
+
+    return `${date} ${time}`;
   },
 };

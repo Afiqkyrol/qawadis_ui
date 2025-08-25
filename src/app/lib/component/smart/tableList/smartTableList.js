@@ -25,8 +25,10 @@ export default function SmartTableList({
   rowsPerPage = 5,
   onClickRow = () => {},
   isLoading = false,
+  theme = "primary",
 }) {
   const [activePage, setActivePage] = useState(1);
+  const [activeRow, setActiveRow] = useState(null);
 
   const extendedColumns = [{ field: "__index", name: "#" }, ...columnList];
   const start = (activePage - 1) * rowsPerPage;
@@ -35,7 +37,14 @@ export default function SmartTableList({
 
   return (
     <Card
-      style={{ marginBottom: "1rem" }}
+      style={{
+        marginBottom: "1rem",
+        ...(theme === "primary"
+          ? { backgroundColor: "white" }
+          : theme === "secondary"
+          ? { backgroundColor: "var(--mantine-color-blue-0)" }
+          : { backgroundColor: "white" }),
+      }}
       shadow="sm"
       padding="lg"
       radius="md"
@@ -45,7 +54,13 @@ export default function SmartTableList({
         <Table
           highlightOnHover
           striped="odd"
-          className={classes.table}
+          className={
+            theme === "primary"
+              ? classes.tablePrimary
+              : theme === "secondary"
+              ? classes.tableSecondary
+              : classes.tablePrimary
+          }
           withRowBorders={false}
         >
           {/* Table Header */}
@@ -54,7 +69,13 @@ export default function SmartTableList({
               {extendedColumns.map((column) => (
                 <TableTh
                   key={column.field}
-                  className={classes.headerCell}
+                  className={
+                    theme === "primary"
+                      ? classes.headerCellPrimary
+                      : theme === "secondary"
+                      ? classes.headerCellSecondary
+                      : classes.headerCellPrimary
+                  }
                   style={{
                     width: column.field === "__index" ? "60px" : "auto",
                     minWidth: column.field === "__index" ? "60px" : "120px",
@@ -87,13 +108,30 @@ export default function SmartTableList({
                 {paginatedData.map((item, rowIndex) => (
                   <TableTr
                     key={item[primaryKey] ?? start + rowIndex}
-                    className={classes.row}
+                    className={`
+                      ${
+                        theme === "primary"
+                          ? classes.rowPrimary
+                          : classes.rowSecondary
+                      }
+                      ${
+                        activeRow === item[primaryKey] && theme === "primary"
+                          ? classes.activeRowPrimary
+                          : ""
+                      }
+                      ${
+                        activeRow === item[primaryKey] && theme === "secondary"
+                          ? classes.activeRowSecondary
+                          : ""
+                      }
+                    `}
                     style={tableType === "Details" ? {} : { cursor: "default" }}
-                    onClick={
-                      tableType === "Details"
-                        ? () => onClickRow(item[primaryKey])
-                        : undefined
-                    }
+                    onClick={() => {
+                      if (tableType === "Details") {
+                        setActiveRow(item[primaryKey]); // ✅ set active row
+                        onClickRow(item[primaryKey]);
+                      }
+                    }}
                   >
                     {extendedColumns.map((column) => {
                       if (column.field === "__index") {
@@ -159,7 +197,16 @@ export default function SmartTableList({
 
                 {/* Filler empty rows */}
                 {Array.from({ length: emptyRows }).map((_, idx) => (
-                  <TableTr key={`empty-${idx}`} className={classes.emptyRow}>
+                  <TableTr
+                    key={`empty-${idx}`}
+                    className={
+                      theme === "primary"
+                        ? classes.emptyRowPrimary
+                        : theme === "secondary"
+                        ? classes.emptyRowSecondary
+                        : classes.emptyRowPrimary
+                    }
+                  >
                     {extendedColumns.map((column) => (
                       <TableTd
                         key={`${column.field}-empty-${idx}`}

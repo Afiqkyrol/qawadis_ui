@@ -1,19 +1,79 @@
 /* Style the whole table */
-.table {
+.tableSecondary {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  font-size: 15px;
+  background: var(--mantine-color-blue-0);
+  border-collapse: collapse;
+  min-width: 800px; /* ✅ ensures default minimum width */
+  table-layout: fixed; /* ✅ columns have fixed width */
+  width: 100%;
+}
+
+.tableSecondary tbody tr:nth-of-type(odd) {
+  background: var(--mantine-color-blue-1);
+}
+
+.tableSecondary tbody tr:nth-of-type(odd):hover {
+  background: var(--mantine-color-blue-2);
+}
+
+.headerCellSecondary {
+  background: var(--mantine-color-blue-1) !important; /* very light gray */
+  color: #374151 !important; /* dark gray text */
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  padding: 14px;
+  border-bottom: 3px solid var(--mantine-color-blue-light-color) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rowSecondary {
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  cursor: pointer;
+  height: 52px;
+}
+
+.rowSecondary:hover {
+  background-color: var(--mantine-color-blue-2);
+  transform: scale(1.01);
+}
+
+.emptyRowSecondary {
+  background: var(--mantine-color-blue-0) !important;
+  height: 52px;
+}
+
+.emptyRowSecondary:hover {
+  background: var(--mantine-color-blue-0) !important;
+  transform: none !important;
+  cursor: default !important;
+}
+
+.activeRowSecondary {
+  background-color: var(--mantine-color-blue-2) !important;
+  font-weight: 600;
+}
+
+/* /////////////////////////////////////////// Default CSS /////////////////////////////////////////// */
+.tablePrimary {
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   font-size: 15px;
   background: white;
   border-collapse: collapse;
-
   min-width: 800px; /* ✅ ensures default minimum width */
   table-layout: fixed; /* ✅ columns have fixed width */
   width: 100%;
 }
 
-/* Force header background */
-.headerCell {
+.headerCellPrimary {
   background: #f9fafb !important; /* very light gray */
   color: #374151 !important; /* dark gray text */
   font-weight: 600;
@@ -27,28 +87,32 @@
   text-overflow: ellipsis; /* ✅ cut long text */
 }
 
-/* Body rows */
-.row {
+.rowPrimary {
   transition: transform 0.15s ease, background-color 0.15s ease;
   cursor: pointer;
   height: 52px; /* ✅ fixed row height */
 }
 
-.row:hover {
-  background-color: var(--mantine-color-gray-0);
+.rowPrimary:hover {
+  background-color: var(--mantine-color-blue-0);
   transform: scale(1.01);
 }
 
 /* Filler empty rows */
-.emptyRow {
+.emptyRowPrimary {
   background: white !important; /* pure white */
   height: 52px; /* match row height */
 }
 
-.emptyRow:hover {
+.emptyRowPrimary:hover {
   background: white !important; /* no hover effect */
   transform: none !important;
   cursor: default !important;
+}
+
+.activeRowPrimary {
+  background-color: var(--mantine-color-blue-0) !important;
+  font-weight: 600;
 }
 
 /* Table cells */
