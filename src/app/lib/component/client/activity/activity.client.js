@@ -10,6 +10,8 @@ import {
   IconBallFootball,
   IconCalendar,
   IconMapPin,
+  IconPlayerPlay,
+  IconPlayFootball,
   IconTrophy,
   IconUser,
 } from "@tabler/icons-react";
@@ -26,7 +28,7 @@ import SmartTextView from "../../smart/textView/smartTextView";
 import { DataFormatter } from "@/app/lib/util/dataFormatter";
 import { nprogress } from "@mantine/nprogress";
 
-const columnList = [
+const columnMatchList = [
   {
     field: "sport",
     name: "Sport",
@@ -40,7 +42,21 @@ const columnList = [
     field: "createdBy",
     name: "Created By",
     icon: IconUser,
+    iconColor: "yellow",
+  },
+];
+const columnPlayerList = [
+  {
+    field: "player",
+    name: "Player",
+    icon: IconPlayFootball,
     iconColor: "violet",
+  },
+  {
+    field: "createdAt",
+    name: "Joined at",
+    icon: IconCalendar,
+    iconColor: "green",
   },
 ];
 
@@ -96,7 +112,11 @@ export default function ActivityClient() {
         true,
         session?.apiToken
       );
-      return response;
+      return response.map((userMatch) => ({
+        ...userMatch,
+        player: userMatch.player.username,
+        createdAt: DataFormatter.formatDateTime(userMatch.createdAt),
+      }));
     },
     { interval: 5000, autoFetch: false, deps: [session] }
   );
@@ -111,10 +131,11 @@ export default function ActivityClient() {
   ];
 
   const onClickRow = async (matchId) => {
+    setShowDetails(true);
+
     nprogress.start();
     nprogress.set(50);
 
-    setShowDetails(true);
     await fetchMatchDetails(matchId);
     await fetchPlayerList(matchId);
 
@@ -128,16 +149,20 @@ export default function ActivityClient() {
       <SmartTitle title="Activity" Icon={IconBallFootball} />
       <SmartTableList
         primaryKey="matchId"
-        columnList={columnList}
+        columnList={columnMatchList}
         dataList={matchList}
         tableType="Details"
         onClickRow={onClickRow}
         rowsPerPage={5}
         isLoading={isLoadingMatchList}
+        theme="primary"
       />
       {showDetails && (
         <div id="details" style={{ height: "82vh" }}>
-          <SmartCard isLoading={isLoadingMatchDetails && isLoadingPlayerList}>
+          <SmartCard
+            isLoading={isLoadingMatchDetails && isLoadingPlayerList}
+            theme="secondary"
+          >
             <Grid gutter="sm" justify="center">
               <Grid.Col
                 style={{ justifyItems: "center" }}
@@ -161,6 +186,15 @@ export default function ActivityClient() {
               </Grid.Col>
             </Grid>
           </SmartCard>
+          <SmartTableList
+            primaryKey="userMatchId"
+            columnList={columnPlayerList}
+            dataList={playerList}
+            tableType="Default"
+            rowsPerPage={5}
+            isLoading={isLoadingPlayerList}
+            theme="secondary"
+          />
         </div>
       )}
     </div>

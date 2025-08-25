@@ -1,12 +1,26 @@
 import { Card, Skeleton } from "@mantine/core";
 import classes from "./smartCard.module.css";
 
-export default function SmartCard({ children, isLoading, style, id = "" }) {
+export default function SmartCard({
+  children,
+  isLoading,
+  style,
+  id = "",
+  theme = "primary",
+}) {
   return (
     <Card
       id={id}
       className={classes.card}
-      style={{ marginBottom: "1rem", ...style }}
+      style={{
+        marginBottom: "1rem",
+        ...(theme === "primary"
+          ? { backgroundColor: "white" }
+          : theme === "secondary"
+          ? { backgroundColor: "var(--mantine-color-blue-0)" }
+          : { backgroundColor: "white" }),
+        ...style,
+      }}
       shadow="sm"
       padding={isLoading ? 0 : "lg"}
       radius="md"
