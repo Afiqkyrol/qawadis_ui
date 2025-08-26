@@ -1,4 +1,9 @@
-import { IconBallFootball, IconHome, IconUser } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconBallFootball,
+  IconHome,
+  IconUser,
+} from "@tabler/icons-react";
 import { Box } from "@mantine/core";
 import classes from "./navbar.module.css";
 import SmartUserButton from "../smart/button/smartUserButton";
@@ -46,6 +51,7 @@ export default function Navbar() {
               buttonType="cancel"
               submitHandler={submitHandler}
               text={"Sign Out"}
+              icon={<IconArrowRight size={14} />}
             />
           </SmartCenter>
         </Box>

@@ -3,7 +3,7 @@
 import SmartTextInput from "@/app/lib/component/smart/input/smart-TextInput";
 import { validateEmail } from "@/app/lib/util/validator";
 import { notificationError } from "@/app/lib/util/notification";
-import { IconAt } from "@tabler/icons-react";
+import { IconArrowRight, IconAt } from "@tabler/icons-react";
 import { useState } from "react";
 import SmartButton from "../smart/button/smartButton";
 import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
@@ -132,6 +132,7 @@ export default function SigninForm() {
             buttonType="submit"
             loading={loading}
             submitHandler={submitHandler}
+            icon={<IconArrowRight size={14} />}
             text="Sign In"
           />
           <Text ta="center" size="sm" mt="sm">

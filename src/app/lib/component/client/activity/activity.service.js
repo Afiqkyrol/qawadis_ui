@@ -23,3 +23,11 @@ export async function getPlayerListByMatchId(matchId, status, init, token) {
     token,
   });
 }
+
+export async function saveUserMatch(body, token) {
+  return await proxyRequest("match/saveUserMatch", {
+    method: "POST",
+    body: body,
+    token,
+  });
+}
