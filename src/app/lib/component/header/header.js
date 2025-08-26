@@ -4,6 +4,7 @@ import LogoCerouno from "../svg/logo";
 import SmartButton from "../smart/button/smartButton";
 import { nprogress } from "@mantine/nprogress";
 import { signOut } from "next-auth/react";
+import { IconArrowRight } from "@tabler/icons-react";
 
 export default function Header({ opened, toggle }) {
   async function submitHandler() {
@@ -24,6 +25,7 @@ export default function Header({ opened, toggle }) {
               buttonType="cancel"
               submitHandler={submitHandler}
               text={"Sign Out"}
+              icon={<IconArrowRight size={14} />}
             />
           </Box>
         </Group>

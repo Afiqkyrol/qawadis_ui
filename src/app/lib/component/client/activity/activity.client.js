@@ -5,10 +5,13 @@ import {
   findMatchById,
   getMatchListByStatus,
   getPlayerListByMatchId,
+  saveUserMatch,
 } from "./activity.service";
 import {
+  IconArrowRight,
   IconBallFootball,
   IconCalendar,
+  IconCancel,
   IconMapPin,
   IconPlayerPlay,
   IconPlayFootball,
@@ -27,6 +30,7 @@ import SmartCard from "../../smart/card/smartCard";
 import SmartTextView from "../../smart/textView/smartTextView";
 import { DataFormatter } from "@/app/lib/util/dataFormatter";
 import { nprogress } from "@mantine/nprogress";
+import SmartButton from "../../smart/button/smartButton";
 
 const columnMatchList = [
   {
@@ -64,6 +68,8 @@ export default function ActivityClient() {
   const session = useSession();
   const router = useRouter();
   const [showDetails, setShowDetails] = useState(false);
+  const [isUserJoined, setIsUserJoined] = useState(false);
+  const [joinedUserMatchId, setJoinedUserMatchId] = useState(null);
 
   const { data: matchList, isLoading: isLoadingMatchList } = useAsyncData(
     async () => {
@@ -112,6 +118,20 @@ export default function ActivityClient() {
         true,
         session?.apiToken
       );
+      if (
+        response.find(
+          (userMatch) => userMatch.player.userId === session.user.userId
+        )
+      ) {
+        setIsUserJoined(true);
+        setJoinedUserMatchId(
+          response.find(
+            (userMatch) => userMatch.player.userId === session.user.userId
+          ).userMatchId
+        );
+      } else {
+        setIsUserJoined(false);
+      }
       return response.map((userMatch) => ({
         ...userMatch,
         player: userMatch.player.username,
@@ -119,6 +139,18 @@ export default function ActivityClient() {
       }));
     },
     { interval: 5000, autoFetch: false, deps: [session] }
+  );
+
+  const {
+    data: newUserMatchId,
+    isLoading: isLoadingUpdateJoinMatch,
+    fetchData: triggerSaveUserMatch,
+  } = useAsyncData(
+    async (body) => {
+      const response = await saveUserMatch(body, session?.apiToken);
+      return response;
+    },
+    { autoFetch: false }
   );
 
   const textViewData = [
@@ -142,6 +174,40 @@ export default function ActivityClient() {
     nprogress.complete();
 
     router.push(`/home/activity#details`);
+  };
+
+  const onClickCancelOrJoinMatch = async (userMatchId, matchId) => {
+    let body = {};
+    if (isUserJoined) {
+      body = {
+        body: {
+          userMatchId: userMatchId,
+          game: {
+            matchId: matchId,
+          },
+          status: {
+            statusId: AppConstant.GSTS_CANCEL,
+          },
+        },
+      };
+    } else {
+      body = {
+        body: {
+          game: {
+            matchId: matchId,
+          },
+          status: {
+            statusId: AppConstant.GSTS_ACTIVE,
+          },
+        },
+      };
+    }
+
+    await triggerSaveUserMatch(body);
+
+    if (!isLoadingUpdateJoinMatch) {
+      await fetchPlayerList(matchId);
+    }
   };
 
   return (
@@ -204,6 +270,33 @@ export default function ActivityClient() {
             isLoading={isLoadingPlayerList}
             theme="secondary"
           />
+          {!isUserJoined && (
+            <SmartButton
+              text={"Join"}
+              buttonType={"submit"}
+              icon={<IconArrowRight size={14} />}
+              submitHandler={() =>
+                onClickCancelOrJoinMatch(null, matchDetails.matchId)
+              }
+              loading={isLoadingUpdateJoinMatch}
+            />
+          )}
+          {isUserJoined && (
+            <div style={{ textAlign: "right" }}>
+              <SmartButton
+                text={"Cancel Join"}
+                buttonType={"cancel"}
+                icon={<IconCancel size={14} />}
+                submitHandler={() =>
+                  onClickCancelOrJoinMatch(
+                    joinedUserMatchId,
+                    matchDetails.matchId
+                  )
+                }
+                loading={isLoadingUpdateJoinMatch}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>

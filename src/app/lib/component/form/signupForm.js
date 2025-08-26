@@ -2,7 +2,7 @@
 
 import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
 import SmartTextInput from "../smart/input/smart-TextInput";
-import { IconAbc, IconAt } from "@tabler/icons-react";
+import { IconAbc, IconArrowRight, IconAt } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { validateEmail } from "../../util/validator";
@@ -179,6 +179,7 @@ export default function SignupForm() {
             buttonType="submit"
             loading={loading}
             submitHandler={submitHandler}
+            icon={<IconArrowRight size={14} />}
             text="Sign Up"
           />
           <Text ta="center" size="sm" mt="sm">
