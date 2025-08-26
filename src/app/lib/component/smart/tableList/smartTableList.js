@@ -25,6 +25,7 @@ export default function SmartTableList({
   rowsPerPage = 5,
   onClickRow = () => {},
   isLoading = false,
+  noDataText = "No data available",
   theme = "primary",
 }) {
   const [activePage, setActivePage] = useState(1);
@@ -219,18 +220,43 @@ export default function SmartTableList({
                 ))}
               </>
             ) : (
-              <TableTr>
-                <TableTd
-                  colSpan={extendedColumns.length}
-                  style={{
-                    textAlign: "center",
-                    padding: "20px",
-                    color: "var(--mantine-color-gray-6)",
-                  }}
+              // ✅ No data, but still render `rowsPerPage` filler rows
+              Array.from({ length: rowsPerPage }).map((_, idx) => (
+                <TableTr
+                  key={`no-data-${idx}`}
+                  className={
+                    theme === "primary"
+                      ? classes.emptyRowPrimary
+                      : theme === "secondary"
+                      ? classes.emptyRowSecondary
+                      : classes.emptyRowPrimary
+                  }
                 >
-                  No data available
-                </TableTd>
-              </TableTr>
+                  {idx === 0 ? (
+                    // first row contains message
+                    <TableTd
+                      colSpan={extendedColumns.length}
+                      style={{
+                        textAlign: "center",
+                        padding: "24.5px",
+                        color: "var(--mantine-color-gray-6)",
+                      }}
+                    >
+                      {noDataText}
+                    </TableTd>
+                  ) : (
+                    // rest are just empty cells
+                    extendedColumns.map((column) => (
+                      <TableTd
+                        key={`${column.field}-no-data-${idx}`}
+                        className={classes.emptyCell}
+                      >
+                        &nbsp;
+                      </TableTd>
+                    ))
+                  )}
+                </TableTr>
+              ))
             )}
           </TableTbody>
         </Table>

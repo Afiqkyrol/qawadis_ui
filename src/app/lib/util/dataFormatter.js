@@ -22,27 +22,14 @@ export const DataFormatter = {
     return `${pad(hours)}:${pad(minutes)} ${period}`;
   },
 
-  dateTimeToDate: (dateTime) => {
-    if (!dateTime) return "-";
+  formatDate: (dateStr) => {
+    if (!dateStr) return "-";
 
-    const dateObj = dateTime instanceof Date ? dateTime : new Date(dateTime);
-    if (isNaN(dateObj)) return "-";
+    // Expecting yyyy-mm-dd
+    const [year, month, day] = dateStr.split("-");
+    if (!year || !month || !day) return "-";
 
-    const pad = (num) => String(num).padStart(2, "0");
-    const year = dateObj.getFullYear();
-    const month = pad(dateObj.getMonth() + 1);
-    const day = pad(dateObj.getDate());
-
-    return `${year}-${month}-${day}`;
-  },
-
-  dateTimeToTime: (dateTime) => {
-    if (!dateTime) return "-";
-
-    const dateObj = dateTime instanceof Date ? dateTime : new Date(dateTime);
-    if (isNaN(dateObj)) return "-";
-
-    return DataFormatter.formatTime(dateObj);
+    return `${day}-${month}-${year}`;
   },
 
   formatDateTime: (dateTime) => {
@@ -54,5 +41,28 @@ export const DataFormatter = {
     if (date === "-" || time === "-") return "-";
 
     return `${date} ${time}`;
+  },
+
+  dateTimeToDate: (dateTime) => {
+    if (!dateTime) return "-";
+
+    const dateObj = dateTime instanceof Date ? dateTime : new Date(dateTime);
+    if (isNaN(dateObj)) return "-";
+
+    const pad = (num) => String(num).padStart(2, "0");
+    const year = dateObj.getFullYear();
+    const month = pad(dateObj.getMonth() + 1);
+    const day = pad(dateObj.getDate());
+
+    return `${day}-${month}-${year}`;
+  },
+
+  dateTimeToTime: (dateTime) => {
+    if (!dateTime) return "-";
+
+    const dateObj = dateTime instanceof Date ? dateTime : new Date(dateTime);
+    if (isNaN(dateObj)) return "-";
+
+    return DataFormatter.formatTime(dateObj);
   },
 };
