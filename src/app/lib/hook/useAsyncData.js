@@ -29,7 +29,7 @@ export function useAsyncData(
       if (isFetchingRef.current) return;
       isFetchingRef.current = true;
 
-      if (!hasLoadedOnceRef.current) setIsLoading(true);
+      if (!hasLoadedOnceRef.current || !interval) setIsLoading(true);
 
       try {
         const result = await fetcher(...latestArgsRef.current);

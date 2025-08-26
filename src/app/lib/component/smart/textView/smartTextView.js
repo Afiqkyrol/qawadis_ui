@@ -1,6 +1,12 @@
 import { Badge, Grid, Stack, Text } from "@mantine/core";
 
-export default function SmartTextView({ data, columns }) {
+export default function SmartTextView({
+  data,
+  columns,
+  ellipsis = true,
+  overflowHidden = true,
+  nowrap = true,
+}) {
   return (
     <Grid justify="flex-start" gutter="md">
       {data.map((item, index) => (
@@ -14,10 +20,10 @@ export default function SmartTextView({ data, columns }) {
               style={{
                 textAlign: "left",
                 color: "var(--mantine-color-blue-6)",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+                whiteSpace: nowrap ? "nowrap" : "normal",
                 cursor: "default",
+                overflow: overflowHidden ? "hidden" : "auto",
+                textOverflow: ellipsis ? "ellipsis" : "",
               }}
               title={item.label}
             >
@@ -37,10 +43,10 @@ export default function SmartTextView({ data, columns }) {
                 fw={500}
                 style={{
                   textAlign: "left",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
                   cursor: "help",
+                  whiteSpace: nowrap ? "nowrap" : "normal",
+                  overflow: overflowHidden ? "hidden" : "auto",
+                  textOverflow: ellipsis ? "ellipsis" : "",
                 }}
                 title={item.value}
               >

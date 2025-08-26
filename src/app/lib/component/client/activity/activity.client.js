@@ -11,20 +11,18 @@ import {
   IconArrowRight,
   IconBallFootball,
   IconCalendar,
-  IconCancel,
   IconMapPin,
-  IconPlayerPlay,
   IconPlayFootball,
   IconTrophy,
   IconUser,
+  IconX,
 } from "@tabler/icons-react";
 import SmartTitle from "../../smart/title/smartTitle";
 import { useAsyncData } from "@/app/lib/hook/useAsyncData";
 import { AppConstant } from "@/app/lib/constant/AppConstant";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Container, Grid, RingProgress, Text } from "@mantine/core";
-import classes from "./activity.module.css";
+import { Grid } from "@mantine/core";
 import SmartRingProgress from "../../smart/ringProgress/smartRingProgress";
 import SmartCard from "../../smart/card/smartCard";
 import SmartTextView from "../../smart/textView/smartTextView";
@@ -99,6 +97,7 @@ export default function ActivityClient() {
         ...response,
         sport: response.sport.description,
         status: response.status.description,
+        date: DataFormatter.formatDate(response.date),
         time: DataFormatter.formatTime(response.time),
         createdBy: response.createdBy.username,
       };
@@ -153,15 +152,6 @@ export default function ActivityClient() {
     { autoFetch: false }
   );
 
-  const textViewData = [
-    { label: "Sport", value: matchDetails?.sport ?? "-" },
-    { label: "Venue", value: matchDetails?.venue ?? "-" },
-    { label: "Created By", value: matchDetails?.createdBy ?? "-" },
-    { label: "Date", value: matchDetails?.date ?? "-" },
-    { label: "Time", value: matchDetails?.time ?? "-" },
-    { label: "Status", value: matchDetails?.status ?? "-" },
-  ];
-
   const onClickRow = async (matchId) => {
     setShowDetails(true);
 
@@ -210,6 +200,15 @@ export default function ActivityClient() {
     }
   };
 
+  const textViewData = [
+    { label: "Sport", value: matchDetails?.sport ?? "-" },
+    { label: "Venue", value: matchDetails?.venue ?? "-" },
+    { label: "Created By", value: matchDetails?.createdBy ?? "-" },
+    { label: "Date", value: matchDetails?.date ?? "-" },
+    { label: "Time", value: matchDetails?.time ?? "-" },
+    { label: "Status", value: matchDetails?.status ?? "-" },
+  ];
+
   return (
     <div>
       <SmartTitle title="Activity" Icon={IconBallFootball} />
@@ -221,12 +220,12 @@ export default function ActivityClient() {
         onClickRow={onClickRow}
         rowsPerPage={5}
         isLoading={isLoadingMatchList}
-        theme="primary"
+        noDataText="No matches available"
       />
       {showDetails && (
         <div id="details" style={{ minHeight: "82vh" }}>
           <SmartCard
-            isLoading={isLoadingMatchDetails && isLoadingPlayerList}
+            isLoading={isLoadingMatchDetails || isLoadingPlayerList}
             theme="secondary"
           >
             <Grid gutter="sm" justify="center">
@@ -248,16 +247,17 @@ export default function ActivityClient() {
                 style={{ alignContent: "center" }}
                 span={{ sm: 12, base: 12, md: 8, lg: 9 }}
               >
-                <SmartTextView data={textViewData} />
+                <SmartTextView data={textViewData} ellipsis={true} />
               </Grid.Col>
             </Grid>
           </SmartCard>
           <SmartCard
             theme="secondary"
-            isLoading={isLoadingMatchDetails && isLoadingPlayerList}
+            isLoading={isLoadingMatchDetails || isLoadingPlayerList}
           >
             <SmartTextView
               data={[{ label: "Address", value: matchDetails?.address ?? "-" }]}
+              nowrap={false}
               columns={1}
             />
           </SmartCard>
@@ -267,26 +267,28 @@ export default function ActivityClient() {
             dataList={playerList}
             tableType="Default"
             rowsPerPage={5}
-            isLoading={isLoadingPlayerList}
-            theme="secondary"
+            isLoading={isLoadingMatchDetails || isLoadingPlayerList}
+            noDataText="No players join yet..."
           />
-          {!isUserJoined && (
-            <SmartButton
-              text={"Join"}
-              buttonType={"submit"}
-              icon={<IconArrowRight size={14} />}
-              submitHandler={() =>
-                onClickCancelOrJoinMatch(null, matchDetails.matchId)
-              }
-              loading={isLoadingUpdateJoinMatch}
-            />
+          {!isUserJoined && !isLoadingMatchDetails && !isLoadingPlayerList && (
+            <div style={{ textAlign: "right" }}>
+              <SmartButton
+                text={"Join"}
+                buttonType={"submit"}
+                icon={<IconArrowRight size={14} />}
+                submitHandler={() =>
+                  onClickCancelOrJoinMatch(null, matchDetails.matchId)
+                }
+                loading={isLoadingUpdateJoinMatch}
+              />
+            </div>
           )}
-          {isUserJoined && (
+          {isUserJoined && !isLoadingMatchDetails && !isLoadingPlayerList && (
             <div style={{ textAlign: "right" }}>
               <SmartButton
                 text={"Cancel Join"}
                 buttonType={"cancel"}
-                icon={<IconCancel size={14} />}
+                icon={<IconX size={14} />}
                 submitHandler={() =>
                   onClickCancelOrJoinMatch(
                     joinedUserMatchId,
