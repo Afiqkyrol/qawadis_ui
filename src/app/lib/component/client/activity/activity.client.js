@@ -39,7 +39,7 @@ const columnMatchList = [
   },
   { field: "date", name: "Date", icon: IconCalendar, iconColor: "green" },
   { field: "venue", name: "Venue", icon: IconMapPin, iconColor: "red" },
-  { field: "status", name: "Status" },
+  { field: "statusDesc", name: "Status" },
   {
     field: "createdBy",
     name: "Created By",
@@ -60,7 +60,13 @@ const columnPlayerList = [
     icon: IconCalendar,
     iconColor: "green",
   },
+  {
+    field: "statusDesc",
+    name: "Status",
+  },
 ];
+
+const safe = (val) => val ?? "-";
 
 export default function ActivityClient() {
   const session = useSession();
@@ -79,7 +85,7 @@ export default function ActivityClient() {
       return response.map((match) => ({
         ...match,
         sport: match.sport.description,
-        status: match.status.description,
+        statusDesc: match.status.description,
         createdBy: match.createdBy.username,
       }));
     },
@@ -96,7 +102,7 @@ export default function ActivityClient() {
       return {
         ...response,
         sport: response.sport.description,
-        status: response.status.description,
+        statusDesc: response.status.description,
         date: DataFormatter.formatDate(response.date),
         time: DataFormatter.formatTime(response.time),
         createdBy: response.createdBy.username,
@@ -117,23 +123,17 @@ export default function ActivityClient() {
         true,
         session?.apiToken
       );
-      if (
-        response.find(
-          (userMatch) => userMatch.player.userId === session.user.userId
-        )
-      ) {
-        setIsUserJoined(true);
-        setJoinedUserMatchId(
-          response.find(
-            (userMatch) => userMatch.player.userId === session.user.userId
-          ).userMatchId
-        );
-      } else {
-        setIsUserJoined(false);
-      }
+      const um = response.find(
+        (um) => um.player.userId === session.user.userId
+      );
+
+      setJoinedUserMatchId(um ? um.userMatchId : null);
+      setIsUserJoined(um?.status.statusId === AppConstant.GSTS_ACTIVE);
+
       return response.map((userMatch) => ({
         ...userMatch,
         player: userMatch.player.username,
+        statusDesc: userMatch.status.description,
         createdAt: DataFormatter.formatDateTime(userMatch.createdAt),
       }));
     },
@@ -154,44 +154,35 @@ export default function ActivityClient() {
 
   const onClickRow = async (matchId) => {
     setShowDetails(true);
-
     nprogress.start();
     nprogress.set(50);
 
-    await fetchMatchDetails(matchId);
-    await fetchPlayerList(matchId);
+    await Promise.all([fetchMatchDetails(matchId), fetchPlayerList(matchId)]);
 
     nprogress.complete();
-
     router.push(`/home/activity#details`);
   };
 
   const onClickCancelOrJoinMatch = async (userMatchId, matchId) => {
-    let body = {};
+    let statusId;
+
     if (isUserJoined) {
-      body = {
-        body: {
-          userMatchId: userMatchId,
-          game: {
-            matchId: matchId,
-          },
-          status: {
-            statusId: AppConstant.GSTS_CANCEL,
-          },
-        },
-      };
+      statusId = AppConstant.GSTS_CANCEL;
     } else {
-      body = {
-        body: {
-          game: {
-            matchId: matchId,
-          },
-          status: {
-            statusId: AppConstant.GSTS_ACTIVE,
-          },
-        },
-      };
+      statusId = AppConstant.GSTS_ACTIVE;
     }
+
+    const body = {
+      body: {
+        userMatchId: userMatchId,
+        game: {
+          matchId: matchId,
+        },
+        status: {
+          statusId: statusId,
+        },
+      },
+    };
 
     await triggerSaveUserMatch(body);
 
@@ -201,12 +192,12 @@ export default function ActivityClient() {
   };
 
   const textViewData = [
-    { label: "Sport", value: matchDetails?.sport ?? "-" },
-    { label: "Venue", value: matchDetails?.venue ?? "-" },
-    { label: "Created By", value: matchDetails?.createdBy ?? "-" },
-    { label: "Date", value: matchDetails?.date ?? "-" },
-    { label: "Time", value: matchDetails?.time ?? "-" },
-    { label: "Status", value: matchDetails?.status ?? "-" },
+    { label: "Sport", value: safe(matchDetails?.sport) },
+    { label: "Venue", value: safe(matchDetails?.venue) },
+    { label: "Created By", value: safe(matchDetails?.createdBy) },
+    { label: "Date", value: safe(matchDetails?.date) },
+    { label: "Time", value: safe(matchDetails?.time) },
+    { label: "Status", value: safe(matchDetails?.statusDesc) },
   ];
 
   return (
@@ -234,11 +225,17 @@ export default function ActivityClient() {
                 span={{ sm: 12, base: 12, md: 4, lg: 3 }}
               >
                 <SmartRingProgress
-                  progressLabel={`${playerList?.length ?? 0}/${
-                    matchDetails?.maxPlayer ?? 0
-                  }`}
+                  progressLabel={`${
+                    playerList?.filter(
+                      (p) => p.status.statusId === AppConstant.GSTS_ACTIVE
+                    ).length ?? 0
+                  }/${matchDetails?.maxPlayer ?? 0}`}
                   nameLabel="Player"
-                  currentValue={playerList?.length ?? 0}
+                  currentValue={
+                    playerList?.filter(
+                      (p) => p.status.statusId === AppConstant.GSTS_ACTIVE
+                    ).length ?? 0
+                  }
                   totalValue={matchDetails?.maxPlayer ?? 0}
                 />
               </Grid.Col>
@@ -270,25 +267,18 @@ export default function ActivityClient() {
             isLoading={isLoadingMatchDetails || isLoadingPlayerList}
             noDataText="No players join yet..."
           />
-          {!isUserJoined && !isLoadingMatchDetails && !isLoadingPlayerList && (
+          {!isLoadingMatchDetails && !isLoadingPlayerList && (
             <div style={{ textAlign: "right" }}>
               <SmartButton
-                text={"Join"}
-                buttonType={"submit"}
-                icon={<IconArrowRight size={14} />}
-                submitHandler={() =>
-                  onClickCancelOrJoinMatch(null, matchDetails.matchId)
+                text={isUserJoined ? "Cancel Join" : "Join"}
+                buttonType={isUserJoined ? "cancel" : "submit"}
+                icon={
+                  isUserJoined ? (
+                    <IconX size={14} />
+                  ) : (
+                    <IconArrowRight size={14} />
+                  )
                 }
-                loading={isLoadingUpdateJoinMatch}
-              />
-            </div>
-          )}
-          {isUserJoined && !isLoadingMatchDetails && !isLoadingPlayerList && (
-            <div style={{ textAlign: "right" }}>
-              <SmartButton
-                text={"Cancel Join"}
-                buttonType={"cancel"}
-                icon={<IconX size={14} />}
                 submitHandler={() =>
                   onClickCancelOrJoinMatch(
                     joinedUserMatchId,

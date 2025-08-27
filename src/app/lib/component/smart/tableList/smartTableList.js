@@ -154,7 +154,7 @@ export default function SmartTableList({
                       const value = item[column.field];
                       const Icon = column.icon;
 
-                      if (column.field === "status") {
+                      if (column.field === "statusDesc") {
                         return (
                           <TableTd key={column.field} className={classes.cell}>
                             <Badge
