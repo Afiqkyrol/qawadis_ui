@@ -43,6 +43,5 @@ export async function proxyRequest(
     return result.data || [];
   } catch (err) {
     notificationError("An error occurred!", err.message);
-    throw err;
   }
 }

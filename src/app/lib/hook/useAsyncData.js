@@ -43,7 +43,6 @@ export function useAsyncData(
           }, interval);
         }
       } catch (err) {
-        console.error(err);
         setError(err);
       } finally {
         isFetchingRef.current = false;
