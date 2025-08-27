@@ -29,6 +29,8 @@ import SmartTextView from "../../smart/textView/smartTextView";
 import { DataFormatter } from "@/app/lib/util/dataFormatter";
 import { nprogress } from "@mantine/nprogress";
 import SmartButton from "../../smart/button/smartButton";
+import SmartModal from "../../smart/modal/smartModal";
+import { useDisclosure } from "@mantine/hooks";
 
 const columnMatchList = [
   {
@@ -74,6 +76,8 @@ export default function ActivityClient() {
   const [showDetails, setShowDetails] = useState(false);
   const [isUserJoined, setIsUserJoined] = useState(false);
   const [joinedUserMatchId, setJoinedUserMatchId] = useState(null);
+  const [openedModal, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
 
   const { data: matchList, isLoading: isLoadingMatchList } = useAsyncData(
     async () => {
@@ -280,18 +284,27 @@ export default function ActivityClient() {
                     <IconArrowRight size={14} />
                   )
                 }
-                submitHandler={() =>
-                  onClickCancelOrJoinMatch(
-                    joinedUserMatchId,
-                    matchDetails.matchId
-                  )
-                }
+                submitHandler={openModal}
                 loading={isLoadingUpdateJoinMatch}
               />
             </div>
           )}
         </div>
       )}
+      <SmartModal
+        isOpen={openedModal}
+        onClose={closeModal}
+        type="confirmation"
+        title="Confirmation"
+        description="Are you sure you want to proceed?"
+        actionButtonColor={
+          isUserJoined ? "var(--mantine-color-red-5)" : undefined
+        }
+        confirmAction={() => {
+          onClickCancelOrJoinMatch(joinedUserMatchId, matchDetails.matchId);
+          closeModal();
+        }}
+      />
     </div>
   );
 }
