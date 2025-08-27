@@ -251,6 +251,7 @@ export default function ActivityClient() {
           <SmartCard
             theme="secondary"
             isLoading={isLoadingMatchDetails || isLoadingPlayerList}
+            smallSkeleton={true}
           >
             <SmartTextView
               data={[{ label: "Address", value: matchDetails?.address ?? "-" }]}

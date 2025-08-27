@@ -7,6 +7,7 @@ export default function SmartCard({
   style,
   id = "",
   theme = "primary",
+  smallSkeleton = false,
 }) {
   return (
     <Card
@@ -26,7 +27,11 @@ export default function SmartCard({
       radius="md"
       withBorder
     >
-      {isLoading ? <Skeleton height={200} radius="md" animate /> : children}
+      {isLoading ? (
+        <Skeleton height={smallSkeleton ? 80 : 200} radius="md" animate />
+      ) : (
+        children
+      )}
     </Card>
   );
 }
