@@ -44,6 +44,8 @@ export function useAsyncData(
         }
       } catch (err) {
         setError(err);
+        stopPolling();
+        setData([]);
       } finally {
         isFetchingRef.current = false;
         setIsLoading(false);
