@@ -31,6 +31,8 @@ import { nprogress } from "@mantine/nprogress";
 import SmartButton from "../../smart/button/smartButton";
 import SmartModal from "../../smart/modal/smartModal";
 import { useDisclosure } from "@mantine/hooks";
+import SmartTab from "../../smart/tab/smartTab";
+import SmartStatusBadge from "../../smart/smartStatusBadge/smartStatusBadge";
 
 const columnMatchList = [
   {
@@ -49,7 +51,8 @@ const columnMatchList = [
     iconColor: "yellow",
   },
 ];
-const columnPlayerList = [
+
+const columnActivePlayerList = [
   {
     field: "player",
     name: "Player",
@@ -59,6 +62,25 @@ const columnPlayerList = [
   {
     field: "createdAt",
     name: "Joined at",
+    icon: IconCalendar,
+    iconColor: "green",
+  },
+  {
+    field: "statusDesc",
+    name: "Status",
+  },
+];
+
+const columnCanceledPlayerList = [
+  {
+    field: "player",
+    name: "Player",
+    icon: IconPlayFootball,
+    iconColor: "violet",
+  },
+  {
+    field: "createdAt",
+    name: "Canceled at",
     icon: IconCalendar,
     iconColor: "green",
   },
@@ -138,7 +160,9 @@ export default function ActivityClient() {
         ...userMatch,
         player: userMatch.player.username,
         statusDesc: userMatch.status.description,
-        createdAt: DataFormatter.formatDateTime(userMatch.createdAt),
+        createdAt: DataFormatter.formatDateTime(
+          userMatch.maintainAt ? userMatch.maintainAt : userMatch.createdAt
+        ),
       }));
     },
     { interval: 5000, autoFetch: false, deps: [session] }
@@ -195,6 +219,51 @@ export default function ActivityClient() {
     }
   };
 
+  const activeStatusPlayerTab = () => {
+    return (
+      <SmartTableList
+        primaryKey="userMatchId"
+        columnList={columnActivePlayerList}
+        dataList={playerList.filter(
+          (p) => p.status.statusId === AppConstant.GSTS_ACTIVE
+        )}
+        tableType="Default"
+        rowsPerPage={5}
+        isLoading={isLoadingMatchDetails || isLoadingPlayerList}
+        noDataText="No players join yet..."
+      />
+    );
+  };
+
+  const canceledStatusPlayerTab = () => {
+    return (
+      <SmartTableList
+        primaryKey="userMatchId"
+        columnList={columnCanceledPlayerList}
+        dataList={playerList.filter(
+          (p) => p.status.statusId === AppConstant.GSTS_CANCEL
+        )}
+        tableType="Default"
+        rowsPerPage={5}
+        isLoading={isLoadingMatchDetails || isLoadingPlayerList}
+        noDataText="No Canceled Players"
+      />
+    );
+  };
+
+  const tabs = [
+    {
+      value: "active",
+      label: <SmartStatusBadge value="Active" cursor="pointer" />,
+      content: activeStatusPlayerTab(),
+    },
+    {
+      value: "cancel",
+      label: <SmartStatusBadge value="Canceled" cursor="pointer" />,
+      content: canceledStatusPlayerTab(),
+    },
+  ];
+
   const textViewData = [
     { label: "Sport", value: safe(matchDetails?.sport) },
     { label: "Venue", value: safe(matchDetails?.venue) },
@@ -218,7 +287,7 @@ export default function ActivityClient() {
         noDataText="No matches available"
       />
       {showDetails && (
-        <div id="details" style={{ minHeight: "82vh" }}>
+        <div id="details" style={{ scrollMarginTop: "140px" }}>
           <SmartCard
             isLoading={isLoadingMatchDetails || isLoadingPlayerList}
             theme="secondary"
@@ -263,14 +332,10 @@ export default function ActivityClient() {
               columns={1}
             />
           </SmartCard>
-          <SmartTableList
-            primaryKey="userMatchId"
-            columnList={columnPlayerList}
-            dataList={playerList}
-            tableType="Default"
-            rowsPerPage={5}
+          <SmartTab
+            tabs={tabs}
+            defaultValue="active"
             isLoading={isLoadingMatchDetails || isLoadingPlayerList}
-            noDataText="No players join yet..."
           />
           {!isLoadingMatchDetails && !isLoadingPlayerList && (
             <div style={{ textAlign: "right" }}>
