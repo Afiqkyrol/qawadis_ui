@@ -3,6 +3,7 @@ import SmartTableList from "../../smart/tableList/smartTableList";
 import { useSession } from "../../layout/innerLayout";
 import {
   findMatchById,
+  getLookupData,
   getMatchListByStatus,
   getPlayerListByMatchId,
   saveUserMatch,
@@ -33,6 +34,8 @@ import SmartModal from "../../smart/modal/smartModal";
 import { useDisclosure } from "@mantine/hooks";
 import SmartTab from "../../smart/tab/smartTab";
 import SmartStatusBadge from "../../smart/smartStatusBadge/smartStatusBadge";
+import SearchMatchForm from "../../form/activity/searchMatchForm";
+import { useLookupData } from "@/app/lib/hook/useLookupData";
 
 const columnMatchList = [
   {
@@ -101,27 +104,45 @@ export default function ActivityClient() {
   const [openedModal, { open: openModal, close: closeModal }] =
     useDisclosure(false);
 
-  const { data: matchList, isLoading: isLoadingMatchList } = useAsyncData(
-    async () => {
+  const { data: sportList, isLoading: isLoadingSportList } = useLookupData(
+    AppConstant.LT_SPORT_TABLE,
+    session?.apiToken
+  );
+
+  const { data: statusList, isLoading: isLoadingStatusList } = useLookupData(
+    AppConstant.LT_GENERAL_STATUS_TABLE,
+    session?.apiToken
+  );
+
+  const {
+    data: matchList,
+    isLoading: isLoadingMatchList,
+    request: fetchMatchList,
+  } = useAsyncData(
+    async (form) => {
       const response = await getMatchListByStatus(
-        AppConstant.GSTS_ACTIVE,
+        form?.sportId,
+        form?.venue,
+        form?.date,
+        form?.statusId,
         true,
         session?.apiToken
       );
       return response.map((match) => ({
         ...match,
         sport: match.sport.description,
+        date: DataFormatter.formatDate(match.date),
         statusDesc: match.status.description,
         createdBy: match.createdBy.username,
       }));
     },
-    { interval: 5000, autoFetch: true, deps: [session] }
+    { interval: 5000, autoFetch: false, deps: [session] }
   );
 
   const {
     data: matchDetails,
     isLoading: isLoadingMatchDetails,
-    fetchData: fetchMatchDetails,
+    request: fetchMatchDetails,
   } = useAsyncData(
     async (matchId) => {
       const response = await findMatchById(matchId, true, session?.apiToken);
@@ -140,7 +161,7 @@ export default function ActivityClient() {
   const {
     data: playerList,
     isLoading: isLoadingPlayerList,
-    fetchData: fetchPlayerList,
+    request: fetchPlayerList,
   } = useAsyncData(
     async (matchId) => {
       const response = await getPlayerListByMatchId(
@@ -171,7 +192,7 @@ export default function ActivityClient() {
   const {
     data: newUserMatchId,
     isLoading: isLoadingUpdateJoinMatch,
-    fetchData: triggerSaveUserMatch,
+    request: triggerSaveUserMatch,
   } = useAsyncData(
     async (body) => {
       const response = await saveUserMatch(body, session?.apiToken);
@@ -274,8 +295,15 @@ export default function ActivityClient() {
   ];
 
   return (
-    <div>
+    <>
       <SmartTitle title="Activity" Icon={IconBallFootball} />
+      <SearchMatchForm
+        request={fetchMatchList}
+        sportList={sportList}
+        statusList={statusList}
+        isLoadingRequest={isLoadingMatchList}
+        setShowDetails={setShowDetails}
+      />
       <SmartTableList
         primaryKey="matchId"
         columnList={columnMatchList}
@@ -370,6 +398,6 @@ export default function ActivityClient() {
           closeModal();
         }}
       />
-    </div>
+    </>
   );
 }

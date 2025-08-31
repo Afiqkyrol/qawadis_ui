@@ -12,6 +12,7 @@ export function useAsyncData(
   const isFetchingRef = useRef(false);
   const hasLoadedOnceRef = useRef(false);
   const latestArgsRef = useRef([]);
+  const prevArgsRef = useRef([]);
 
   const stopPolling = useCallback(() => {
     if (intervalRef.current) {
@@ -20,16 +21,22 @@ export function useAsyncData(
     }
   }, []);
 
-  const fetchData = useCallback(
+  const request = useCallback(
     async (...args) => {
       if (args.length > 0) {
         latestArgsRef.current = args;
       }
 
+      const argsChanged =
+        JSON.stringify(prevArgsRef.current) !==
+        JSON.stringify(latestArgsRef.current);
+      prevArgsRef.current = [...latestArgsRef.current];
+
       if (isFetchingRef.current) return;
       isFetchingRef.current = true;
 
-      if (!hasLoadedOnceRef.current || !interval) setIsLoading(true);
+      if (!hasLoadedOnceRef.current || !interval || argsChanged)
+        setIsLoading(true);
 
       try {
         const result = await fetcher(...latestArgsRef.current);
@@ -39,7 +46,7 @@ export function useAsyncData(
 
         if (interval && !intervalRef.current) {
           intervalRef.current = setInterval(() => {
-            fetchData(...latestArgsRef.current);
+            request(...latestArgsRef.current);
           }, interval);
         }
       } catch (err) {
@@ -56,11 +63,11 @@ export function useAsyncData(
 
   useEffect(() => {
     if (autoFetch) {
-      fetchData();
+      request();
     }
 
     return () => stopPolling();
   }, deps);
 
-  return { data, isLoading, error, fetchData, stopPolling };
+  return { data, isLoading, error, request, stopPolling };
 }

@@ -57,8 +57,6 @@ export const authOptions = {
             },
           });
           user = await user.json();
-          console.log(user);
-
           return {
             user: user.data,
             apiToken: token,
@@ -72,7 +70,7 @@ export const authOptions = {
   ],
   session: {
     strategy: "jwt",
-    maxAge: 3 * 24 * 60 * 60,
+    maxAge: 24 * 60 * 60,
     updateAge: 24 * 60 * 60,
   },
   secret: NEXTAUTH_SECRET_KEY,
