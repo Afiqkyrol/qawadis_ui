@@ -1,9 +1,25 @@
+import { AppConstant } from "@/app/lib/constant/AppConstant";
 import { proxyRequest } from "@/app/lib/util/proxyRequest";
 
-export async function getMatchListByStatus(status, init, token) {
-  return await proxyRequest("match/getMatchListByStatus", {
+export async function getLookupData(init, token) {
+  return await proxyRequest("lookups/getLookupData", {
     method: "GET",
-    query: { status, init },
+    query: { table: AppConstant.LT_SPORT_TABLE, active: true, init },
+    token,
+  });
+}
+
+export async function getMatchListByStatus(
+  sportId,
+  venue,
+  date,
+  statusId,
+  init,
+  token
+) {
+  return await proxyRequest("match/getMatchList", {
+    method: "GET",
+    query: { sportId, venue, date, statusId, init },
     token,
   });
 }

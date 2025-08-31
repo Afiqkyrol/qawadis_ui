@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
-import SmartTextInput from "../smart/input/smart-TextInput";
+import SmartTextInput from "../smart/textInput/smart-TextInput";
 import { IconAbc, IconArrowRight, IconAt } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

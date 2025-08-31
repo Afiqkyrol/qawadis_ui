@@ -1,6 +1,6 @@
 "use client";
 
-import SmartTextInput from "@/app/lib/component/smart/input/smart-TextInput";
+import SmartTextInput from "@/app/lib/component/smart/textInput/smart-TextInput";
 import { validateEmail } from "@/app/lib/util/validator";
 import { notificationError } from "@/app/lib/util/notification";
 import { IconArrowRight, IconAt } from "@tabler/icons-react";
