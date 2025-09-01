@@ -14,7 +14,7 @@ import {
   Card,
   Skeleton,
 } from "@mantine/core";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import classes from "./smartTableList.module.css";
 
 export default function SmartTableList({
@@ -32,6 +32,14 @@ export default function SmartTableList({
   const [activeRow, setActiveRow] = useState(null);
 
   const extendedColumns = [{ field: "__index", name: "#" }, ...columnList];
+  const totalPages = Math.max(1, Math.ceil(dataList.length / rowsPerPage));
+
+  useEffect(() => {
+    if (activePage > totalPages) {
+      setActivePage(1);
+    }
+  }, [dataList, rowsPerPage, activePage, totalPages]);
+
   const start = (activePage - 1) * rowsPerPage;
   const paginatedData = dataList.slice(start, start + rowsPerPage);
   const emptyRows = rowsPerPage - paginatedData.length;
@@ -267,7 +275,7 @@ export default function SmartTableList({
           <Skeleton height={21} width={200} radius="md" />
         ) : dataList.length > 0 ? (
           <Pagination
-            total={Math.ceil(dataList.length / rowsPerPage)}
+            total={totalPages}
             value={activePage}
             onChange={setActivePage}
             size="xs"

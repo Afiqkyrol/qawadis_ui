@@ -7,6 +7,7 @@ import SmartDatePicker from "../../smart/datePicker/smartDatePicker";
 import SmartButton from "../../smart/button/smartButton";
 import SmartCard from "../../smart/card/smartCard";
 import { Grid } from "@mantine/core";
+import SmartTimePicker from "../../smart/timePicker/smartTimePicker";
 
 export default function SearchMatchForm({
   sportList,
@@ -83,15 +84,6 @@ export default function SearchMatchForm({
             style={{ marginBottom: "1rem" }}
             valueValidator={() => {}}
           />
-        </Grid.Col>
-        <Grid.Col
-          style={{
-            justifyItems: "stretch",
-            paddingTop: "0",
-            paddingBottom: "0",
-          }}
-          span={{ sm: 12, base: 12, md: 6, lg: 6 }}
-        >
           <SmartTextInput
             controlName="venue"
             label="Venue"
@@ -106,6 +98,15 @@ export default function SearchMatchForm({
             style={{ marginBottom: "1rem" }}
             valueValidator={() => {}}
           />
+        </Grid.Col>
+        <Grid.Col
+          style={{
+            justifyItems: "stretch",
+            paddingTop: "0",
+            paddingBottom: "0",
+          }}
+          span={{ sm: 12, base: 12, md: 6, lg: 6 }}
+        >
           <SmartDatePicker
             controlName="date"
             placeholder="Select date"
@@ -114,6 +115,15 @@ export default function SearchMatchForm({
             onChange={inputHandler}
             error={errors.date}
             style={{ marginBottom: "1rem" }}
+          />
+          <SmartTimePicker
+            controlName="time"
+            label="Time"
+            value={form.time}
+            onChange={inputHandler}
+            error={errors.time}
+            style={{ marginBottom: "1rem" }}
+            withDropdown
           />
         </Grid.Col>
         <Grid.Col
