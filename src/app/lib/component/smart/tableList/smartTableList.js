@@ -14,7 +14,7 @@ import {
   Card,
   Skeleton,
 } from "@mantine/core";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import classes from "./smartTableList.module.css";
 
 export default function SmartTableList({
@@ -32,6 +32,14 @@ export default function SmartTableList({
   const [activeRow, setActiveRow] = useState(null);
 
   const extendedColumns = [{ field: "__index", name: "#" }, ...columnList];
+  const totalPages = Math.max(1, Math.ceil(dataList.length / rowsPerPage));
+
+  useEffect(() => {
+    if (activePage > totalPages) {
+      setActivePage(1);
+    }
+  }, [dataList, rowsPerPage, activePage, totalPages]);
+
   const start = (activePage - 1) * rowsPerPage;
   const paginatedData = dataList.slice(start, start + rowsPerPage);
   const emptyRows = rowsPerPage - paginatedData.length;
@@ -64,7 +72,6 @@ export default function SmartTableList({
           }
           withRowBorders={false}
         >
-          {/* Table Header */}
           <TableThead className={classes.headerRow}>
             <TableTr>
               {extendedColumns.map((column) => (
@@ -88,10 +95,8 @@ export default function SmartTableList({
             </TableTr>
           </TableThead>
 
-          {/* Table Body */}
           <TableTbody>
             {isLoading ? (
-              // ✅ Show skeleton rows
               Array.from({ length: rowsPerPage }).map((_, rowIdx) => (
                 <TableTr key={`skeleton-row-${rowIdx}`}>
                   {extendedColumns.map((column, colIdx) => (
@@ -129,7 +134,7 @@ export default function SmartTableList({
                     style={tableType === "Details" ? {} : { cursor: "default" }}
                     onClick={() => {
                       if (tableType === "Details") {
-                        setActiveRow(item[primaryKey]); // ✅ set active row
+                        setActiveRow(item[primaryKey]);
                         onClickRow(item[primaryKey]);
                       }
                     }}
@@ -220,7 +225,6 @@ export default function SmartTableList({
                 ))}
               </>
             ) : (
-              // ✅ No data, but still render `rowsPerPage` filler rows
               Array.from({ length: rowsPerPage }).map((_, idx) => (
                 <TableTr
                   key={`no-data-${idx}`}
@@ -233,7 +237,6 @@ export default function SmartTableList({
                   }
                 >
                   {idx === 0 ? (
-                    // first row contains message
                     <TableTd
                       colSpan={extendedColumns.length}
                       style={{
@@ -245,7 +248,6 @@ export default function SmartTableList({
                       {noDataText}
                     </TableTd>
                   ) : (
-                    // rest are just empty cells
                     extendedColumns.map((column) => (
                       <TableTd
                         key={`${column.field}-no-data-${idx}`}
@@ -267,7 +269,7 @@ export default function SmartTableList({
           <Skeleton height={21} width={200} radius="md" />
         ) : dataList.length > 0 ? (
           <Pagination
-            total={Math.ceil(dataList.length / rowsPerPage)}
+            total={totalPages}
             value={activePage}
             onChange={setActivePage}
             size="xs"

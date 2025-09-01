@@ -14,7 +14,7 @@ export function useSession() {
 }
 
 export default function InnerLayout({ children, session }) {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
 
   return (
     <SessionContext.Provider value={session}>
@@ -31,14 +31,20 @@ export default function InnerLayout({ children, session }) {
           <Header opened={opened} toggle={toggle} />
         </AppShell.Header>
         <AppShell.Navbar>
-          {/* {session.user.username}
-        {Array(15)
-          .fill(0)
-          .map((_, index) => (
-            <Skeleton key={index} h={28} mt="sm" animate={true} />
-          ))} */}
-          <Navbar />
+          <Navbar toggle={toggle} />
         </AppShell.Navbar>
+        {opened && (
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 9999,
+              background: "transparent",
+              cursor: "pointer",
+            }}
+            onClick={close}
+          />
+        )}
         <AppShell.Main
           style={{
             filter: opened ? "blur(4px)" : "none",

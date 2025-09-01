@@ -12,6 +12,7 @@ import {
   IconArrowRight,
   IconBallFootball,
   IconCalendar,
+  IconClock,
   IconMapPin,
   IconPlayFootball,
   IconTrophy,
@@ -45,6 +46,7 @@ const columnMatchList = [
     iconColor: "blue",
   },
   { field: "date", name: "Date", icon: IconCalendar, iconColor: "green" },
+  { field: "time", name: "Time", icon: IconClock, iconColor: "orange" },
   { field: "venue", name: "Venue", icon: IconMapPin, iconColor: "red" },
   { field: "statusDesc", name: "Status" },
   {
@@ -124,6 +126,7 @@ export default function ActivityClient() {
         form?.sportId,
         form?.venue,
         form?.date,
+        form?.time,
         form?.statusId,
         true,
         session?.apiToken
@@ -132,6 +135,7 @@ export default function ActivityClient() {
         ...match,
         sport: match.sport.description,
         date: DataFormatter.formatDate(match.date),
+        time: DataFormatter.formatTime(match.time),
         statusDesc: match.status.description,
         createdBy: match.createdBy.username,
       }));
@@ -316,10 +320,7 @@ export default function ActivityClient() {
       />
       {showDetails && (
         <div id="details" style={{ scrollMarginTop: "140px" }}>
-          <SmartCard
-            isLoading={isLoadingMatchDetails || isLoadingPlayerList}
-            theme="secondary"
-          >
+          <SmartCard isLoading={isLoadingMatchDetails} theme="secondary">
             <Grid gutter="sm" justify="center">
               <Grid.Col
                 style={{ justifyItems: "center" }}
@@ -351,7 +352,7 @@ export default function ActivityClient() {
           </SmartCard>
           <SmartCard
             theme="secondary"
-            isLoading={isLoadingMatchDetails || isLoadingPlayerList}
+            isLoading={isLoadingMatchDetails}
             smallSkeleton={true}
           >
             <SmartTextView

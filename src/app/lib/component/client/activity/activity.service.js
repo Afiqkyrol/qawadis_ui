@@ -13,13 +13,14 @@ export async function getMatchListByStatus(
   sportId,
   venue,
   date,
+  time,
   statusId,
   init,
   token
 ) {
   return await proxyRequest("match/getMatchList", {
     method: "GET",
-    query: { sportId, venue, date, statusId, init },
+    query: { sportId, venue, date, time, statusId, init },
     token,
   });
 }

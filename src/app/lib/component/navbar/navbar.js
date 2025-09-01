@@ -25,7 +25,7 @@ const itemList = [
   { icon: IconUser, label: "Contacts", link: "/test" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ toggle }) {
   const session = useSession();
   async function submitHandler() {
     nprogress.start();
@@ -40,7 +40,7 @@ export default function Navbar() {
           <SmartUserButton session={session} />
         </div>
         <div className={classes.section}>
-          <SmartLinkList itemList={itemList} />
+          <SmartLinkList toggle={toggle} itemList={itemList} />
         </div>
       </div>
       <div className={classes.footer}>

@@ -2,7 +2,7 @@ import { Badge, UnstyledButton } from "@mantine/core";
 import classes from "./smartLinkList.module.css";
 import { useRouter, usePathname } from "next/navigation";
 
-export default function SmartLinkList({ itemList }) {
+export default function SmartLinkList({ itemList, toggle }) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -15,7 +15,10 @@ export default function SmartLinkList({ itemList }) {
     return (
       <UnstyledButton
         data-active={isActive || undefined}
-        onClick={() => router.push(linkPath)}
+        onClick={() => {
+          router.push(linkPath);
+          toggle();
+        }}
         key={item.label}
         className={classes.mainLink}
       >
