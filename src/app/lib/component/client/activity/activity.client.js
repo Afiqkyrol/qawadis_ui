@@ -37,6 +37,7 @@ import SmartTab from "../../smart/tab/smartTab";
 import SmartStatusBadge from "../../smart/smartStatusBadge/smartStatusBadge";
 import SearchMatchForm from "../../form/activity/searchMatchForm";
 import { useLookupData } from "@/app/lib/hook/useLookupData";
+import SmartMapEmbed from "../../smart/mapEmbed/smartMapEmbed";
 
 const columnMatchList = [
   {
@@ -355,6 +356,9 @@ export default function ActivityClient() {
             isLoading={isLoadingMatchDetails}
             smallSkeleton={true}
           >
+            {matchDetails?.mapLink && (
+              <SmartMapEmbed shareUrl={matchDetails.mapLink} />
+            )}
             <SmartTextView
               data={[{ label: "Address", value: matchDetails?.address ?? "-" }]}
               nowrap={false}
