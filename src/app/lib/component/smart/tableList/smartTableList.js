@@ -72,7 +72,6 @@ export default function SmartTableList({
           }
           withRowBorders={false}
         >
-          {/* Table Header */}
           <TableThead className={classes.headerRow}>
             <TableTr>
               {extendedColumns.map((column) => (
@@ -96,10 +95,8 @@ export default function SmartTableList({
             </TableTr>
           </TableThead>
 
-          {/* Table Body */}
           <TableTbody>
             {isLoading ? (
-              // ✅ Show skeleton rows
               Array.from({ length: rowsPerPage }).map((_, rowIdx) => (
                 <TableTr key={`skeleton-row-${rowIdx}`}>
                   {extendedColumns.map((column, colIdx) => (
@@ -137,7 +134,7 @@ export default function SmartTableList({
                     style={tableType === "Details" ? {} : { cursor: "default" }}
                     onClick={() => {
                       if (tableType === "Details") {
-                        setActiveRow(item[primaryKey]); // ✅ set active row
+                        setActiveRow(item[primaryKey]);
                         onClickRow(item[primaryKey]);
                       }
                     }}
@@ -228,7 +225,6 @@ export default function SmartTableList({
                 ))}
               </>
             ) : (
-              // ✅ No data, but still render `rowsPerPage` filler rows
               Array.from({ length: rowsPerPage }).map((_, idx) => (
                 <TableTr
                   key={`no-data-${idx}`}
@@ -241,7 +237,6 @@ export default function SmartTableList({
                   }
                 >
                   {idx === 0 ? (
-                    // first row contains message
                     <TableTd
                       colSpan={extendedColumns.length}
                       style={{
@@ -253,7 +248,6 @@ export default function SmartTableList({
                       {noDataText}
                     </TableTd>
                   ) : (
-                    // rest are just empty cells
                     extendedColumns.map((column) => (
                       <TableTd
                         key={`${column.field}-no-data-${idx}`}
