@@ -38,7 +38,7 @@ export default function InnerLayout({ children, session }) {
             style={{
               position: "fixed",
               inset: 0,
-              zIndex: 9999,
+              zIndex: 1,
               background: "transparent",
               cursor: "pointer",
             }}
