@@ -5,7 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import Header from "../header/header";
 import "./innerLayout.css";
 import Navbar from "../navbar/navbar";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const SessionContext = createContext(null);
 
@@ -15,6 +15,14 @@ export function useSession() {
 
 export default function InnerLayout({ children, session }) {
   const [opened, { toggle, close }] = useDisclosure();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <SessionContext.Provider value={session}>
@@ -33,7 +41,7 @@ export default function InnerLayout({ children, session }) {
         <AppShell.Navbar>
           <Navbar toggle={toggle} />
         </AppShell.Navbar>
-        {opened && (
+        {opened && isMobile && (
           <div
             style={{
               position: "fixed",
@@ -47,7 +55,7 @@ export default function InnerLayout({ children, session }) {
         )}
         <AppShell.Main
           style={{
-            filter: opened ? "blur(4px)" : "none",
+            filter: opened && isMobile ? "blur(4px)" : "none",
             transition: "filter 0.3s ease",
           }}
         >
