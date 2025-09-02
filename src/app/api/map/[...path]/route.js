@@ -1,4 +1,6 @@
 // app/api/map/[...path]/route.js
+const embedUrlCache = new Map();
+
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const shareUrl = searchParams.get("url");
@@ -6,6 +8,14 @@ export async function GET(req) {
     return new Response(JSON.stringify({ error: "Missing url query" }), {
       status: 400,
     });
+  }
+
+  // Check cache first
+  if (embedUrlCache.has(shareUrl)) {
+    return new Response(
+      JSON.stringify({ embedUrl: embedUrlCache.get(shareUrl) }),
+      { headers: { "Content-Type": "application/json" } }
+    );
   }
 
   try {
@@ -36,6 +46,9 @@ export async function GET(req) {
             placeName
           )}&ll=${lat},${lng}&z=16&output=embed`
         : `https://www.google.com/maps?q=${lat},${lng}&hl=en&z=16&output=embed`;
+
+      // After you get embedUrl:
+      embedUrlCache.set(shareUrl, embedUrl); // cache result
 
       return new Response(JSON.stringify({ embedUrl }), {
         headers: { "Content-Type": "application/json" },
