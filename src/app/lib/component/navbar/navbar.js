@@ -15,14 +15,19 @@ import SmartLinkList from "../smart/linkList/smartList";
 import { useSession } from "../layout/innerLayout";
 
 const itemList = [
-  { icon: IconHome, label: "Home", notifications: 3, link: "/" },
+  {
+    icon: IconHome,
+    label: "Home",
+    // notifications: 3,
+    link: "/",
+  },
   {
     icon: IconBallFootball,
     label: "Activity",
-    notifications: 4,
+    // notifications: 4,
     link: "/activity",
   },
-  { icon: IconUser, label: "Contacts", link: "/test" },
+  // { icon: IconUser, label: "Contacts", link: "/test" },
 ];
 
 export default function Navbar({ toggle }) {

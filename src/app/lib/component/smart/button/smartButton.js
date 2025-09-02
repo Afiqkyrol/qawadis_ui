@@ -9,6 +9,8 @@ export default function SmartButton({
   text,
   icon,
   style,
+  variant,
+  gradient,
 }) {
   const [isLoading, setIsLoading] = useState(loading);
 
@@ -47,6 +49,8 @@ export default function SmartButton({
       <Button
         style={{ ...style }}
         rightSection={icon}
+        variant={variant}
+        gradient={gradient}
         onClick={submitHandler}
         loading={loading}
       >

@@ -15,6 +15,7 @@ import {
   IconClock,
   IconMapPin,
   IconPlayFootball,
+  IconPlus,
   IconTrophy,
   IconUser,
   IconX,
@@ -24,7 +25,7 @@ import { useAsyncData } from "@/app/lib/hook/useAsyncData";
 import { AppConstant } from "@/app/lib/constant/AppConstant";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Grid } from "@mantine/core";
+import { Box, Divider, Grid } from "@mantine/core";
 import SmartRingProgress from "../../smart/ringProgress/smartRingProgress";
 import SmartCard from "../../smart/card/smartCard";
 import SmartTextView from "../../smart/textView/smartTextView";
@@ -309,6 +310,18 @@ export default function ActivityClient() {
         isLoadingRequest={isLoadingMatchList}
         setShowDetails={setShowDetails}
       />
+      <Box style={{ textAlign: "right" }}>
+        <SmartButton
+          text="Create Match"
+          style={{
+            marginBottom: "1rem",
+          }}
+          variant="outline"
+          icon={<IconPlus size={14} />}
+          // loading={loadingSearch}
+          submitHandler={async () => {}}
+        />
+      </Box>
       <SmartTableList
         primaryKey="matchId"
         columnList={columnMatchList}
@@ -321,6 +334,7 @@ export default function ActivityClient() {
       />
       {showDetails && (
         <div id="details" style={{ scrollMarginTop: "140px" }}>
+          <Divider my="xs" label="Match Details" labelPosition="center" />
           <SmartCard isLoading={isLoadingMatchDetails} theme="secondary">
             <Grid gutter="sm" justify="center">
               <Grid.Col

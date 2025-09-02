@@ -37,6 +37,7 @@ export default function SmartMapEmbed({
     return (
       <Skeleton
         width={width}
+        title="Loading map..."
         height={height}
         radius="md"
         style={{ marginBottom: "1rem" }}
