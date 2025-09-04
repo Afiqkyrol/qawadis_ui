@@ -319,7 +319,9 @@ export default function ActivityClient() {
           variant="outline"
           icon={<IconPlus size={14} />}
           // loading={loadingSearch}
-          submitHandler={async () => {}}
+          submitHandler={async () => {
+            router.push("/home/activity/new-activity");
+          }}
         />
       </Box>
       <SmartTableList

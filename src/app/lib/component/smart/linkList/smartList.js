@@ -10,7 +10,13 @@ export default function SmartLinkList({ itemList, toggle }) {
 
   const mainLinks = itemList.map((item, index) => {
     const linkPath = normalizePath("/home" + item.link);
-    const isActive = normalizePath(pathname) === linkPath;
+    let isActive;
+    if (linkPath === "/home") {
+      isActive = normalizePath(pathname) === linkPath;
+    } else {
+      isActive = normalizePath(pathname).startsWith(linkPath);
+    }
+    console.log({ pathname, linkPath, isActive });
 
     return (
       <UnstyledButton
