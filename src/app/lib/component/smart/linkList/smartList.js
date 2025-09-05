@@ -1,6 +1,7 @@
 import { Badge, UnstyledButton } from "@mantine/core";
 import classes from "./smartLinkList.module.css";
 import { useRouter, usePathname } from "next/navigation";
+import { nprogress } from "@mantine/nprogress";
 
 export default function SmartLinkList({ itemList, toggle }) {
   const router = useRouter();
@@ -10,12 +11,19 @@ export default function SmartLinkList({ itemList, toggle }) {
 
   const mainLinks = itemList.map((item, index) => {
     const linkPath = normalizePath("/home" + item.link);
-    const isActive = normalizePath(pathname) === linkPath;
+    let isActive;
+    if (linkPath === "/home") {
+      isActive = normalizePath(pathname) === linkPath;
+    } else {
+      isActive = normalizePath(pathname).startsWith(linkPath);
+    }
 
     return (
       <UnstyledButton
         data-active={isActive || undefined}
         onClick={() => {
+          nprogress.start();
+          nprogress.set(50);
           router.push(linkPath);
           toggle();
         }}

@@ -1,4 +1,4 @@
-import HomeClient from "../lib/component/client/home/home.client";
+import HomeClient from "./home.client";
 
 export function generateMetadata() {
   return {

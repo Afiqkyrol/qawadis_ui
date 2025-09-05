@@ -1,13 +1,13 @@
 "use client";
 
+import SignupForm from "@/app/lib/component/form/auth/signupForm";
 import { Center, Container } from "@mantine/core";
-import SigninForm from "../../form/signinForm";
 
-export default function SigninClient() {
+export default function SignupClient() {
   return (
     <Container fluid h="100vh">
       <Center h="100%">
-        <SigninForm />
+        <SignupForm />
       </Center>
     </Container>
   );
