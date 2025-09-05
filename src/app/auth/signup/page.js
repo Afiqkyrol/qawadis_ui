@@ -1,7 +1,7 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import SignupClient from "@/app/lib/component/client/signup/signup.client";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import SignupClient from "./signup.client";
 
 export function generateMetadata() {
   return {

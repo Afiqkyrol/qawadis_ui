@@ -1,0 +1,10 @@
+.link {
+  color: var(--mantine-color-blue-6, #228be6);
+  cursor: pointer;
+  text-decoration: none;
+  transition: text-decoration 0.2s;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

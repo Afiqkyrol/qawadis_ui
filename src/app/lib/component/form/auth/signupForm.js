@@ -1,15 +1,15 @@
 "use client";
 
 import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
-import SmartTextInput from "../smart/textInput/smart-TextInput";
+import SmartTextInput from "../../smart/textInput/smart-TextInput";
 import { IconAbc, IconArrowRight, IconAt } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { validateEmail } from "../../util/validator";
+import { validateEmail } from "../../../util/validator";
 import { nprogress } from "@mantine/nprogress";
-import SmartButton from "../smart/button/smartButton";
+import SmartButton from "../../smart/button/smartButton";
 import { signIn } from "next-auth/react";
-import { notificationError } from "../../util/notification";
+import { notificationError } from "../../../util/notification";
 
 export default function SignupForm() {
   const router = useRouter();

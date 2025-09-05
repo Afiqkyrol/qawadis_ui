@@ -1,4 +1,4 @@
-import NewActivityClientPage from "@/app/lib/component/client/activity/new-activity/new-activity.client";
+import NewActivityClientPage from "@/app/home/activity/new-activity/new-activity.client";
 
 export function generateMetadata() {
   return {

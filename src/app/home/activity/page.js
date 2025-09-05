@@ -1,4 +1,4 @@
-import ActivityClient from "@/app/lib/component/client/activity/activity.client";
+import ActivityClient from "@/app/home/activity/activity.client";
 
 export function generateMetadata() {
   return {
