@@ -16,7 +16,10 @@ export default function SmartDatePicker({
   disabled = false,
   withAsterisk = false,
   allowDeselect = false,
+  required,
   style,
+  valueValidator,
+  error,
 }) {
   return (
     <DatePickerInput
@@ -35,9 +38,11 @@ export default function SmartDatePicker({
       clearable={clearable}
       allowDeselect={allowDeselect}
       disabled={disabled}
-      withAsterisk={withAsterisk}
+      withAsterisk={required}
       rightSection={!value ? <IconCalendar size={18} stroke={1.5} /> : null}
       style={style}
+      onDropdownClose={valueValidator}
+      error={error}
     />
   );
 }

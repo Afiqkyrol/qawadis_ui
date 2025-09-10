@@ -1,10 +1,11 @@
 import { Badge, UnstyledButton } from "@mantine/core";
 import classes from "./smartLinkList.module.css";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { nprogress } from "@mantine/nprogress";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
 
 export default function SmartLinkList({ itemList, toggle }) {
-  const router = useRouter();
+  const { goTo } = useNavigate();
   const pathname = usePathname();
 
   const normalizePath = (path) => path.replace(/\/+$/, ""); // remove trailing slash
@@ -22,9 +23,7 @@ export default function SmartLinkList({ itemList, toggle }) {
       <UnstyledButton
         data-active={isActive || undefined}
         onClick={() => {
-          nprogress.start();
-          nprogress.set(50);
-          router.push(linkPath);
+          goTo(linkPath);
           toggle();
         }}
         key={item.label}

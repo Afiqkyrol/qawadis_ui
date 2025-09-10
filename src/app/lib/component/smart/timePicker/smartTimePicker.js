@@ -13,7 +13,9 @@ export default function SmartTimePicker({
   withSeconds = false,
   withDropdown = true,
   clearable = true,
-  withAsterisk = false,
+  required = false,
+  valueValidator,
+  error,
   style,
 }) {
   return (
@@ -31,9 +33,11 @@ export default function SmartTimePicker({
       clearable
       withSeconds={withSeconds}
       withDropdown={withDropdown}
-      withAsterisk={withAsterisk}
+      withAsterisk={required}
       rightSection={!value ? <IconClock size={18} stroke={1.5} /> : null}
       style={style}
+      error={error}
+      onBlur={valueValidator}
     />
   );
 }

@@ -53,6 +53,7 @@ export function useAsyncData(
         setError(err);
         stopPolling();
         setData([]);
+        throw err;
       } finally {
         isFetchingRef.current = false;
         setIsLoading(false);

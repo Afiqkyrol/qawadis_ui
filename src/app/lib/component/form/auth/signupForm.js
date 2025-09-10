@@ -3,16 +3,16 @@
 import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
 import SmartTextInput from "../../smart/textInput/smart-TextInput";
 import { IconAbc, IconArrowRight, IconAt } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { validateEmail } from "../../../util/validator";
 import { nprogress } from "@mantine/nprogress";
 import SmartButton from "../../smart/button/smartButton";
 import { signIn } from "next-auth/react";
 import { notificationError } from "../../../util/notification";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
 
 export default function SignupForm() {
-  const router = useRouter();
+  const { goTo } = useNavigate();
 
   const [form, setForm] = useState({
     username: "",
@@ -101,7 +101,7 @@ export default function SignupForm() {
     });
 
     if (result?.ok) {
-      router.push("/home");
+      goTo("/home");
     } else {
       notificationError("An error occurred!", result.error);
       setLoading(false);

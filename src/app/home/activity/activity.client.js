@@ -24,7 +24,6 @@ import SmartTitle from "../../lib/component/smart/title/smartTitle";
 import { useAsyncData } from "@/app/lib/hook/useAsyncData";
 import { AppConstant } from "@/app/lib/constant/AppConstant";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Box, Divider, Grid } from "@mantine/core";
 import SmartRingProgress from "../../lib/component/smart/ringProgress/smartRingProgress";
 import SmartCard from "../../lib/component/smart/card/smartCard";
@@ -40,6 +39,7 @@ import SearchMatchForm from "../../lib/component/form/activity/searchMatchForm";
 import { useLookupData } from "@/app/lib/hook/useLookupData";
 import SmartMapEmbed from "../../lib/component/smart/mapEmbed/smartMapEmbed";
 import SmartBreadcrumbs from "@/app/lib/component/smart/breadCrumbs/smartBreadCrumbs";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
 
 const items = [{ title: "Activity", href: "/home/activity" }];
 
@@ -104,7 +104,7 @@ const safe = (val) => val ?? "-";
 
 export default function ActivityClient() {
   const session = useSession();
-  const router = useRouter();
+  const { goTo } = useNavigate();
   const [showDetails, setShowDetails] = useState(false);
   const [isUserJoined, setIsUserJoined] = useState(false);
   const [joinedUserMatchId, setJoinedUserMatchId] = useState(null);
@@ -212,13 +212,9 @@ export default function ActivityClient() {
 
   const onClickRow = async (matchId) => {
     setShowDetails(true);
-    nprogress.start();
-    nprogress.set(50);
-
     await Promise.all([fetchMatchDetails(matchId), fetchPlayerList(matchId)]);
-
+    goTo(`/home/activity#details`);
     nprogress.complete();
-    router.push(`/home/activity#details`);
   };
 
   const onClickCancelOrJoinMatch = async (userMatchId, matchId) => {
@@ -310,7 +306,8 @@ export default function ActivityClient() {
   return (
     <>
       <SmartTitle title="Activity" Icon={IconBallFootball} />
-      <SmartBreadcrumbs itemList={items} />
+      <SmartBreadcrumbs itemList={items} st />
+      <Divider my="xs" label="Search Match" labelPosition="center" />
       <SearchMatchForm
         request={fetchMatchList}
         sportList={sportList}
@@ -328,9 +325,7 @@ export default function ActivityClient() {
           icon={<IconPlus size={14} />}
           // loading={loadingSearch}
           submitHandler={async () => {
-            nprogress.start();
-            nprogress.set(50);
-            router.push("/home/activity/new-activity");
+            goTo("/home/activity/new-activity");
           }}
         />
       </Box>

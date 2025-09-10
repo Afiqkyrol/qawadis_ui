@@ -23,7 +23,6 @@ export async function GET(req) {
     const data = await backendRes.json();
     return new Response(JSON.stringify(data), { status: backendRes.status });
   } catch (err) {
-    console.error(err);
     return new Response(
       JSON.stringify({ error: err.message || "Proxy error" }),
       {
@@ -53,7 +52,6 @@ export async function POST(req) {
     const data = await backendRes.json();
     return new Response(JSON.stringify(data), { status: backendRes.status });
   } catch (err) {
-    console.error(err);
     return new Response(
       JSON.stringify({ error: err.message || "Proxy error" }),
       {

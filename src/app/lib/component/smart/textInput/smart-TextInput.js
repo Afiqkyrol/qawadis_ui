@@ -1,4 +1,11 @@
-import { TextInput, Tooltip, Text, Center, PasswordInput } from "@mantine/core";
+import {
+  TextInput,
+  Tooltip,
+  Text,
+  Center,
+  PasswordInput,
+  Textarea,
+} from "@mantine/core";
 import "./smart-TextInput.css";
 
 export default function SmartTextInput({
@@ -37,6 +44,24 @@ export default function SmartTextInput({
       />
     );
   } else if (type === "textarea") {
+    return (
+      <Textarea
+        name={controlName}
+        label={label}
+        placeholder={placeholder}
+        withAsterisk={required}
+        error={error}
+        style={style}
+        value={value}
+        onChange={(event) => {
+          onChange({
+            controlName: event.target.name,
+            value: event.currentTarget.value,
+          });
+        }}
+        onBlur={valueValidator}
+      />
+    );
   } else {
     let section;
     if (contain === "tooltip") {

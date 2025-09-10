@@ -8,11 +8,11 @@ import { useState } from "react";
 import SmartButton from "../../smart/button/smartButton";
 import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { nprogress } from "@mantine/nprogress";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
 
 export default function SigninForm() {
-  const router = useRouter();
+  const { goTo } = useNavigate();
 
   const [form, setForm] = useState({
     email: "",
@@ -79,7 +79,7 @@ export default function SigninForm() {
     });
 
     if (result?.ok) {
-      router.push("/home");
+      goTo("/home");
     } else {
       notificationError("An error occurred!", result.error);
       setLoading(false);
