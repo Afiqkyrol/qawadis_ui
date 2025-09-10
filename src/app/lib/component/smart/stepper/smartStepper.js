@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Stepper, Button, Group, Divider } from "@mantine/core";
+import {
+  Stepper,
+  Button,
+  Group,
+  Divider,
+  Box,
+  LoadingOverlay,
+  Loader,
+} from "@mantine/core";
 
 export default function SmartStepper({
   stepList,
@@ -42,40 +50,53 @@ export default function SmartStepper({
         ))}
         <Stepper.Completed>
           <Divider my="xs" />
-          {stepList.at(-1)?.content}
+
+          <Box pos="relative">
+            <LoadingOverlay
+              visible={true}
+              loaderProps={{ children: <Loader color="blue" /> }}
+            />
+            {stepList.at(-1)?.content}
+          </Box>
         </Stepper.Completed>
       </Stepper>
 
-      {!isCompleted && (
-        <Group justify="center" mt="md">
-          {active > 0 && (
-            <Button
-              variant="default"
-              onClick={() => handleStepChange(active - 1)}
-            >
-              Prev
-            </Button>
-          )}
+      <Group justify="center" mt="md">
+        {/* Prev button: show on all steps except first and completed */}
+        {active > 0 && (
+          <Button
+            variant="default"
+            disabled={isCompleted}
+            onClick={() => handleStepChange(active - 1)}
+          >
+            Prev
+          </Button>
+        )}
 
-          {isLastStep ? (
-            <Button
-              onClick={async () => {
-                const prevActive = active;
-                try {
-                  handleStepChange(active + 1);
-                  await submitHandler();
-                } catch (err) {
-                  handleStepChange(prevActive);
-                }
-              }}
-            >
-              Submit
-            </Button>
-          ) : (
-            <Button onClick={() => handleStepChange(active + 1)}>Next</Button>
-          )}
-        </Group>
-      )}
+        {/* Next button: show on all steps except last and completed */}
+        {!isLastStep && !isCompleted && (
+          <Button onClick={() => handleStepChange(active + 1)}>Next</Button>
+        )}
+
+        {/* Submit button: show on last and completed step, but lock in completed */}
+        {(isLastStep || isCompleted) && (
+          <Button
+            onClick={async () => {
+              if (isCompleted) return;
+              const prevActive = active;
+              try {
+                handleStepChange(active + 1);
+                await submitHandler();
+              } catch (err) {
+                handleStepChange(prevActive);
+              }
+            }}
+            disabled={isCompleted}
+          >
+            Submit
+          </Button>
+        )}
+      </Group>
     </>
   );
 }
