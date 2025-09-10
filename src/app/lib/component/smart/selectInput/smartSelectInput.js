@@ -28,7 +28,7 @@ export default function SmartSelectInput({
       data={normalizedOptions}
       disabled={readOnly}
       error={error}
-      style={style}
+      style={{ minHeight: "80.2px", ...style }}
       onChange={(event) =>
         onChange({ controlName, value: event.currentTarget.value })
       }

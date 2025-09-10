@@ -35,7 +35,7 @@ export default function SmartTimePicker({
       withDropdown={withDropdown}
       withAsterisk={required}
       rightSection={!value ? <IconClock size={18} stroke={1.5} /> : null}
-      style={style}
+      style={{ minHeight: "80.2px", ...style }}
       error={error}
       onBlur={valueValidator}
     />

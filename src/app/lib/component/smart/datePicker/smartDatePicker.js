@@ -40,7 +40,7 @@ export default function SmartDatePicker({
       disabled={disabled}
       withAsterisk={required}
       rightSection={!value ? <IconCalendar size={18} stroke={1.5} /> : null}
-      style={style}
+      style={{ minHeight: "80.2px", ...style }}
       onDropdownClose={valueValidator}
       error={error}
     />

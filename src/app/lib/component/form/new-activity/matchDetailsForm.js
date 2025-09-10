@@ -81,7 +81,6 @@ export default function MatchDetailsForm({ form, setForm }) {
             value={form.sportId}
             onChange={inputHandler}
             error={errors.sportId}
-            style={{ marginBottom: "1rem" }}
             required={true}
             valueValidator={() => validateField("sportId", form.sportId)}
           />
@@ -94,7 +93,6 @@ export default function MatchDetailsForm({ form, setForm }) {
             onChange={inputHandler}
             error={errors.date}
             required={true}
-            style={{ marginBottom: "1rem" }}
             valueValidator={() => validateField("date", form.date)}
           />
         </Grid.Col>
@@ -114,7 +112,6 @@ export default function MatchDetailsForm({ form, setForm }) {
             onChange={inputHandler}
             error={errors.maxPlayer}
             required={true}
-            style={{ marginBottom: "1rem" }}
             valueValidator={() => validateField("maxPlayer", form.maxPlayer)}
           />
           <SmartTimePicker
@@ -123,7 +120,6 @@ export default function MatchDetailsForm({ form, setForm }) {
             value={form.time}
             onChange={inputHandler}
             error={errors.time}
-            style={{ marginBottom: "1rem" }}
             valueValidator={() => validateField("time", form.time)}
             required={true}
             withDropdown

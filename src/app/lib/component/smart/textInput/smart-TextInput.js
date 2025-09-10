@@ -32,7 +32,7 @@ export default function SmartTextInput({
         placeholder={placeholder}
         withAsterisk={required}
         error={error}
-        style={style}
+        style={{ minHeight: "80.2px", ...style }}
         value={value}
         onChange={(event) =>
           onChange({
@@ -96,7 +96,7 @@ export default function SmartTextInput({
         type={type}
         withAsterisk={required}
         error={error}
-        style={style}
+        style={{ minHeight: "80.2px", ...style }}
         value={value}
         onChange={(event) =>
           onChange({

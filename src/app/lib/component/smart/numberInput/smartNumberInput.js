@@ -22,7 +22,7 @@ export default function SmartNumberInput({
       placeholder={placeholder}
       withAsterisk={required}
       error={error}
-      style={style}
+      style={{ minHeight: "80.2px", ...style }}
       value={value}
       min={min}
       max={max}

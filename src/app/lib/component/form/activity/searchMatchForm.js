@@ -71,7 +71,6 @@ export default function SearchMatchForm({
             value={form.sportId}
             onChange={inputHandler}
             error={errors.sportId}
-            style={{ marginBottom: "1rem" }}
             valueValidator={() => {}}
           />
           <SmartSelectInput
@@ -81,7 +80,6 @@ export default function SearchMatchForm({
             value={form.statusId}
             onChange={inputHandler}
             error={errors.statusId}
-            style={{ marginBottom: "1rem" }}
             valueValidator={() => {}}
           />
           <SmartTextInput
@@ -95,7 +93,6 @@ export default function SearchMatchForm({
             error={errors.venue}
             value={form.venue}
             onChange={inputHandler}
-            style={{ marginBottom: "1rem" }}
             valueValidator={() => {}}
           />
         </Grid.Col>
@@ -114,7 +111,6 @@ export default function SearchMatchForm({
             value={form.date}
             onChange={inputHandler}
             error={errors.date}
-            style={{ marginBottom: "1rem" }}
           />
           <SmartTimePicker
             controlName="time"
@@ -122,7 +118,6 @@ export default function SearchMatchForm({
             value={form.time}
             onChange={inputHandler}
             error={errors.time}
-            style={{ marginBottom: "1rem" }}
             withDropdown
           />
         </Grid.Col>
