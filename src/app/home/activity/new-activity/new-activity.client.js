@@ -13,6 +13,7 @@ import MatchDetailsForm from "@/app/lib/component/form/new-activity/matchDetails
 import { saveMatch } from "./new-activity.service";
 import { useAsyncData } from "@/app/lib/hook/useAsyncData";
 import { useSession } from "@/app/lib/component/layout/innerLayout";
+import LocationDetailsForm from "@/app/lib/component/form/new-activity/locationDetailsForm";
 
 const items = [
   { title: "Activity", href: "/home/activity" },
@@ -29,6 +30,9 @@ export default function NewActivityClientPage() {
     time: "",
     maxPlayer: "",
     remark: "",
+    mapLink: "",
+    venue: "",
+    address: "",
   });
 
   const {
@@ -59,11 +63,8 @@ export default function NewActivityClientPage() {
     <MatchDetailsForm form={form} setForm={setForm} />
   );
 
-  const mapDetailsStep = () => (
-    <>
-      <h3>Map Details Form</h3>
-      {/* Form fields go here */}
-    </>
+  const locationDetailsStep = () => (
+    <LocationDetailsForm form={form} setForm={setForm} />
   );
 
   const confirmationStep = () => (
@@ -82,7 +83,7 @@ export default function NewActivityClientPage() {
     {
       label: "Second step",
       description: "Location details",
-      content: mapDetailsStep(),
+      content: locationDetailsStep(),
     },
     {
       label: "Final step",
