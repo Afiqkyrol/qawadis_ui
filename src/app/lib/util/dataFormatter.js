@@ -65,4 +65,17 @@ export const DataFormatter = {
 
     return DataFormatter.formatTime(dateObj);
   },
+
+  googleMapsLinkToEmbedLinks: async (url) => {
+    try {
+      const resp = await fetch(
+        `/api/map/resolve?url=${encodeURIComponent(url)}`
+      );
+      const { embedUrl } = await resp.json();
+
+      return embedUrl ?? "";
+    } catch (err) {
+      throw err;
+    }
+  },
 };

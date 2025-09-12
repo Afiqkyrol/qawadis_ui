@@ -11,16 +11,13 @@ import SmartNumberInput from "../../smart/numberInput/smartNumberInput";
 import SmartTimePicker from "../../smart/timePicker/smartTimePicker";
 import SmartTextInput from "../../smart/textInput/smart-TextInput";
 
-export default function MatchDetailsForm({ form, setForm }) {
+export default function MatchDetailsForm({
+  form,
+  setForm,
+  errors,
+  validateField,
+}) {
   const session = useSession();
-
-  const [errors, setErrors] = useState({
-    sportId: "",
-    date: "",
-    time: "",
-    maxPlayer: "",
-    remark: "",
-  });
 
   const inputHandler = ({ controlName, value }) => {
     setForm({
@@ -30,29 +27,6 @@ export default function MatchDetailsForm({ form, setForm }) {
 
     validateField(controlName, value);
   };
-
-  function validateField(controlName, value) {
-    let error = "";
-
-    if (controlName === "sportId") {
-      if (!value) error = "Sport is required";
-    }
-
-    if (controlName === "date") {
-      if (!value) error = "Date is required";
-    }
-
-    if (controlName === "maxPlayer") {
-      if (!value || value < 1) error = "Max player required at least 1";
-    }
-
-    if (controlName === "time") {
-      if (!value) error = "Time is required";
-    }
-
-    setErrors((prev) => ({ ...prev, [controlName]: error }));
-    return error === "";
-  }
 
   const { data: sportList, isLoading: loadingSportList } = useLookupData(
     AppConstant.LT_SPORT_TABLE,

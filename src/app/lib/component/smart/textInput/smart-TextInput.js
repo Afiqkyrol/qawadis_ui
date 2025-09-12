@@ -14,6 +14,7 @@ export default function SmartTextInput({
   placeholder,
   type,
   contain,
+  description,
   icon,
   align,
   tooltipLabel,
@@ -30,6 +31,7 @@ export default function SmartTextInput({
         name={controlName}
         label={label}
         placeholder={placeholder}
+        description={description}
         withAsterisk={required}
         error={error}
         style={{ minHeight: "80.2px", ...style }}
@@ -49,6 +51,7 @@ export default function SmartTextInput({
         name={controlName}
         label={label}
         placeholder={placeholder}
+        description={description}
         withAsterisk={required}
         error={error}
         style={style}
@@ -93,10 +96,11 @@ export default function SmartTextInput({
         name={controlName}
         label={label}
         placeholder={placeholder}
+        description={description}
         type={type}
         withAsterisk={required}
         error={error}
-        style={{ minHeight: "80.2px", ...style }}
+        style={{ minHeight: description ? "99.6px" : "80.2px", ...style }}
         value={value}
         onChange={(event) =>
           onChange({

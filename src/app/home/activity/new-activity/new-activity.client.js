@@ -31,9 +31,68 @@ export default function NewActivityClientPage() {
     maxPlayer: "",
     remark: "",
     mapLink: "",
+    rawMapLink: "",
     venue: "",
     address: "",
   });
+
+  const [errors, setErrors] = useState({
+    sportId: "",
+    date: "",
+    time: "",
+    maxPlayer: "",
+    remark: "",
+    rawMapLink: "",
+    venue: "",
+    address: "",
+  });
+
+  function validateField(controlName, value) {
+    let error = "";
+
+    if (controlName === "sportId") {
+      if (!value) error = "Sport is required";
+    }
+
+    if (controlName === "date") {
+      if (!value) error = "Date is required";
+    }
+
+    if (controlName === "maxPlayer") {
+      if (!value || value < 1) error = "Max player required at least 1";
+    }
+
+    if (controlName === "time") {
+      if (!value) error = "Time is required";
+    }
+
+    if (controlName === "venue") {
+      if (!value) error = "Venue is required";
+    }
+
+    if (controlName === "address") {
+      if (!value) error = "Address is required";
+    }
+
+    setErrors((prev) => ({ ...prev, [controlName]: error }));
+    return error === "";
+  }
+
+  const isMatchDetailsFormValid = () => {
+    return (
+      validateField("sportId", form.sportId) &&
+      validateField("date", form.date) &&
+      validateField("maxPlayer", form.maxPlayer) &&
+      validateField("time", form.time)
+    );
+  };
+
+  const isLocationFormValid = () => {
+    return (
+      validateField("venue", form.venue) &&
+      validateField("address", form.address)
+    );
+  };
 
   const {
     data: newMatchId,
@@ -60,17 +119,39 @@ export default function NewActivityClientPage() {
   }, []);
 
   const matchDetailsStep = () => (
-    <MatchDetailsForm form={form} setForm={setForm} />
+    <MatchDetailsForm
+      form={form}
+      setForm={setForm}
+      errors={errors}
+      validateField={validateField}
+    />
   );
 
   const locationDetailsStep = () => (
-    <LocationDetailsForm form={form} setForm={setForm} />
+    <LocationDetailsForm
+      form={form}
+      setForm={setForm}
+      errors={errors}
+      setErrors={setErrors}
+      validateField={validateField}
+    />
   );
 
   const confirmationStep = () => (
     <>
-      <h3>Confirmation</h3>
-      {/* Form fields go here */}
+      <MatchDetailsForm
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        validateField={validateField}
+      />
+      <LocationDetailsForm
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        setErrors={setErrors}
+        validateField={validateField}
+      />
     </>
   );
 
@@ -79,11 +160,13 @@ export default function NewActivityClientPage() {
       label: "First step",
       description: "Match Details",
       content: matchDetailsStep(),
+      validation: () => isMatchDetailsFormValid(),
     },
     {
       label: "Second step",
       description: "Location details",
       content: locationDetailsStep(),
+      validation: () => isLocationFormValid(),
     },
     {
       label: "Final step",

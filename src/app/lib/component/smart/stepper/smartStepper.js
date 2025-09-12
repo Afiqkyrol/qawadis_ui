@@ -75,7 +75,13 @@ export default function SmartStepper({
 
         {/* Next button: show on all steps except last and completed */}
         {!isLastStep && !isCompleted && (
-          <Button onClick={() => handleStepChange(active + 1)}>Next</Button>
+          <Button
+            onClick={() => {
+              if (stepList[active].validation()) handleStepChange(active + 1);
+            }}
+          >
+            Next
+          </Button>
         )}
 
         {/* Submit button: show on last and completed step, but lock in completed */}

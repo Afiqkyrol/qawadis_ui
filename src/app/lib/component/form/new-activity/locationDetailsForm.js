@@ -1,15 +1,18 @@
-import { Grid } from "@mantine/core";
+import { ActionIcon, Grid } from "@mantine/core";
 import { useState } from "react";
 import SmartTextInput from "../../smart/textInput/smart-TextInput";
-import { IconCheck } from "@tabler/icons-react";
-import SmartButton from "../../smart/button/smartButton";
+import { IconMapDown } from "@tabler/icons-react";
+import SmartMapEmbed from "../../smart/mapEmbed/smartMapEmbed";
+import { DataFormatter } from "@/app/lib/util/dataFormatter";
 
-export default function LocationDetailsForm({ form, setForm }) {
-  const [errors, setErrors] = useState({
-    venue: "",
-    mapLink: "",
-  });
-
+export default function LocationDetailsForm({
+  form,
+  setForm,
+  errors,
+  setErrors,
+  validateField,
+}) {
+  const [isMapLoading, setIsMapLoading] = useState(false);
   const inputHandler = ({ controlName, value }) => {
     setForm({
       ...form,
@@ -19,16 +22,30 @@ export default function LocationDetailsForm({ form, setForm }) {
     validateField(controlName, value);
   };
 
-  function validateField(controlName, value) {
-    let error = "";
+  const buttonCheckMapHandler = async () => {
+    try {
+      setIsMapLoading(true);
+      const embedUrl = await DataFormatter.googleMapsLinkToEmbedLinks(
+        form.rawMapLink
+      );
 
-    // if (controlName === "sportId") {
-    //   if (!value) error = "Sport is required";
-    // }
-
-    setErrors((prev) => ({ ...prev, [controlName]: error }));
-    return error === "";
-  }
+      setForm({
+        ...form,
+        mapLink: embedUrl,
+      });
+    } catch (err) {
+      setErrors((prev) => ({
+        ...prev,
+        rawMapLink: "Please enter a valid Google Maps Link",
+      }));
+      setForm({
+        ...form,
+        mapLink: "",
+      });
+    } finally {
+      setIsMapLoading(false);
+    }
+  };
 
   return (
     <Grid
@@ -80,38 +97,43 @@ export default function LocationDetailsForm({ form, setForm }) {
           paddingTop: "0",
           paddingBottom: "0",
         }}
-        span={{ sm: 6, base: 12, md: 9, lg: 10 }}
+        span={{ sm: 12, base: 12, md: 12, lg: 12 }}
       >
-        <SmartTextInput
-          controlName="mapLink"
-          label="Google Maps Link"
-          placeholder="Enter link"
-          value={form.mapLink}
-          error={errors.mapLink}
-          onChange={inputHandler}
-          valueValidator={() => validateField("mapLink", form.mapLink)}
-        />
-      </Grid.Col>
-      <Grid.Col
-        style={{
-          justifyItems: "stretch",
-          alignContent: "center",
-          paddingTop: "0",
-          paddingBottom: "0",
-        }}
-        span={{ sm: 6, base: 12, md: 3, lg: 2 }}
-      >
-        <SmartButton
-          text="Check Map"
-          variant="outline"
+        <div
           style={{
-            marginTop: "6px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            gap: "1%",
           }}
-          icon={<IconCheck size={14} />}
-          // loading={loadingSearch}
-          submitHandler={async () => {}}
-        />
+        >
+          <SmartTextInput
+            controlName="rawMapLink"
+            label="Google Maps Link"
+            placeholder="Enter link"
+            value={form.rawMapLink}
+            error={errors.rawMapLink}
+            onChange={inputHandler}
+            valueValidator={() => {}}
+            style={{ width: "inherit" }}
+          />
+          <ActionIcon
+            style={{ maxWidth: "34px", marginTop: "6px" }}
+            variant="outline"
+            size="input-sm"
+            loading={isMapLoading}
+            onClick={async () => {
+              buttonCheckMapHandler();
+            }}
+          >
+            <IconMapDown size={18} stroke={1.5} />
+          </ActionIcon>
+        </div>
       </Grid.Col>
+      {form?.mapLink && (
+        <SmartMapEmbed shareUrl={form.mapLink} isLoading={isMapLoading} />
+      )}
     </Grid>
   );
 }
