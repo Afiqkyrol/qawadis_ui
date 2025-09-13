@@ -23,6 +23,7 @@ export default function SmartTextInput({
   value,
   onChange,
   valueValidator,
+  readOnly,
   style,
 }) {
   if (type === "password") {
@@ -56,6 +57,7 @@ export default function SmartTextInput({
         error={error}
         style={style}
         value={value}
+        disabled={readOnly}
         onChange={(event) => {
           onChange({
             controlName: event.target.name,
@@ -100,6 +102,7 @@ export default function SmartTextInput({
         type={type}
         withAsterisk={required}
         error={error}
+        disabled={readOnly}
         style={{ minHeight: description ? "99.6px" : "80.2px", ...style }}
         value={value}
         onChange={(event) =>

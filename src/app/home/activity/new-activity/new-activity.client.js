@@ -30,6 +30,7 @@ export default function NewActivityClientPage() {
     time: "",
     maxPlayer: "",
     remark: "",
+    withMapsLink: false,
     mapLink: "",
     rawMapLink: "",
     venue: "",
@@ -74,6 +75,17 @@ export default function NewActivityClientPage() {
       if (!value) error = "Address is required";
     }
 
+    if (controlName === "rawMapLink" && form.withMapsLink) {
+      if (!value) error = "Google Maps Link is required";
+    }
+
+    if (controlName === "mapLink" && form.withMapsLink) {
+      controlName = "rawMapLink";
+      if (!value)
+        error =
+          "Please click the Map Button on the right first to check the map";
+    }
+
     setErrors((prev) => ({ ...prev, [controlName]: error }));
     return error === "";
   }
@@ -90,7 +102,9 @@ export default function NewActivityClientPage() {
   const isLocationFormValid = () => {
     return (
       validateField("venue", form.venue) &&
-      validateField("address", form.address)
+      validateField("address", form.address) &&
+      validateField("rawMapLink", form.rawMapLink) &&
+      validateField("mapLink", form.mapLink)
     );
   };
 
@@ -144,6 +158,7 @@ export default function NewActivityClientPage() {
         setForm={setForm}
         errors={errors}
         validateField={validateField}
+        readOnly={true}
       />
       <LocationDetailsForm
         form={form}
@@ -151,6 +166,7 @@ export default function NewActivityClientPage() {
         errors={errors}
         setErrors={setErrors}
         validateField={validateField}
+        readOnly={true}
       />
     </>
   );

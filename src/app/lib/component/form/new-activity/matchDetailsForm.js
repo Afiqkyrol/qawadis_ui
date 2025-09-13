@@ -16,6 +16,7 @@ export default function MatchDetailsForm({
   setForm,
   errors,
   validateField,
+  readOnly = false,
 }) {
   const session = useSession();
 
