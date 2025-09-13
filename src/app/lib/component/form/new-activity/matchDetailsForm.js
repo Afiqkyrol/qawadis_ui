@@ -55,6 +55,7 @@ export default function MatchDetailsForm({
             options={sportList}
             value={form.sportId}
             onChange={inputHandler}
+            readOnly={readOnly}
             error={errors.sportId}
             required={true}
             valueValidator={() => validateField("sportId", form.sportId)}
@@ -66,6 +67,7 @@ export default function MatchDetailsForm({
             value={form.date}
             minDate={new Date()}
             onChange={inputHandler}
+            readOnly={readOnly}
             error={errors.date}
             required={true}
             valueValidator={() => validateField("date", form.date)}
@@ -86,6 +88,7 @@ export default function MatchDetailsForm({
             value={form.maxPlayer}
             onChange={inputHandler}
             error={errors.maxPlayer}
+            readOnly={readOnly}
             required={true}
             valueValidator={() => validateField("maxPlayer", form.maxPlayer)}
           />
@@ -95,6 +98,7 @@ export default function MatchDetailsForm({
             value={form.time}
             onChange={inputHandler}
             error={errors.time}
+            readOnly={readOnly}
             valueValidator={() => validateField("time", form.time)}
             required={true}
             withDropdown
@@ -113,6 +117,7 @@ export default function MatchDetailsForm({
             label="Remark"
             placeholder="Enter remark"
             type="textarea"
+            readOnly={readOnly}
             value={form.remark}
             error={errors.remark}
             onChange={inputHandler}

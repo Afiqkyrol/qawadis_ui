@@ -1,4 +1,5 @@
 import { Switch } from "@mantine/core";
+import "./smartSwitchInput.css";
 
 export default function SmartSwitchInput({
   controlName,

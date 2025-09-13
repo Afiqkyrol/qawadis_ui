@@ -15,6 +15,10 @@
 .mantine-TextInput-input:disabled {
   color: #000000;
 }
+
+.mantine-Textarea-input:disabled {
+  color: #000000;
+}
 /* .mantine-PasswordInput-input[data-error]:has(input:focus) {
   border: 1px solid blue !important;
 } */

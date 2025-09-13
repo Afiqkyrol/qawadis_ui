@@ -13,6 +13,7 @@ export default function SmartTimePicker({
   withSeconds = false,
   withDropdown = true,
   clearable = true,
+  readOnly,
   required = false,
   valueValidator,
   error,
@@ -30,6 +31,7 @@ export default function SmartTimePicker({
       min={minTime}
       max={maxTime}
       format={format}
+      disabled={readOnly}
       clearable
       withSeconds={withSeconds}
       withDropdown={withDropdown}

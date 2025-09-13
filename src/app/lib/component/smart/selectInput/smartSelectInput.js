@@ -1,4 +1,5 @@
 import { NativeSelect } from "@mantine/core";
+import "./smartSelectInput.css";
 
 export default function SmartSelectInput({
   controlName,

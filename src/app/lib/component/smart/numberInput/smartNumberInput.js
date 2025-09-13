@@ -12,6 +12,7 @@ export default function SmartNumberInput({
   min = 0,
   max,
   onChange,
+  readOnly,
   valueValidator,
   style,
 }) {
@@ -22,6 +23,7 @@ export default function SmartNumberInput({
       placeholder={placeholder}
       withAsterisk={required}
       error={error}
+      disabled={readOnly}
       style={{ minHeight: "80.2px", ...style }}
       value={value}
       min={min}
