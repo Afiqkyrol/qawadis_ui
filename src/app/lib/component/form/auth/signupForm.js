@@ -126,75 +126,73 @@ export default function SignupForm() {
           Sign Up
         </Text>
         <Space h="sm" />
-        <Stack align="stretch" justify="center" gap="sm">
-          <SmartTextInput
-            controlName="username"
-            label="Username"
-            type="text"
-            contain="icon"
-            icon={<IconAbc size={18} stroke={1.5} />}
-            align="right"
-            required
-            error={errors.username}
-            value={form.username}
-            onChange={inputHandler}
-            valueValidator={() => validateField("username", form.username)}
-          />
-          <SmartTextInput
-            controlName="email"
-            label="Email"
-            type="email"
-            contain="icon"
-            icon={<IconAt size={18} stroke={1.5} />}
-            align="right"
-            required
-            error={errors.email}
-            value={form.email}
-            onChange={inputHandler}
-            valueValidator={() => validateField("email", form.email)}
-          />
-          <SmartTextInput
-            controlName="password"
-            label="Password"
-            type="password"
-            required
-            error={errors.password}
-            value={form.password}
-            onChange={inputHandler}
-            valueValidator={() => validateField("password", form.password)}
-          />
-          <SmartTextInput
-            controlName="confirmPassword"
-            label="Confirm Password"
-            type="password"
-            required
-            error={errors.confirmPassword}
-            value={form.confirmPassword}
-            onChange={inputHandler}
-            valueValidator={() =>
-              validateField("confirmPassword", form.confirmPassword)
-            }
-          />
-          <SmartButton
-            buttonType="submit"
-            loading={loading}
-            submitHandler={submitHandler}
-            icon={<IconArrowRight size={14} />}
-            text="Sign Up"
-          />
-          <Text ta="center" size="sm" mt="sm">
-            Already have an account?{" "}
-            <Text
-              component="a"
-              href="/auth/signin"
-              fw={500}
-              c="blue"
-              style={{ textDecoration: "none" }}
-            >
-              Sign In
-            </Text>
+        <SmartTextInput
+          controlName="username"
+          label="Username"
+          type="text"
+          contain="icon"
+          icon={<IconAbc size={18} stroke={1.5} />}
+          align="right"
+          required
+          error={errors.username}
+          value={form.username}
+          onChange={inputHandler}
+          valueValidator={() => validateField("username", form.username)}
+        />
+        <SmartTextInput
+          controlName="email"
+          label="Email"
+          type="email"
+          contain="icon"
+          icon={<IconAt size={18} stroke={1.5} />}
+          align="right"
+          required
+          error={errors.email}
+          value={form.email}
+          onChange={inputHandler}
+          valueValidator={() => validateField("email", form.email)}
+        />
+        <SmartTextInput
+          controlName="password"
+          label="Password"
+          type="password"
+          required
+          error={errors.password}
+          value={form.password}
+          onChange={inputHandler}
+          valueValidator={() => validateField("password", form.password)}
+        />
+        <SmartTextInput
+          controlName="confirmPassword"
+          label="Confirm Password"
+          type="password"
+          required
+          error={errors.confirmPassword}
+          value={form.confirmPassword}
+          onChange={inputHandler}
+          valueValidator={() =>
+            validateField("confirmPassword", form.confirmPassword)
+          }
+        />
+        <SmartButton
+          buttonType="submit"
+          loading={loading}
+          submitHandler={submitHandler}
+          icon={<IconArrowRight size={14} />}
+          text="Sign Up"
+        />
+        <Text ta="center" size="sm" mt="sm">
+          Already have an account?{" "}
+          <Text
+            component="a"
+            href="/auth/signin"
+            fw={500}
+            c="blue"
+            style={{ textDecoration: "none" }}
+          >
+            Sign In
           </Text>
-        </Stack>
+        </Text>
       </Card>
     </Container>
   );

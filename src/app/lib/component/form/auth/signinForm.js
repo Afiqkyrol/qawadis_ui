@@ -104,50 +104,48 @@ export default function SigninForm() {
           Sign In
         </Text>
         <Space h="sm" />
-        <Stack align="stretch" justify="center" gap="sm">
-          <SmartTextInput
-            controlName="email"
-            label="Email"
-            type="email"
-            contain="icon"
-            icon={<IconAt size={18} stroke={1.5} />}
-            align="right"
-            required
-            error={errors.email}
-            value={form.email}
-            onChange={inputHandler}
-            valueValidator={() => validateField("email", form.email)}
-          />
-          <SmartTextInput
-            controlName="password"
-            label="Password"
-            type="password"
-            required
-            error={errors.password}
-            value={form.password}
-            onChange={inputHandler}
-            valueValidator={() => validateField("password", form.password)}
-          />
-          <SmartButton
-            buttonType="submit"
-            loading={loading}
-            submitHandler={submitHandler}
-            icon={<IconArrowRight size={14} />}
-            text="Sign In"
-          />
-          <Text ta="center" size="sm" mt="sm">
-            Don’t have an account?{" "}
-            <Text
-              component="a"
-              href="/auth/signup"
-              fw={500}
-              c="blue"
-              style={{ textDecoration: "none" }}
-            >
-              Sign Up
-            </Text>
+        <SmartTextInput
+          controlName="email"
+          label="Email"
+          type="email"
+          contain="icon"
+          icon={<IconAt size={18} stroke={1.5} />}
+          align="right"
+          required
+          error={errors.email}
+          value={form.email}
+          onChange={inputHandler}
+          valueValidator={() => validateField("email", form.email)}
+        />
+        <SmartTextInput
+          controlName="password"
+          label="Password"
+          type="password"
+          required
+          error={errors.password}
+          value={form.password}
+          onChange={inputHandler}
+          valueValidator={() => validateField("password", form.password)}
+        />
+        <SmartButton
+          buttonType="submit"
+          loading={loading}
+          submitHandler={submitHandler}
+          icon={<IconArrowRight size={14} />}
+          text="Sign In"
+        />
+        <Text ta="center" size="sm" mt="sm">
+          Don’t have an account?{" "}
+          <Text
+            component="a"
+            href="/auth/signup"
+            fw={500}
+            c="blue"
+            style={{ textDecoration: "none" }}
+          >
+            Sign Up
           </Text>
-        </Stack>
+        </Text>
       </Card>
     </Container>
   );
