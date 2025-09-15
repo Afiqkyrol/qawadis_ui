@@ -83,7 +83,7 @@ export default function LocationDetailsForm({
         <SmartTextInput
           controlName="venue"
           label="Venue"
-          placeholder="Enter venue"
+          placeholder="Enter Venue"
           value={form.venue}
           required={true}
           readOnly={readOnly}
@@ -103,7 +103,7 @@ export default function LocationDetailsForm({
         <SmartTextInput
           controlName="address"
           label="Address"
-          placeholder="Enter address"
+          placeholder="Enter Address"
           required={true}
           value={form.address}
           error={errors.address}
@@ -151,7 +151,7 @@ export default function LocationDetailsForm({
             <SmartTextInput
               controlName="rawMapLink"
               label="Google Maps Link"
-              placeholder="Enter link"
+              placeholder="Enter Link"
               value={form.rawMapLink}
               error={errors.rawMapLink}
               required={true}

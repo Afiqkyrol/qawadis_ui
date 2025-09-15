@@ -13,6 +13,7 @@ import {
   Pagination,
   Card,
   Skeleton,
+  Tooltip,
 } from "@mantine/core";
 import { useState, useEffect } from "react";
 import classes from "./smartTableList.module.css";
@@ -87,6 +88,7 @@ export default function SmartTableList({
                   style={{
                     width: column.field === "__index" ? "60px" : "auto",
                     minWidth: column.field === "__index" ? "60px" : "120px",
+                    textAlign: column.field === "__index" ? "center" : "",
                   }}
                 >
                   {column.name}
@@ -182,25 +184,27 @@ export default function SmartTableList({
                       if (Icon) {
                         return (
                           <TableTd key={column.field} className={classes.cell}>
-                            <Group>
-                              <Icon
-                                size={18}
-                                stroke={1.5}
-                                color={
-                                  column.iconColor
-                                    ? `var(--mantine-color-${column.iconColor}-6)`
-                                    : "white"
-                                }
-                              />
-                              <Text fw={500}>{value}</Text>
-                            </Group>
+                            <Tooltip label={value}>
+                              <Group>
+                                <Icon
+                                  size={18}
+                                  stroke={1.5}
+                                  color={
+                                    column.iconColor
+                                      ? `var(--mantine-color-${column.iconColor}-6)`
+                                      : "white"
+                                  }
+                                />
+                                <Text fw={500}>{value}</Text>
+                              </Group>
+                            </Tooltip>
                           </TableTd>
                         );
                       }
 
                       return (
                         <TableTd key={column.field} className={classes.cell}>
-                          {value}
+                          <Tooltip label={value}>{value}</Tooltip>
                         </TableTd>
                       );
                     })}

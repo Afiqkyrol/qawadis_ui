@@ -8,6 +8,7 @@ import SmartButton from "../../smart/button/smartButton";
 import SmartCard from "../../smart/card/smartCard";
 import { Grid } from "@mantine/core";
 import SmartTimePicker from "../../smart/timePicker/smartTimePicker";
+import SmartComboBox from "../../smart/comboBox/smartComboBox";
 
 export default function SearchMatchForm({
   sportList,
@@ -64,28 +65,27 @@ export default function SearchMatchForm({
           }}
           span={{ sm: 12, base: 12, md: 6, lg: 6 }}
         >
-          <SmartSelectInput
+          <SmartComboBox
             controlName="sportId"
             label="Sport"
             options={sportList}
             value={form.sportId}
             onChange={inputHandler}
-            error={errors.sportId}
-            valueValidator={() => {}}
+            placeholder="Select Sport..."
           />
-          <SmartSelectInput
+          <SmartComboBox
             controlName="statusId"
             label="Status"
             options={statusList}
             value={form.statusId}
             onChange={inputHandler}
-            error={errors.statusId}
-            valueValidator={() => {}}
+            placeholder="Select Status..."
+            isStatus={true}
           />
           <SmartTextInput
             controlName="venue"
             label="Venue"
-            placeholder="Enter venue"
+            placeholder="Enter Venue"
             type="text"
             contain="icon"
             icon={<IconAbc size={18} stroke={1.5} />}
@@ -106,7 +106,7 @@ export default function SearchMatchForm({
         >
           <SmartDatePicker
             controlName="date"
-            placeholder="Select date"
+            placeholder="Select Date"
             label="Date"
             value={form.date}
             onChange={inputHandler}

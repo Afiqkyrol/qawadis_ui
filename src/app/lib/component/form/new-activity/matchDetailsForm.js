@@ -10,6 +10,7 @@ import SmartDatePicker from "../../smart/datePicker/smartDatePicker";
 import SmartNumberInput from "../../smart/numberInput/smartNumberInput";
 import SmartTimePicker from "../../smart/timePicker/smartTimePicker";
 import SmartTextInput from "../../smart/textInput/smart-TextInput";
+import SmartComboBox from "../../smart/comboBox/smartComboBox";
 
 export default function MatchDetailsForm({
   form,
@@ -49,9 +50,10 @@ export default function MatchDetailsForm({
           }}
           span={{ sm: 12, base: 12, md: 6, lg: 6 }}
         >
-          <SmartSelectInput
+          <SmartComboBox
             controlName="sportId"
             label="Sport"
+            placeholder="Select Sport..."
             options={sportList}
             value={form.sportId}
             onChange={inputHandler}
@@ -62,7 +64,7 @@ export default function MatchDetailsForm({
           />
           <SmartDatePicker
             controlName="date"
-            placeholder="Select date"
+            placeholder="Select Date"
             label="Date"
             value={form.date}
             minDate={new Date().setDate(new Date().getDate() + 1)}
@@ -83,7 +85,7 @@ export default function MatchDetailsForm({
         >
           <SmartNumberInput
             controlName="maxPlayer"
-            placeholder="Enter maximum players allowed"
+            placeholder="Enter Maximum Players Allowed"
             label="Max Player(s)"
             value={form.maxPlayer}
             onChange={inputHandler}
@@ -115,7 +117,7 @@ export default function MatchDetailsForm({
           <SmartTextInput
             controlName="remark"
             label="Remark"
-            placeholder="Enter remark"
+            placeholder="Enter Remark"
             type="textarea"
             readOnly={readOnly}
             value={form.remark}
