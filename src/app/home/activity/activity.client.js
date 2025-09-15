@@ -221,7 +221,7 @@ export default function ActivityClient() {
     let statusId;
 
     if (isUserJoined) {
-      statusId = AppConstant.GSTS_CANCEL;
+      statusId = AppConstant.GSTS_CANCELED;
     } else {
       statusId = AppConstant.GSTS_ACTIVE;
     }
@@ -267,7 +267,7 @@ export default function ActivityClient() {
         primaryKey="userMatchId"
         columnList={columnCanceledPlayerList}
         dataList={playerList.filter(
-          (p) => p.status.statusId === AppConstant.GSTS_CANCEL
+          (p) => p.status.statusId === AppConstant.GSTS_CANCELED
         )}
         tableType="Default"
         rowsPerPage={5}
@@ -280,12 +280,12 @@ export default function ActivityClient() {
   const tabs = [
     {
       value: "active",
-      label: <SmartStatusBadge value="Active" cursor="pointer" />,
+      label: <SmartStatusBadge value="ACTIVE" cursor="pointer" />,
       content: activeStatusPlayerTab(),
     },
     {
       value: "cancel",
-      label: <SmartStatusBadge value="Canceled" cursor="pointer" />,
+      label: <SmartStatusBadge value="CANCELED" cursor="pointer" />,
       content: canceledStatusPlayerTab(),
     },
   ];
@@ -341,7 +341,7 @@ export default function ActivityClient() {
       />
       {showDetails && (
         <div id="details" style={{ scrollMarginTop: "140px" }}>
-          <Divider my="xs" label="Match Details" labelPosition="center" />
+          <Divider my="xs" label="Activity Details" labelPosition="center" />
           <SmartCard isLoading={isLoadingMatchDetails} theme="secondary">
             <Grid gutter="sm" justify="center">
               <Grid.Col
@@ -391,23 +391,25 @@ export default function ActivityClient() {
             defaultValue="active"
             isLoading={isLoadingMatchDetails || isLoadingPlayerList}
           />
-          {!isLoadingMatchDetails && !isLoadingPlayerList && (
-            <div style={{ textAlign: "right" }}>
-              <SmartButton
-                text={isUserJoined ? "Cancel Join" : "Join"}
-                buttonType={isUserJoined ? "cancel" : "submit"}
-                icon={
-                  isUserJoined ? (
-                    <IconX size={14} />
-                  ) : (
-                    <IconArrowRight size={14} />
-                  )
-                }
-                submitHandler={openModal}
-                loading={isLoadingUpdateJoinMatch}
-              />
-            </div>
-          )}
+          {!isLoadingMatchDetails &&
+            !isLoadingPlayerList &&
+            matchDetails.status.statusId === AppConstant.GSTS_ACTIVE && (
+              <div style={{ textAlign: "right" }}>
+                <SmartButton
+                  text={isUserJoined ? "Cancel Join" : "Join"}
+                  buttonType={isUserJoined ? "cancel" : "submit"}
+                  icon={
+                    isUserJoined ? (
+                      <IconX size={14} />
+                    ) : (
+                      <IconArrowRight size={14} />
+                    )
+                  }
+                  submitHandler={openModal}
+                  loading={isLoadingUpdateJoinMatch}
+                />
+              </div>
+            )}
         </div>
       )}
       <SmartModal

@@ -163,7 +163,13 @@ export default function SmartTableList({
                         return (
                           <TableTd key={column.field} className={classes.cell}>
                             <Badge
-                              color={value === "Active" ? "green" : "red"}
+                              color={
+                                value === "ACTIVE"
+                                  ? "green"
+                                  : value === "CLOSED"
+                                  ? "gray"
+                                  : "red"
+                              }
                               radius="sm"
                               variant="filled"
                             >

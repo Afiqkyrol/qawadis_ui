@@ -8,6 +8,8 @@ import {
   LoadingOverlay,
   Loader,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import SmartModal from "../modal/smartModal";
 
 export default function SmartStepper({
   stepList,
@@ -18,6 +20,9 @@ export default function SmartStepper({
 }) {
   const [active, setActive] = useState(0);
   const [highestStepVisited, setHighestStepVisited] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [openedModal, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
 
   const handleStepChange = (nextStep) => {
     if (nextStep < 0 || nextStep > stepList.length) return;
@@ -50,14 +55,7 @@ export default function SmartStepper({
         ))}
         <Stepper.Completed>
           <Divider my="xs" />
-
-          <Box pos="relative">
-            <LoadingOverlay
-              visible={true}
-              loaderProps={{ children: <Loader color="blue" /> }}
-            />
-            {stepList.at(-1)?.content}
-          </Box>
+          {stepList.at(-1)?.content}
         </Stepper.Completed>
       </Stepper>
 
@@ -88,21 +86,36 @@ export default function SmartStepper({
         {(isLastStep || isCompleted) && (
           <Button
             onClick={async () => {
-              if (isCompleted) return;
-              const prevActive = active;
-              try {
-                handleStepChange(active + 1);
-                await submitHandler();
-              } catch (err) {
-                handleStepChange(prevActive);
-              }
+              openModal();
             }}
-            disabled={isCompleted}
+            // disabled={isCompleted}
+            loading={isLoading}
           >
             Submit
           </Button>
         )}
       </Group>
+      <SmartModal
+        isOpen={openedModal}
+        onClose={closeModal}
+        type="confirmation"
+        title="Confirmation"
+        description="Are you sure you want to proceed?"
+        confirmAction={async () => {
+          setIsLoading(true);
+          if (isCompleted) return;
+          const prevActive = active;
+          try {
+            handleStepChange(active + 1);
+            closeModal();
+            await submitHandler();
+          } catch (err) {
+            handleStepChange(prevActive);
+          } finally {
+            setIsLoading(false);
+          }
+        }}
+      />
     </>
   );
 }

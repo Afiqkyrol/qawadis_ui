@@ -14,6 +14,8 @@ import { saveMatch } from "./new-activity.service";
 import { useAsyncData } from "@/app/lib/hook/useAsyncData";
 import { useSession } from "@/app/lib/component/layout/innerLayout";
 import LocationDetailsForm from "@/app/lib/component/form/new-activity/locationDetailsForm";
+import { AppConstant } from "@/app/lib/constant/AppConstant";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
 
 const items = [
   { title: "Activity", href: "/home/activity" },
@@ -23,8 +25,10 @@ const items = [
 export default function NewActivityClientPage() {
   const session = useSession();
   const isVertical = useMediaQuery("(max-width: 48em)"); // 48em = 768px (Mantine base breakpoint)
+  const { goTo } = useNavigate();
 
   const [form, setForm] = useState({
+    matchId: "",
     sportId: "",
     date: "",
     time: "",
@@ -81,7 +85,8 @@ export default function NewActivityClientPage() {
 
     if (controlName === "mapLink" && form.withMapsLink) {
       controlName = "rawMapLink";
-      if (!value)
+      if (!form.rawMapLink) error = "Google Maps Link is required";
+      else if (!value)
         error =
           "Please click the Map Button on the right first to check the map";
     }
@@ -114,7 +119,23 @@ export default function NewActivityClientPage() {
     request: triggerSaveMatch,
   } = useAsyncData(
     async () => {
-      const response = await saveMatch(form, session?.apiToken);
+      const body = {
+        matchId: form.matchId,
+        sport: {
+          sportId: form.sportId,
+        },
+        venue: form.venue,
+        address: form.address,
+        maxPlayer: form.maxPlayer,
+        date: form.date,
+        time: form.time,
+        mapLink: form.mapLink,
+        remark: form.remark,
+        status: {
+          statusId: AppConstant.GSTS_ACTIVE,
+        },
+      };
+      const response = await saveMatch({ body }, session?.apiToken);
       return response;
     },
     { autoFetch: false }
@@ -123,6 +144,7 @@ export default function NewActivityClientPage() {
   const submitHandler = async () => {
     try {
       await triggerSaveMatch();
+      goTo("/home/activity");
     } catch (err) {
       throw err;
     }
@@ -174,7 +196,7 @@ export default function NewActivityClientPage() {
   const stepList = [
     {
       label: "First step",
-      description: "Match Details",
+      description: "Activity Details",
       content: matchDetailsStep(),
       validation: () => isMatchDetailsFormValid(),
     },
@@ -195,7 +217,7 @@ export default function NewActivityClientPage() {
     <>
       <SmartTitle title="New Activity" Icon={IconPlus} />
       <SmartBreadcrumbs itemList={items} />
-      <Divider my="xs" label="Create Match" labelPosition="center" />
+      <Divider my="xs" label="Create Activity" labelPosition="center" />
       <SmartCard>
         <SmartStepper
           submitHandler={submitHandler}

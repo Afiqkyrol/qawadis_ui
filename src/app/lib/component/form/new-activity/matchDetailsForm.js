@@ -65,7 +65,7 @@ export default function MatchDetailsForm({
             placeholder="Select date"
             label="Date"
             value={form.date}
-            minDate={new Date()}
+            minDate={new Date().setDate(new Date().getDate() + 1)}
             onChange={inputHandler}
             readOnly={readOnly}
             error={errors.date}
