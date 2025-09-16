@@ -4,8 +4,6 @@ import { AppConstant } from "@/app/lib/constant/AppConstant";
 import { useLookupData } from "@/app/lib/hook/useLookupData";
 import { useSession } from "../../layout/innerLayout";
 import { Grid } from "@mantine/core";
-import { useState } from "react";
-import SmartSelectInput from "../../smart/selectInput/smartSelectInput";
 import SmartDatePicker from "../../smart/datePicker/smartDatePicker";
 import SmartNumberInput from "../../smart/numberInput/smartNumberInput";
 import SmartTimePicker from "../../smart/timePicker/smartTimePicker";

@@ -1,7 +1,6 @@
 import { Badge, UnstyledButton } from "@mantine/core";
 import classes from "./smartLinkList.module.css";
 import { usePathname } from "next/navigation";
-import { nprogress } from "@mantine/nprogress";
 import { useNavigate } from "@/app/lib/hook/useNavigate";
 
 export default function SmartLinkList({ itemList, toggle }) {

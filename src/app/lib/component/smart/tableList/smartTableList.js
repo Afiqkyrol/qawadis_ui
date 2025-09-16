@@ -7,7 +7,6 @@ import {
   TableTh,
   TableTd,
   ScrollArea,
-  Badge,
   Group,
   Text,
   Pagination,
@@ -17,6 +16,7 @@ import {
 } from "@mantine/core";
 import { useState, useEffect } from "react";
 import classes from "./smartTableList.module.css";
+import SmartStatusBadge from "../smartStatusBadge/smartStatusBadge";
 
 export default function SmartTableList({
   primaryKey = "id",
@@ -164,19 +164,7 @@ export default function SmartTableList({
                       if (column.field === "statusDesc") {
                         return (
                           <TableTd key={column.field} className={classes.cell}>
-                            <Badge
-                              color={
-                                value === "ACTIVE"
-                                  ? "green"
-                                  : value === "CLOSED"
-                                  ? "gray"
-                                  : "red"
-                              }
-                              radius="sm"
-                              variant="filled"
-                            >
-                              {value}
-                            </Badge>
+                            <SmartStatusBadge value={value} />
                           </TableTd>
                         );
                       }

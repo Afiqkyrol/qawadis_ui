@@ -2,7 +2,6 @@ import {
   IconArrowRight,
   IconBallFootball,
   IconHome,
-  IconUser,
 } from "@tabler/icons-react";
 import { Box } from "@mantine/core";
 import classes from "./navbar.module.css";

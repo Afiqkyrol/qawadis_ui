@@ -6,7 +6,15 @@ import { notificationError } from "@/app/lib/util/notification";
 import { IconArrowRight, IconAt } from "@tabler/icons-react";
 import { useState } from "react";
 import SmartButton from "../../smart/button/smartButton";
-import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
+import {
+  Card,
+  Container,
+  Space,
+  Text,
+  Title,
+  Group,
+  Anchor,
+} from "@mantine/core";
 import { signIn } from "next-auth/react";
 import { nprogress } from "@mantine/nprogress";
 import { useNavigate } from "@/app/lib/hook/useNavigate";
@@ -134,18 +142,41 @@ export default function SigninForm() {
           icon={<IconArrowRight size={14} />}
           text="Sign In"
         />
-        <Text ta="center" size="sm" mt="sm">
-          Don’t have an account?{" "}
-          <Text
-            component="a"
-            href="/auth/signup"
-            fw={500}
-            c="blue"
-            style={{ textDecoration: "none" }}
+        <Group
+          position="apart"
+          align="center"
+          mt="sm"
+          justify="space-between"
+          style={{ width: "100%", marginTop: 16 }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Text size="sm" style={{ margin: 0 }}>
+              Don’t have an account?
+            </Text>
+            <Anchor
+              component="button"
+              type="button"
+              onClick={() => goTo("/auth/signup")}
+              color="blue"
+              size="sm"
+              fw={700}
+              style={{ padding: 0, lineHeight: 1, textDecoration: "none" }}
+              aria-label="Sign up"
+            >
+              Sign Up
+            </Anchor>
+          </div>
+
+          <Anchor
+            component="button"
+            type="button"
+            onClick={() => goTo("/auth/forgot-password")}
+            size="sm"
+            aria-label="Forgot password"
           >
-            Sign Up
-          </Text>
-        </Text>
+            Forgot password?
+          </Anchor>
+        </Group>
       </Card>
     </Container>
   );
