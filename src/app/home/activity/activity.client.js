@@ -24,7 +24,6 @@ import SmartTitle from "../../lib/component/smart/title/smartTitle";
 import { useAsyncData } from "@/app/lib/hook/useAsyncData";
 import { AppConstant } from "@/app/lib/constant/AppConstant";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Box, Divider, Grid } from "@mantine/core";
 import SmartRingProgress from "../../lib/component/smart/ringProgress/smartRingProgress";
 import SmartCard from "../../lib/component/smart/card/smartCard";
@@ -40,6 +39,7 @@ import SearchMatchForm from "../../lib/component/form/activity/searchMatchForm";
 import { useLookupData } from "@/app/lib/hook/useLookupData";
 import SmartMapEmbed from "../../lib/component/smart/mapEmbed/smartMapEmbed";
 import SmartBreadcrumbs from "@/app/lib/component/smart/breadCrumbs/smartBreadCrumbs";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
 
 const items = [{ title: "Activity", href: "/home/activity" }];
 
@@ -104,7 +104,7 @@ const safe = (val) => val ?? "-";
 
 export default function ActivityClient() {
   const session = useSession();
-  const router = useRouter();
+  const { goTo } = useNavigate();
   const [showDetails, setShowDetails] = useState(false);
   const [isUserJoined, setIsUserJoined] = useState(false);
   const [joinedUserMatchId, setJoinedUserMatchId] = useState(null);
@@ -212,20 +212,16 @@ export default function ActivityClient() {
 
   const onClickRow = async (matchId) => {
     setShowDetails(true);
-    nprogress.start();
-    nprogress.set(50);
-
     await Promise.all([fetchMatchDetails(matchId), fetchPlayerList(matchId)]);
-
+    goTo(`/home/activity#details`);
     nprogress.complete();
-    router.push(`/home/activity#details`);
   };
 
   const onClickCancelOrJoinMatch = async (userMatchId, matchId) => {
     let statusId;
 
     if (isUserJoined) {
-      statusId = AppConstant.GSTS_CANCEL;
+      statusId = AppConstant.GSTS_CANCELED;
     } else {
       statusId = AppConstant.GSTS_ACTIVE;
     }
@@ -271,7 +267,7 @@ export default function ActivityClient() {
         primaryKey="userMatchId"
         columnList={columnCanceledPlayerList}
         dataList={playerList.filter(
-          (p) => p.status.statusId === AppConstant.GSTS_CANCEL
+          (p) => p.status.statusId === AppConstant.GSTS_CANCELED
         )}
         tableType="Default"
         rowsPerPage={5}
@@ -284,12 +280,12 @@ export default function ActivityClient() {
   const tabs = [
     {
       value: "active",
-      label: <SmartStatusBadge value="Active" cursor="pointer" />,
+      label: <SmartStatusBadge value="ACTIVE" cursor="pointer" />,
       content: activeStatusPlayerTab(),
     },
     {
       value: "cancel",
-      label: <SmartStatusBadge value="Canceled" cursor="pointer" />,
+      label: <SmartStatusBadge value="CANCELED" cursor="pointer" />,
       content: canceledStatusPlayerTab(),
     },
   ];
@@ -310,7 +306,8 @@ export default function ActivityClient() {
   return (
     <>
       <SmartTitle title="Activity" Icon={IconBallFootball} />
-      <SmartBreadcrumbs itemList={items} />
+      <SmartBreadcrumbs itemList={items} st />
+      <Divider my="xs" label="Search Match" labelPosition="center" />
       <SearchMatchForm
         request={fetchMatchList}
         sportList={sportList}
@@ -328,9 +325,7 @@ export default function ActivityClient() {
           icon={<IconPlus size={14} />}
           // loading={loadingSearch}
           submitHandler={async () => {
-            nprogress.start();
-            nprogress.set(50);
-            router.push("/home/activity/new-activity");
+            goTo("/home/activity/new-activity");
           }}
         />
       </Box>
@@ -346,7 +341,7 @@ export default function ActivityClient() {
       />
       {showDetails && (
         <div id="details" style={{ scrollMarginTop: "140px" }}>
-          <Divider my="xs" label="Match Details" labelPosition="center" />
+          <Divider my="xs" label="Activity Details" labelPosition="center" />
           <SmartCard isLoading={isLoadingMatchDetails} theme="secondary">
             <Grid gutter="sm" justify="center">
               <Grid.Col
@@ -396,23 +391,25 @@ export default function ActivityClient() {
             defaultValue="active"
             isLoading={isLoadingMatchDetails || isLoadingPlayerList}
           />
-          {!isLoadingMatchDetails && !isLoadingPlayerList && (
-            <div style={{ textAlign: "right" }}>
-              <SmartButton
-                text={isUserJoined ? "Cancel Join" : "Join"}
-                buttonType={isUserJoined ? "cancel" : "submit"}
-                icon={
-                  isUserJoined ? (
-                    <IconX size={14} />
-                  ) : (
-                    <IconArrowRight size={14} />
-                  )
-                }
-                submitHandler={openModal}
-                loading={isLoadingUpdateJoinMatch}
-              />
-            </div>
-          )}
+          {!isLoadingMatchDetails &&
+            !isLoadingPlayerList &&
+            matchDetails.status.statusId === AppConstant.GSTS_ACTIVE && (
+              <div style={{ textAlign: "right" }}>
+                <SmartButton
+                  text={isUserJoined ? "Cancel Join" : "Join"}
+                  buttonType={isUserJoined ? "cancel" : "submit"}
+                  icon={
+                    isUserJoined ? (
+                      <IconX size={14} />
+                    ) : (
+                      <IconArrowRight size={14} />
+                    )
+                  }
+                  submitHandler={openModal}
+                  loading={isLoadingUpdateJoinMatch}
+                />
+              </div>
+            )}
         </div>
       )}
       <SmartModal

@@ -1,16 +1,17 @@
 "use client";
 
 import { Breadcrumbs } from "@mantine/core";
-import { useRouter, usePathname } from "next/navigation";
 import classes from "./smartBreadCrumbs.module.css";
-import { nprogress } from "@mantine/nprogress";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
+import { usePathname } from "next/navigation";
 
 export default function SmartBreadcrumbs({
   itemList,
   separator,
   separatorMargin = "sm",
+  style,
 }) {
-  const router = useRouter();
+  const { goTo } = useNavigate();
   const pathname = usePathname();
 
   const items = itemList.map((item, index) => (
@@ -19,9 +20,7 @@ export default function SmartBreadcrumbs({
       className={classes.link}
       onClick={() => {
         if (pathname !== item.href) {
-          nprogress.start();
-          nprogress.set(50);
-          router.push(item.href);
+          goTo(item.href);
         }
       }}
     >
@@ -33,7 +32,7 @@ export default function SmartBreadcrumbs({
     <Breadcrumbs
       separator={separator}
       separatorMargin={separatorMargin}
-      style={{ marginBottom: "1rem", marginLeft: "1rem" }}
+      style={{ marginLeft: "1rem", ...style }}
     >
       {items}
     </Breadcrumbs>

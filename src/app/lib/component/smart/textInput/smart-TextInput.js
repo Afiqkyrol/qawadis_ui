@@ -1,4 +1,11 @@
-import { TextInput, Tooltip, Text, Center, PasswordInput } from "@mantine/core";
+import {
+  TextInput,
+  Tooltip,
+  Text,
+  Center,
+  PasswordInput,
+  Textarea,
+} from "@mantine/core";
 import "./smart-TextInput.css";
 
 export default function SmartTextInput({
@@ -7,6 +14,7 @@ export default function SmartTextInput({
   placeholder,
   type,
   contain,
+  description,
   icon,
   align,
   tooltipLabel,
@@ -15,6 +23,7 @@ export default function SmartTextInput({
   value,
   onChange,
   valueValidator,
+  readOnly,
   style,
 }) {
   if (type === "password") {
@@ -23,9 +32,10 @@ export default function SmartTextInput({
         name={controlName}
         label={label}
         placeholder={placeholder}
+        description={description}
         withAsterisk={required}
         error={error}
-        style={style}
+        style={{ minHeight: "80.2px", ...style }}
         value={value}
         onChange={(event) =>
           onChange({
@@ -37,6 +47,26 @@ export default function SmartTextInput({
       />
     );
   } else if (type === "textarea") {
+    return (
+      <Textarea
+        name={controlName}
+        label={label}
+        placeholder={placeholder}
+        description={description}
+        withAsterisk={required}
+        error={error}
+        style={style}
+        value={value}
+        disabled={readOnly}
+        onChange={(event) => {
+          onChange({
+            controlName: event.target.name,
+            value: event.currentTarget.value,
+          });
+        }}
+        onBlur={valueValidator}
+      />
+    );
   } else {
     let section;
     if (contain === "tooltip") {
@@ -68,10 +98,12 @@ export default function SmartTextInput({
         name={controlName}
         label={label}
         placeholder={placeholder}
+        description={description}
         type={type}
         withAsterisk={required}
         error={error}
-        style={style}
+        disabled={readOnly}
+        style={{ minHeight: description ? "99.6px" : "80.2px", ...style }}
         value={value}
         onChange={(event) =>
           onChange({

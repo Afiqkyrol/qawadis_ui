@@ -1,36 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Skeleton } from "@mantine/core";
+import { useState, useEffect } from "react";
+
+// global cache (lives across renders while app runs)
+const embedCache = new Map();
 
 export default function SmartMapEmbed({
   shareUrl,
+  isLoading,
   width = "100%",
   height = "300",
 }) {
-  const [embedMapUrl, setEmbedMapUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [cachedUrl, setCachedUrl] = useState(null);
 
   useEffect(() => {
     if (!shareUrl) return;
 
-    const resolveUrl = async () => {
-      try {
-        setIsLoading(true);
-        const resp = await fetch(
-          `/api/map/resolve?url=${encodeURIComponent(shareUrl)}`
-        );
-        const { embedUrl } = await resp.json();
-
-        setEmbedMapUrl(embedUrl);
-      } catch (err) {
-        console.error("Error resolving map link:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    resolveUrl();
+    // if cached, reuse it
+    if (embedCache.has(shareUrl)) {
+      setCachedUrl(embedCache.get(shareUrl));
+    } else {
+      // here you can normalize/shareUrl if needed
+      embedCache.set(shareUrl, shareUrl);
+      setCachedUrl(shareUrl);
+    }
   }, [shareUrl]);
 
   if (isLoading) {
@@ -45,11 +39,11 @@ export default function SmartMapEmbed({
     );
   }
 
-  if (!embedMapUrl) return null;
+  if (!cachedUrl) return null;
 
   return (
     <iframe
-      src={embedMapUrl}
+      src={cachedUrl}
       width={width}
       height={height}
       style={{

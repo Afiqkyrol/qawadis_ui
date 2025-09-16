@@ -1,6 +1,7 @@
 import { DatePickerInput } from "@mantine/dates";
 import { IconCalendar } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import "./smartDatePicker.css";
 
 export default function SmartDatePicker({
   controlName = "",
@@ -13,10 +14,13 @@ export default function SmartDatePicker({
   maxDate,
   valueFormat = "DD MMM YYYY",
   clearable = true,
-  disabled = false,
+  readOnly = false,
   withAsterisk = false,
   allowDeselect = false,
+  required,
   style,
+  valueValidator,
+  error,
 }) {
   return (
     <DatePickerInput
@@ -34,10 +38,12 @@ export default function SmartDatePicker({
       valueFormat={valueFormat}
       clearable={clearable}
       allowDeselect={allowDeselect}
-      disabled={disabled}
-      withAsterisk={withAsterisk}
+      disabled={readOnly}
+      withAsterisk={required}
       rightSection={!value ? <IconCalendar size={18} stroke={1.5} /> : null}
-      style={style}
+      style={{ minHeight: "80.2px", ...style }}
+      onDropdownClose={valueValidator}
+      error={error}
     />
   );
 }

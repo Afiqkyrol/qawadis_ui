@@ -8,6 +8,7 @@ import SmartButton from "../../smart/button/smartButton";
 import SmartCard from "../../smart/card/smartCard";
 import { Grid } from "@mantine/core";
 import SmartTimePicker from "../../smart/timePicker/smartTimePicker";
+import SmartComboBox from "../../smart/comboBox/smartComboBox";
 
 export default function SearchMatchForm({
   sportList,
@@ -64,30 +65,27 @@ export default function SearchMatchForm({
           }}
           span={{ sm: 12, base: 12, md: 6, lg: 6 }}
         >
-          <SmartSelectInput
+          <SmartComboBox
             controlName="sportId"
             label="Sport"
             options={sportList}
             value={form.sportId}
             onChange={inputHandler}
-            error={errors.sportId}
-            style={{ marginBottom: "1rem" }}
-            valueValidator={() => {}}
+            placeholder="Select Sport..."
           />
-          <SmartSelectInput
+          <SmartComboBox
             controlName="statusId"
             label="Status"
             options={statusList}
             value={form.statusId}
             onChange={inputHandler}
-            error={errors.statusId}
-            style={{ marginBottom: "1rem" }}
-            valueValidator={() => {}}
+            placeholder="Select Status..."
+            isStatus={true}
           />
           <SmartTextInput
             controlName="venue"
             label="Venue"
-            placeholder="Enter venue"
+            placeholder="Enter Venue"
             type="text"
             contain="icon"
             icon={<IconAbc size={18} stroke={1.5} />}
@@ -95,7 +93,6 @@ export default function SearchMatchForm({
             error={errors.venue}
             value={form.venue}
             onChange={inputHandler}
-            style={{ marginBottom: "1rem" }}
             valueValidator={() => {}}
           />
         </Grid.Col>
@@ -109,12 +106,11 @@ export default function SearchMatchForm({
         >
           <SmartDatePicker
             controlName="date"
-            placeholder="Select date"
+            placeholder="Select Date"
             label="Date"
             value={form.date}
             onChange={inputHandler}
             error={errors.date}
-            style={{ marginBottom: "1rem" }}
           />
           <SmartTimePicker
             controlName="time"
@@ -122,7 +118,6 @@ export default function SearchMatchForm({
             value={form.time}
             onChange={inputHandler}
             error={errors.time}
-            style={{ marginBottom: "1rem" }}
             withDropdown
           />
         </Grid.Col>

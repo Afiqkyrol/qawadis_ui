@@ -6,13 +6,21 @@ import { notificationError } from "@/app/lib/util/notification";
 import { IconArrowRight, IconAt } from "@tabler/icons-react";
 import { useState } from "react";
 import SmartButton from "../../smart/button/smartButton";
-import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
+import {
+  Card,
+  Container,
+  Space,
+  Text,
+  Title,
+  Group,
+  Anchor,
+} from "@mantine/core";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { nprogress } from "@mantine/nprogress";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
 
 export default function SigninForm() {
-  const router = useRouter();
+  const { goTo } = useNavigate();
 
   const [form, setForm] = useState({
     email: "",
@@ -79,7 +87,7 @@ export default function SigninForm() {
     });
 
     if (result?.ok) {
-      router.push("/home");
+      goTo("/home");
     } else {
       notificationError("An error occurred!", result.error);
       setLoading(false);
@@ -104,50 +112,71 @@ export default function SigninForm() {
           Sign In
         </Text>
         <Space h="sm" />
-        <Stack align="stretch" justify="center" gap="sm">
-          <SmartTextInput
-            controlName="email"
-            label="Email"
-            type="email"
-            contain="icon"
-            icon={<IconAt size={18} stroke={1.5} />}
-            align="right"
-            required
-            error={errors.email}
-            value={form.email}
-            onChange={inputHandler}
-            valueValidator={() => validateField("email", form.email)}
-          />
-          <SmartTextInput
-            controlName="password"
-            label="Password"
-            type="password"
-            required
-            error={errors.password}
-            value={form.password}
-            onChange={inputHandler}
-            valueValidator={() => validateField("password", form.password)}
-          />
-          <SmartButton
-            buttonType="submit"
-            loading={loading}
-            submitHandler={submitHandler}
-            icon={<IconArrowRight size={14} />}
-            text="Sign In"
-          />
-          <Text ta="center" size="sm" mt="sm">
-            Don’t have an account?{" "}
-            <Text
-              component="a"
-              href="/auth/signup"
-              fw={500}
-              c="blue"
-              style={{ textDecoration: "none" }}
+        <SmartTextInput
+          controlName="email"
+          label="Email"
+          type="email"
+          contain="icon"
+          icon={<IconAt size={18} stroke={1.5} />}
+          align="right"
+          required
+          error={errors.email}
+          value={form.email}
+          onChange={inputHandler}
+          valueValidator={() => validateField("email", form.email)}
+        />
+        <SmartTextInput
+          controlName="password"
+          label="Password"
+          type="password"
+          required
+          error={errors.password}
+          value={form.password}
+          onChange={inputHandler}
+          valueValidator={() => validateField("password", form.password)}
+        />
+        <SmartButton
+          buttonType="submit"
+          loading={loading}
+          submitHandler={submitHandler}
+          icon={<IconArrowRight size={14} />}
+          text="Sign In"
+        />
+        <Group
+          position="apart"
+          align="center"
+          mt="sm"
+          justify="space-between"
+          style={{ width: "100%", marginTop: 16 }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Text size="sm" style={{ margin: 0 }}>
+              Don’t have an account?
+            </Text>
+            <Anchor
+              component="button"
+              type="button"
+              onClick={() => goTo("/auth/signup")}
+              color="blue"
+              size="sm"
+              fw={700}
+              style={{ padding: 0, lineHeight: 1, textDecoration: "none" }}
+              aria-label="Sign up"
             >
               Sign Up
-            </Text>
-          </Text>
-        </Stack>
+            </Anchor>
+          </div>
+
+          <Anchor
+            component="button"
+            type="button"
+            onClick={() => goTo("/auth/forgot-password")}
+            size="sm"
+            aria-label="Forgot password"
+          >
+            Forgot password?
+          </Anchor>
+        </Group>
       </Card>
     </Container>
   );

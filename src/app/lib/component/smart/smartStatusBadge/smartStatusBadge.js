@@ -4,7 +4,7 @@ export default function SmartStatusBadge({ value, cursor = "default" }) {
   return (
     <Badge
       style={{ cursor }}
-      color={value === "Active" ? "green" : "red"}
+      color={value === "ACTIVE" ? "green" : value === "CLOSED" ? "gray" : "red"}
       radius="sm"
       variant="filled"
     >

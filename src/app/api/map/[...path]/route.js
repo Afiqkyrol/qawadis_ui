@@ -65,15 +65,7 @@ export async function GET(req) {
         }
       );
     }
-
-    return new Response(
-      JSON.stringify({ error: "Could not build embed url" }),
-      { status: 500 }
-    );
   } catch (err) {
-    return new Response(
-      JSON.stringify({ error: err.message || "Failed to resolve map" }),
-      { status: 500 }
-    );
+    throw err;
   }
 }

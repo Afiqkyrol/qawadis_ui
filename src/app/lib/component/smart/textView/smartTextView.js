@@ -32,7 +32,13 @@ export default function SmartTextView({
 
             {item.label === "Status" ? (
               <Badge
-                color={item.value === "Active" ? "green" : "red"}
+                color={
+                  item.value === "ACTIVE"
+                    ? "green"
+                    : item.value === "CLOSED"
+                    ? "gray"
+                    : "red"
+                }
                 radius="sm"
                 variant="filled"
               >

@@ -3,16 +3,16 @@
 import { Card, Container, Space, Stack, Text, Title } from "@mantine/core";
 import SmartTextInput from "../../smart/textInput/smart-TextInput";
 import { IconAbc, IconArrowRight, IconAt } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { validateEmail } from "../../../util/validator";
 import { nprogress } from "@mantine/nprogress";
 import SmartButton from "../../smart/button/smartButton";
 import { signIn } from "next-auth/react";
 import { notificationError } from "../../../util/notification";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
 
 export default function SignupForm() {
-  const router = useRouter();
+  const { goTo } = useNavigate();
 
   const [form, setForm] = useState({
     username: "",
@@ -101,7 +101,7 @@ export default function SignupForm() {
     });
 
     if (result?.ok) {
-      router.push("/home");
+      goTo("/home");
     } else {
       notificationError("An error occurred!", result.error);
       setLoading(false);
@@ -126,75 +126,73 @@ export default function SignupForm() {
           Sign Up
         </Text>
         <Space h="sm" />
-        <Stack align="stretch" justify="center" gap="sm">
-          <SmartTextInput
-            controlName="username"
-            label="Username"
-            type="text"
-            contain="icon"
-            icon={<IconAbc size={18} stroke={1.5} />}
-            align="right"
-            required
-            error={errors.username}
-            value={form.username}
-            onChange={inputHandler}
-            valueValidator={() => validateField("username", form.username)}
-          />
-          <SmartTextInput
-            controlName="email"
-            label="Email"
-            type="email"
-            contain="icon"
-            icon={<IconAt size={18} stroke={1.5} />}
-            align="right"
-            required
-            error={errors.email}
-            value={form.email}
-            onChange={inputHandler}
-            valueValidator={() => validateField("email", form.email)}
-          />
-          <SmartTextInput
-            controlName="password"
-            label="Password"
-            type="password"
-            required
-            error={errors.password}
-            value={form.password}
-            onChange={inputHandler}
-            valueValidator={() => validateField("password", form.password)}
-          />
-          <SmartTextInput
-            controlName="confirmPassword"
-            label="Confirm Password"
-            type="password"
-            required
-            error={errors.confirmPassword}
-            value={form.confirmPassword}
-            onChange={inputHandler}
-            valueValidator={() =>
-              validateField("confirmPassword", form.confirmPassword)
-            }
-          />
-          <SmartButton
-            buttonType="submit"
-            loading={loading}
-            submitHandler={submitHandler}
-            icon={<IconArrowRight size={14} />}
-            text="Sign Up"
-          />
-          <Text ta="center" size="sm" mt="sm">
-            Already have an account?{" "}
-            <Text
-              component="a"
-              href="/auth/signin"
-              fw={500}
-              c="blue"
-              style={{ textDecoration: "none" }}
-            >
-              Sign In
-            </Text>
+        <SmartTextInput
+          controlName="username"
+          label="Username"
+          type="text"
+          contain="icon"
+          icon={<IconAbc size={18} stroke={1.5} />}
+          align="right"
+          required
+          error={errors.username}
+          value={form.username}
+          onChange={inputHandler}
+          valueValidator={() => validateField("username", form.username)}
+        />
+        <SmartTextInput
+          controlName="email"
+          label="Email"
+          type="email"
+          contain="icon"
+          icon={<IconAt size={18} stroke={1.5} />}
+          align="right"
+          required
+          error={errors.email}
+          value={form.email}
+          onChange={inputHandler}
+          valueValidator={() => validateField("email", form.email)}
+        />
+        <SmartTextInput
+          controlName="password"
+          label="Password"
+          type="password"
+          required
+          error={errors.password}
+          value={form.password}
+          onChange={inputHandler}
+          valueValidator={() => validateField("password", form.password)}
+        />
+        <SmartTextInput
+          controlName="confirmPassword"
+          label="Confirm Password"
+          type="password"
+          required
+          error={errors.confirmPassword}
+          value={form.confirmPassword}
+          onChange={inputHandler}
+          valueValidator={() =>
+            validateField("confirmPassword", form.confirmPassword)
+          }
+        />
+        <SmartButton
+          buttonType="submit"
+          loading={loading}
+          submitHandler={submitHandler}
+          icon={<IconArrowRight size={14} />}
+          text="Sign Up"
+        />
+        <Text ta="center" size="sm" mt="sm">
+          Already have an account?{" "}
+          <Text
+            component="a"
+            href="/auth/signin"
+            fw={500}
+            c="blue"
+            style={{ textDecoration: "none" }}
+          >
+            Sign In
           </Text>
-        </Stack>
+        </Text>
       </Card>
     </Container>
   );

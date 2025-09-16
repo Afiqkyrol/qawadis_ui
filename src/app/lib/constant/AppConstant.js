@@ -6,5 +6,6 @@ export const AppConstant = {
   // General Status
   GSTS_ACTIVE: 1,
   GSTS_INACTIVE: 2,
-  GSTS_CANCEL: 3,
+  GSTS_CANCELED: 3,
+  GSTS_CLOSED: 4,
 };

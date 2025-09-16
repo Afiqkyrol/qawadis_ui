@@ -10,7 +10,7 @@
 
   position: sticky;
   top: 4rem; /* sticks to the top of its container */
-  z-index: 10; /* ensure it stays above other content */
+  z-index: 99; /* ensure it stays above other content */
 }
 
 .header {

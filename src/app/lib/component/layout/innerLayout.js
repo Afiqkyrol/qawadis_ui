@@ -1,6 +1,6 @@
 "use client";
 
-import { AppShell, Skeleton } from "@mantine/core";
+import { AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Header from "../header/header";
 import "./innerLayout.css";

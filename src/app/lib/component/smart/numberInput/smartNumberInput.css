@@ -1,0 +1,11 @@
+.mantine-NumberInput-section {
+  width: 34px !important;
+}
+
+.mantine-NumberInput-input {
+  padding-right: 34px !important;
+}
+
+.mantine-NumberInput-input:disabled {
+  color: #000000;
+}
