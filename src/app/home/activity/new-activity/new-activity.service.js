@@ -2,7 +2,7 @@ import { proxyRequest } from "../../../lib/util/proxyRequest";
 
 export async function saveMatch(body, token) {
   try {
-    return await proxyRequest("match/saveMatchs", {
+    return await proxyRequest("match/saveMatch", {
       method: "POST",
       body: body,
       token,
