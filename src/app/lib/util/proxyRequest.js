@@ -36,7 +36,8 @@ export async function proxyRequest(
 
     if (!res.ok || !result || typeof result !== "object") {
       throw new Error(
-        result?.detailMessage || "Unable to load data. Please try again later."
+        result?.detailMessage ||
+          "Unable to process request. Please try again later."
       );
     }
 
