@@ -5,7 +5,7 @@ import { validateEmail } from "@/app/lib/util/validator";
 import { useState } from "react";
 import { IconAt } from "@tabler/icons-react";
 import SmartCard from "../../smart/card/smartCard";
-import { Anchor, Container, Group, Text, Title } from "@mantine/core";
+import { Anchor, Container, Group, Title } from "@mantine/core";
 import { useNavigate } from "@/app/lib/hook/useNavigate";
 
 export default function ForgotPasswordForm() {
@@ -66,31 +66,30 @@ export default function ForgotPasswordForm() {
           value={form.email}
           onChange={inputHandler}
           valueValidator={() => validateField("email", form.email)}
-          style={{ marginBottom: "1rem" }}
         />
+
         <Group
           position="apart"
           align="center"
-          mt="sm"
-          justify="space-between"
-          style={{ width: "100%", marginTop: 16 }}
+          mt="md"
+          style={{ width: "100%" }}
         >
           <Anchor
             component="button"
             type="button"
             onClick={() => goTo("/auth/signin")}
+            className="link"
             size="sm"
             aria-label="Back to Sign In"
           >
             Back to Sign In
           </Anchor>
-          <div style={{ textAlign: "right" }}>
-            <SmartButton
-              text="Send Reset Link"
-              loading={loading}
-              submitHandler={() => {}}
-            />
-          </div>
+
+          <SmartButton
+            text="Send Reset Link"
+            loading={loading}
+            submitHandler={() => {}}
+          />
         </Group>
       </SmartCard>
     </Container>

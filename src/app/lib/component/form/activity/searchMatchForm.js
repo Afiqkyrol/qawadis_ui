@@ -132,6 +132,7 @@ export default function SearchMatchForm({
         >
           <SmartButton
             text="Clear"
+            clas
             style={{ margin: "0 6px" }}
             icon={<IconClearAll size={14} />}
             loading={loadingClear}

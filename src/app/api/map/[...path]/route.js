@@ -1,4 +1,6 @@
 // app/api/map/[...path]/route.js
+import { parseEmbedUrl } from "@/app/lib/util/mapResolver";
+
 const embedUrlCache = new Map();
 
 export async function GET(req) {
@@ -7,13 +9,17 @@ export async function GET(req) {
   if (!shareUrl) {
     return new Response(JSON.stringify({ error: "Missing url query" }), {
       status: 400,
+      headers: { "Content-Type": "application/json" },
     });
   }
 
   // Check cache first
   if (embedUrlCache.has(shareUrl)) {
     return new Response(
-      JSON.stringify({ embedUrl: embedUrlCache.get(shareUrl) }),
+      JSON.stringify({
+        embedUrl: embedUrlCache.get(shareUrl),
+        fromCache: true,
+      }),
       { headers: { "Content-Type": "application/json" } }
     );
   }
@@ -23,49 +29,22 @@ export async function GET(req) {
     const finalUrl = res.url;
     const html = await res.text();
 
-    let match = html.match(
-      /https:\/\/www\.google\.com\/maps\/embed\?pb=[^"'<> ]+/
+    const embedUrl = parseEmbedUrl(finalUrl, html);
+    if (embedUrl) {
+      embedUrlCache.set(shareUrl, embedUrl);
+      return new Response(JSON.stringify({ embedUrl, fromCache: false }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response(
+      JSON.stringify({ error: "Could not build embed url" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
-    if (match) {
-      return new Response(JSON.stringify({ embedUrl: match[0] }), {
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    const coord = finalUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
-    const place = finalUrl.match(/\/maps\/place\/([^\/@?]+)/);
-    if (coord) {
-      const lat = coord[1];
-      const lng = coord[2];
-      const placeName = place
-        ? decodeURIComponent(place[1]).replace(/\+/g, " ")
-        : null;
-
-      const embedUrl = placeName
-        ? `https://www.google.com/maps?q=${encodeURIComponent(
-            placeName
-          )}&ll=${lat},${lng}&z=16&output=embed`
-        : `https://www.google.com/maps?q=${lat},${lng}&hl=en&z=16&output=embed`;
-
-      // After you get embedUrl:
-      embedUrlCache.set(shareUrl, embedUrl); // cache result
-
-      return new Response(JSON.stringify({ embedUrl }), {
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    if (finalUrl.includes("google.com/maps")) {
-      return new Response(
-        JSON.stringify({
-          embedUrl: finalUrl.replace("/maps/", "/maps/embed/"),
-        }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
   } catch (err) {
-    throw err;
+    return new Response(
+      JSON.stringify({ error: err.message || "Failed to resolve map" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
 }

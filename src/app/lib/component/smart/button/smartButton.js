@@ -14,7 +14,7 @@ export default function SmartButton({
 }) {
   const [isLoading, setIsLoading] = useState(loading);
 
-  if (buttonType === "submit") {
+  if (buttonType === "signIn") {
     return (
       <Button
         style={{ ...style }}
@@ -29,12 +29,26 @@ export default function SmartButton({
     );
   }
 
-  if (buttonType === "cancel") {
+  if (buttonType === "signOut") {
     return (
       <Button
         style={{ ...style }}
         variant="gradient"
         gradient={{ from: "red", to: "orange", deg: 90 }}
+        rightSection={icon}
+        onClick={submitHandler}
+        loading={loading}
+      >
+        {text}
+      </Button>
+    );
+  }
+
+  if (buttonType === "cancel") {
+    return (
+      <Button
+        style={{ ...style }}
+        color="red"
         rightSection={icon}
         onClick={submitHandler}
         loading={loading}

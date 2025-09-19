@@ -1,4 +1,4 @@
-import { notificationError } from "@/app/lib/util/notification";
+import { notificationError } from "./notification";
 
 /**
  * Generic proxy request (GET, POST, etc.)

@@ -14,19 +14,8 @@ import SmartLinkList from "../smart/linkList/smartList";
 import { useSession } from "../layout/innerLayout";
 
 const itemList = [
-  {
-    icon: IconHome,
-    label: "Home",
-    // notifications: 3,
-    link: "/",
-  },
-  {
-    icon: IconBallFootball,
-    label: "Activity",
-    // notifications: 4,
-    link: "/activity",
-  },
-  // { icon: IconUser, label: "Contacts", link: "/test" },
+  { icon: IconHome, label: "Home", link: "/" },
+  { icon: IconBallFootball, label: "Activity", link: "/activity" },
 ];
 
 export default function Navbar({ toggle }) {
@@ -52,7 +41,7 @@ export default function Navbar({ toggle }) {
           <SmartCenter style={{ padding: "5px" }}>
             <SmartButton
               style={{ width: "90%" }}
-              buttonType="cancel"
+              buttonType="signOut"
               submitHandler={submitHandler}
               text={"Sign Out"}
               icon={<IconArrowRight size={14} />}

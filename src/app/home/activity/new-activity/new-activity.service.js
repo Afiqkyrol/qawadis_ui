@@ -1,4 +1,4 @@
-import { proxyRequest } from "@/app/lib/util/proxyRequest";
+import { proxyRequest } from "../../../lib/util/proxyRequest";
 
 export async function saveMatch(body, token) {
   try {

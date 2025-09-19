@@ -47,10 +47,7 @@ export default function SmartTableList({
 
   return (
     <Card
-      style={{
-        marginBottom: "1rem",
-        // remove inline background color overrides — let theme/CSS control surface color
-      }}
+      className={classes.card}
       shadow="sm"
       padding="lg"
       radius="md"
@@ -258,9 +255,9 @@ export default function SmartTableList({
         </Table>
       </ScrollArea>
 
-      <div style={{ marginTop: "6px" }} className="flex justify-center mt-4">
+      <div className={classes.paginationContainer}>
         {isLoading || dataList == null ? (
-          <Skeleton height={21} width={200} radius="md" />
+          <Skeleton height={20} width={200} radius="md" />
         ) : dataList.length > 0 ? (
           <Pagination
             total={totalPages}

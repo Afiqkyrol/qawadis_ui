@@ -22,7 +22,7 @@ export default function Header({ opened, toggle }) {
           <Box hiddenFrom="sm"></Box>
           <Box visibleFrom="sm">
             <SmartButton
-              buttonType="cancel"
+              buttonType="signOut"
               submitHandler={submitHandler}
               text={"Sign Out"}
               icon={<IconArrowRight size={14} />}

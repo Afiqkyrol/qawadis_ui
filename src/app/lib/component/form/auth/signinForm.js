@@ -18,6 +18,7 @@ import {
 import { signIn } from "next-auth/react";
 import { nprogress } from "@mantine/nprogress";
 import { useNavigate } from "@/app/lib/hook/useNavigate";
+import classes from "./signinForm.module.css";
 
 export default function SigninForm() {
   const { goTo } = useNavigate();
@@ -136,18 +137,18 @@ export default function SigninForm() {
           valueValidator={() => validateField("password", form.password)}
         />
         <SmartButton
-          buttonType="submit"
+          buttonType="signIn"
           loading={loading}
           submitHandler={submitHandler}
           icon={<IconArrowRight size={14} />}
           text="Sign In"
         />
+
         <Group
           position="apart"
           align="center"
-          mt="sm"
-          justify="space-between"
-          style={{ width: "100%", marginTop: 16 }}
+          mt="md"
+          style={{ width: "100%" }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <Text size="sm" style={{ margin: 0 }}>
@@ -157,10 +158,7 @@ export default function SigninForm() {
               component="button"
               type="button"
               onClick={() => goTo("/auth/signup")}
-              color="blue"
-              size="sm"
-              fw={700}
-              style={{ padding: 0, lineHeight: 1, textDecoration: "none" }}
+              className={classes?.link}
               aria-label="Sign up"
             >
               Sign Up
@@ -171,7 +169,7 @@ export default function SigninForm() {
             component="button"
             type="button"
             onClick={() => goTo("/auth/forgot-password")}
-            size="sm"
+            className={classes?.link}
             aria-label="Forgot password"
           >
             Forgot password?

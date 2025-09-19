@@ -339,7 +339,7 @@ export default function ActivityClient() {
         onClickRow={onClickRow}
         rowsPerPage={5}
         isLoading={isLoadingMatchList}
-        noDataText="No matches available"
+        noDataText="No activity available"
       />
       {showDetails && (
         <div id="details" style={{ scrollMarginTop: "140px" }}>
@@ -399,7 +399,7 @@ export default function ActivityClient() {
               <div style={{ textAlign: "right" }}>
                 <SmartButton
                   text={isUserJoined ? "Cancel Join" : "Join"}
-                  buttonType={isUserJoined ? "cancel" : "submit"}
+                  buttonType={isUserJoined ? "cancel" : "default"}
                   icon={
                     isUserJoined ? (
                       <IconX size={14} />
