@@ -1,3 +1,7 @@
 .mantine-DatePickerInput-input:disabled {
   color: #000000;
 }
+
+.mantine-DatePickerInput-root {
+  min-height: 80.2px;
+}

@@ -49,11 +49,7 @@ export default function SmartTableList({
     <Card
       style={{
         marginBottom: "1rem",
-        ...(theme === "primary"
-          ? { backgroundColor: "white" }
-          : theme === "secondary"
-          ? { backgroundColor: "var(--mantine-color-blue-0)" }
-          : { backgroundColor: "white" }),
+        // remove inline background color overrides — let theme/CSS control surface color
       }}
       shadow="sm"
       padding="lg"
@@ -240,7 +236,7 @@ export default function SmartTableList({
                       style={{
                         textAlign: "center",
                         padding: "24.5px",
-                        color: "var(--mantine-color-gray-6)",
+                        color: "var(--app-muted, var(--mantine-color-gray-6))", // use centralized token
                       }}
                     >
                       {noDataText}
