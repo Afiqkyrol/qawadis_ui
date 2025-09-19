@@ -78,7 +78,7 @@ export default function ForgotPasswordForm() {
             component="button"
             type="button"
             onClick={() => goTo("/auth/signin")}
-            className="link"
+            
             size="sm"
             aria-label="Back to Sign In"
           >
