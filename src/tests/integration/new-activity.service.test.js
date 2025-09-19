@@ -21,7 +21,7 @@ describe("saveMatch service", () => {
 
     expect(typeof data).toBe("number");
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith("match/saveMatchs", {
+    expect(spy).toHaveBeenCalledWith("match/saveMatch", {
       method: "POST",
       body,
       token,
