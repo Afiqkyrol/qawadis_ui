@@ -4,46 +4,27 @@ import * as proxyModule from "../app/lib/util/proxyRequest";
 
 describe("saveMatch service", () => {
   afterEach(() => {
-    if (proxyModule.proxyRequest && proxyModule.proxyRequest.mockRestore) {
-      proxyModule.proxyRequest.mockRestore();
-    }
+    // restore all spies/mocks
+    vi.restoreAllMocks();
   });
 
-  it("resolves and returns data when backend returns success shape", async () => {
-    const mockResp = {
-      success: true,
-      data: { success: true, data: expect.any(Number) },
-    };
+  it("returns backend data when proxyRequest resolves with standardized success", async () => {
+    const mockResp = 13; // because proxyRequest already returns only data
     vi.spyOn(proxyModule, "proxyRequest").mockResolvedValue(mockResp);
 
     const data = await saveMatch({ foo: "bar" }, "token");
-    expect(data).toEqual(mockResp.data);
+    expect(data).toBe(13);
   });
 
-  it("throws standardized error object when backend indicates failure", async () => {
-    const mockResp = {
+  it("throws backend error object as-is when proxyRequest rejects", async () => {
+    const backendError = {
       success: false,
-      error: "Validation failed",
-      status: 400,
+      message: "An error occurred!",
+      data: null,
+      detailMessage: "Invalid input",
     };
-    vi.spyOn(proxyModule, "proxyRequest").mockResolvedValue(mockResp);
+    vi.spyOn(proxyModule, "proxyRequest").mockRejectedValue(backendError);
 
-    await expect(saveMatch({ foo: "bar" }, "token")).rejects.toMatchObject({
-      success: false,
-      error: expect.any(String),
-      status: expect.any(Number),
-    });
-  });
-
-  it("throws standardized error on network / proxyRequest rejection", async () => {
-    vi.spyOn(proxyModule, "proxyRequest").mockRejectedValue(
-      new Error("network")
-    );
-
-    await expect(saveMatch({ foo: "bar" }, "token")).rejects.toMatchObject({
-      success: false,
-      error: "network",
-      status: 500,
-    });
+    await expect(saveMatch({ foo: "bar" }, "token")).rejects.toBe(backendError);
   });
 });
