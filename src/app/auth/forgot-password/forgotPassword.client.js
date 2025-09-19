@@ -22,7 +22,14 @@ export default function ForgotPasswordClient() {
   }, []);
 
   return (
-    <Container fluid h="100vh">
+    <Container
+      style={{
+        background:
+          "linear-gradient(170deg, var(--mantine-color-blue-1) 65%, var(--mantine-color-green-0) 50%)!important",
+      }}
+      fluid
+      h="100vh"
+    >
       <Center h="100%">
         <ForgotPasswordForm />
       </Center>

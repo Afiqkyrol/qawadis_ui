@@ -1,7 +1,7 @@
 "use client";
 
 import SigninForm from "@/app/lib/component/form/auth/signinForm";
-import { Center, Container, Box } from "@mantine/core";
+import { Center, Container } from "@mantine/core";
 import { useEffect } from "react";
 import { nprogress } from "@mantine/nprogress";
 

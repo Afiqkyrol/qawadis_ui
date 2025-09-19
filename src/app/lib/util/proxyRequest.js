@@ -1,4 +1,4 @@
-import { notificationError } from "@/app/lib/util/notification";
+import { notificationError } from "./notification";
 
 /**
  * Generic proxy request (GET, POST, etc.)
@@ -36,7 +36,8 @@ export async function proxyRequest(
 
     if (!res.ok || !result || typeof result !== "object") {
       throw new Error(
-        result?.detailMessage || "Unable to load data. Please try again later."
+        result?.detailMessage ||
+          "Unable to process request. Please try again later."
       );
     }
 

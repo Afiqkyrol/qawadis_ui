@@ -132,10 +132,7 @@ export default function SearchMatchForm({
         >
           <SmartButton
             text="Clear"
-            style={{
-              backgroundColor: "var(--mantine-color-red-5)",
-              margin: "0 6px",
-            }}
+            style={{ margin: "0 6px" }}
             icon={<IconClearAll size={14} />}
             loading={loadingClear}
             submitHandler={async () => {
@@ -152,13 +149,11 @@ export default function SearchMatchForm({
               await searchHandler(nextForm);
               setLoadingClear(false);
             }}
+            buttonType="cancel"
           />
           <SmartButton
             text="Search"
-            style={{
-              backgroundColor: "var(--mantine-color-blue-6)",
-              margin: "0 6px",
-            }}
+            style={{ margin: "0 6px" }}
             icon={<IconSearch size={14} />}
             loading={loadingSearch}
             submitHandler={async () => {

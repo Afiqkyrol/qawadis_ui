@@ -1,12 +1,13 @@
 .card {
   background: linear-gradient(
     135deg,
-    var(--mantine-color-blue-6),
-    var(--mantine-color-green-6)
+    var(--app-primary-400, #228be6),
+    var(--app-primary-500, #66cfff)
   );
-  color: white;
+  color: var(--app-text, #fff);
   margin-bottom: 1rem;
-  padding: var(--mantine-spacing-md);
+  padding: 16px;
+  border-radius: var(--app-radius-md, 10px);
 
   position: sticky;
   top: 4rem; /* sticks to the top of its container */
@@ -16,14 +17,14 @@
 .header {
   display: flex;
   align-items: center;
-  gap: var(--mantine-spacing-sm);
+  gap: 8px;
 }
 
 .icon {
-  color: white;
+  color: inherit;
 }
 
 .title {
-  color: white;
+  color: inherit;
   font-weight: 700;
 }
