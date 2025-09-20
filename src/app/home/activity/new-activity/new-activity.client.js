@@ -22,7 +22,7 @@ const items = [
   { title: "New Activity", href: "/home/activity/new-activity" },
 ];
 
-export default function NewActivityClientPage() {
+export default function NewActivityClient() {
   const session = useSession();
   const isVertical = useMediaQuery("(max-width: 48em)"); // 48em = 768px (Mantine base breakpoint)
   const { goTo } = useNavigate();

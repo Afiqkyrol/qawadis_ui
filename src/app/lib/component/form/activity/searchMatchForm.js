@@ -10,12 +10,7 @@ import { Grid } from "@mantine/core";
 import SmartTimePicker from "../../smart/timePicker/smartTimePicker";
 import SmartComboBox from "../../smart/comboBox/smartComboBox";
 
-export default function SearchMatchForm({
-  sportList,
-  statusList,
-  request,
-  setShowDetails,
-}) {
+export default function SearchMatchForm({ sportList, statusList, request }) {
   const [form, setForm] = useState({
     sportId: "",
     venue: "",
@@ -46,7 +41,6 @@ export default function SearchMatchForm({
   };
 
   const searchHandler = async (formData) => {
-    setShowDetails(false);
     return await request(formData);
   };
 
