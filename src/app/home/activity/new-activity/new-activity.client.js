@@ -142,12 +142,8 @@ export default function NewActivityClientPage() {
   );
 
   const submitHandler = async () => {
-    try {
-      await triggerSaveMatch();
-      goTo("/home/activity");
-    } catch (err) {
-      throw err;
-    }
+    await triggerSaveMatch();
+    goTo("/home/activity");
   };
 
   useEffect(() => {

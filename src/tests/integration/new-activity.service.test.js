@@ -2,9 +2,8 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { saveMatch } from "../../app/home/activity/new-activity/new-activity.service";
 import * as proxyModule from "../../app/lib/util/proxyRequest";
 
-describe("saveMatch service", () => {
+describe("new-activity service", () => {
   afterEach(() => {
-    // restore all spies/mocks
     vi.restoreAllMocks();
   });
 
@@ -29,12 +28,7 @@ describe("saveMatch service", () => {
   });
 
   it("throws backend error object as-is when proxyRequest rejects", async () => {
-    const backendError = {
-      success: false,
-      message: "An error occurred!",
-      data: null,
-      detailMessage: "Invalid input",
-    };
+    const backendError = "An error occurred!";
     vi.spyOn(proxyModule, "proxyRequest").mockRejectedValue(backendError);
 
     await expect(saveMatch({ foo: "bar" }, "token")).rejects.toBe(backendError);
