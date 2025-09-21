@@ -28,7 +28,7 @@ export default function SmartCard({
       withBorder
     >
       {isLoading ? (
-        <Skeleton height={smallSkeleton ? 80 : 200} radius="md" animate />
+        <Skeleton height={smallSkeleton ? 80 : 250} radius="md" animate />
       ) : (
         children
       )}

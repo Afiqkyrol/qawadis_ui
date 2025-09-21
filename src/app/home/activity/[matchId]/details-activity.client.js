@@ -18,11 +18,23 @@ import {
   IconBallFootball,
   IconCalendar,
   IconClock,
+  IconEdit,
   IconMapPin,
   IconPlayFootball,
+  IconTrash,
+  IconUser,
   IconX,
 } from "@tabler/icons-react";
-import { Divider, Grid } from "@mantine/core";
+import {
+  Box,
+  Divider,
+  Grid,
+  Group,
+  Progress,
+  Space,
+  Text,
+  Title,
+} from "@mantine/core";
 import SmartStatusBadge from "@/app/lib/component/smart/smartStatusBadge/smartStatusBadge";
 import SmartTableList from "@/app/lib/component/smart/tableList/smartTableList";
 import SmartButton from "@/app/lib/component/smart/button/smartButton";
@@ -35,6 +47,7 @@ import SmartModal from "@/app/lib/component/smart/modal/smartModal";
 import { useDisclosure } from "@mantine/hooks";
 import SmartCard from "@/app/lib/component/smart/card/smartCard";
 import SmartRingProgress from "@/app/lib/component/smart/ringProgress/smartRingProgress";
+import SmartProgress from "@/app/lib/component/smart/progress/smartProgress";
 
 const safe = (val) => val ?? "-";
 
@@ -82,6 +95,7 @@ export default function DetailsActivityClient({ matchId }) {
     { title: "Details", href: `/home/activity/${matchId}` },
   ];
   const session = useSession();
+
   const [isUserJoined, setIsUserJoined] = useState(false);
   const [joinedUserMatchId, setJoinedUserMatchId] = useState(null);
   const [openedModal, { open: openModal, close: closeModal }] =
@@ -101,6 +115,7 @@ export default function DetailsActivityClient({ matchId }) {
         date: DataFormatter.formatDate(response.date),
         time: DataFormatter.formatTime(response.time),
         createdBy: response.createdBy.username,
+        createdByUserId: response.createdBy.userId,
       };
     },
     { autoFetch: true, deps: [session] }
@@ -134,7 +149,7 @@ export default function DetailsActivityClient({ matchId }) {
         ),
       }));
     },
-    { interval: 5000, autoFetch: true, deps: [session] }
+    { interval: 5000, autoFetch: true, noLoading: true, deps: [session] }
   );
 
   const {
@@ -177,35 +192,117 @@ export default function DetailsActivityClient({ matchId }) {
     }
   };
 
+  const actionJoinCancelButton =
+    !isLoadingMatchDetails &&
+    !isLoadingPlayerList &&
+    matchDetails.status.statusId === AppConstant.GSTS_ACTIVE ? (
+      <SmartButton
+        text={isUserJoined ? "Cancel Join" : "Join"}
+        buttonType={isUserJoined ? "cancel" : "default"}
+        variant={isUserJoined ? "outline" : "filled"}
+        icon={isUserJoined ? <IconX size={14} /> : <IconArrowRight size={14} />}
+        submitHandler={openModal}
+        loading={isLoadingUpdateJoinMatch}
+      />
+    ) : (
+      <></>
+    );
+
+  const viewData = [
+    {
+      label: "Venue",
+      value: safe(matchDetails?.venue),
+      isValueText: true,
+      icon: <IconMapPin />,
+      iconColor: "red",
+      span: { base: 12, md: 4, lg: 3 },
+    },
+    {
+      label: "Date",
+      value: safe(matchDetails?.date),
+      isValueText: true,
+      icon: <IconCalendar />,
+      iconColor: "green",
+      span: { base: 12, md: 4, lg: 3 },
+    },
+    {
+      label: "Time",
+      value: safe(matchDetails?.time),
+      isValueText: true,
+      icon: <IconClock />,
+      iconColor: "orange",
+      span: { base: 12, md: 4, lg: 3 },
+    },
+    {
+      label: "Maximum Player",
+      value: safe(matchDetails?.maxPlayer) + " Player(s)",
+      isValueText: true,
+      icon: <IconPlayFootball />,
+      iconColor: "violet",
+      span: { base: 12, md: 4, lg: 3 },
+    },
+  ];
+  ``;
+  const playerListViewData = [
+    {
+      label:
+        "Total Players Joined : " +
+        playerList?.filter((p) => p.status.statusId === AppConstant.GSTS_ACTIVE)
+          .length +
+        "/" +
+        safe(matchDetails?.maxPlayer),
+      value: (
+        <SmartProgress
+          currentValue={
+            playerList?.filter(
+              (p) => p.status.statusId === AppConstant.GSTS_ACTIVE
+            ).length
+          }
+          totalValue={safe(matchDetails?.maxPlayer)}
+        />
+      ),
+      isValueText: false,
+      icon: <IconPlayFootball />,
+      iconColor: "violet",
+      span: { base: 12, md: 12, lg: 12 },
+    },
+  ];
+
   const activeStatusPlayerTab = () => {
     return (
-      <SmartTableList
-        primaryKey="userMatchId"
-        columnList={columnActivePlayerList}
-        dataList={playerList.filter(
-          (p) => p.status.statusId === AppConstant.GSTS_ACTIVE
-        )}
-        tableType="Default"
-        rowsPerPage={5}
-        isLoading={isLoadingMatchDetails || isLoadingPlayerList}
-        noDataText="No players join yet..."
-      />
+      <>
+        <SmartTableList
+          primaryKey="userMatchId"
+          columnList={columnActivePlayerList}
+          dataList={playerList.filter(
+            (p) => p.status.statusId === AppConstant.GSTS_ACTIVE
+          )}
+          tableType="Default"
+          rowsPerPage={5}
+          isLoading={isLoadingMatchDetails || isLoadingPlayerList}
+          noDataText="No players join yet..."
+          footerContent={actionJoinCancelButton}
+        />
+      </>
     );
   };
 
   const canceledStatusPlayerTab = () => {
     return (
-      <SmartTableList
-        primaryKey="userMatchId"
-        columnList={columnCanceledPlayerList}
-        dataList={playerList.filter(
-          (p) => p.status.statusId === AppConstant.GSTS_CANCELED
-        )}
-        tableType="Default"
-        rowsPerPage={5}
-        isLoading={isLoadingMatchDetails || isLoadingPlayerList}
-        noDataText="No Canceled Players"
-      />
+      <>
+        <SmartTableList
+          primaryKey="userMatchId"
+          columnList={columnCanceledPlayerList}
+          dataList={playerList.filter(
+            (p) => p.status.statusId === AppConstant.GSTS_CANCELED
+          )}
+          tableType="Default"
+          rowsPerPage={5}
+          isLoading={isLoadingMatchDetails || isLoadingPlayerList}
+          noDataText="No Canceled Players"
+          footerContent={actionJoinCancelButton}
+        />
+      </>
     );
   };
 
@@ -222,39 +319,6 @@ export default function DetailsActivityClient({ matchId }) {
     },
   ];
 
-  const textViewData = [
-    { label: "Sport", value: safe(matchDetails?.sport) },
-    { label: "Venue", value: safe(matchDetails?.venue) },
-    { label: "Created By", value: safe(matchDetails?.createdBy) },
-    { label: "Date", value: safe(matchDetails?.date) },
-    { label: "Time", value: safe(matchDetails?.time) },
-    { label: "Status", value: safe(matchDetails?.statusDesc) },
-  ];
-
-  const textViewData2 = [
-    {
-      label: "Venue",
-      value: safe(matchDetails?.venue),
-      icon: <IconMapPin />,
-      iconColor: "red",
-      span: { base: 12, md: 4, lg: 3 },
-    },
-    {
-      label: "Date",
-      value: safe(matchDetails?.date),
-      icon: <IconCalendar />,
-      iconColor: "green",
-      span: { base: 12, md: 4, lg: 3 },
-    },
-    {
-      label: "Time",
-      value: safe(matchDetails?.time),
-      icon: <IconClock />,
-      iconColor: "orange",
-      span: { base: 12, md: 4, lg: 3 },
-    },
-  ];
-
   useEffect(() => {
     nprogress.complete();
   }, []);
@@ -265,83 +329,86 @@ export default function DetailsActivityClient({ matchId }) {
       <SmartBreadcrumbs itemList={items} />
       <Divider my="xs" label="Details" labelPosition="center" />
       <SmartHeader
+        isLoading={isLoadingMatchDetails}
         title="Football"
         description={
           <>
-            Created by <b>Admin</b>
+            Created by <strong>{matchDetails?.createdBy}</strong>
           </>
         }
         status={matchDetails?.statusDesc}
-        data={<SmartDataDisplay data={textViewData2} />}
+        data={<SmartDataDisplay data={viewData} />}
       />
-      <SmartCard isLoading={isLoadingMatchDetails} theme="secondary">
-        <Grid gutter="sm" justify="center">
-          <Grid.Col
-            style={{ justifyItems: "center" }}
-            span={{ sm: 12, base: 12, md: 4, lg: 3 }}
-          >
-            <SmartRingProgress
-              progressLabel={`${
-                playerList?.filter(
-                  (p) => p.status.statusId === AppConstant.GSTS_ACTIVE
-                ).length ?? 0
-              }/${matchDetails?.maxPlayer ?? 0}`}
-              nameLabel="Player"
-              currentValue={
-                playerList?.filter(
-                  (p) => p.status.statusId === AppConstant.GSTS_ACTIVE
-                ).length ?? 0
-              }
-              totalValue={matchDetails?.maxPlayer ?? 0}
-            />
-          </Grid.Col>
-
-          <Grid.Col
-            style={{ alignContent: "center" }}
-            span={{ sm: 12, base: 12, md: 8, lg: 9 }}
-          >
-            <SmartTextView data={textViewData} ellipsis={true} />
-          </Grid.Col>
-        </Grid>
-      </SmartCard>
-      <SmartCard
-        theme="secondary"
-        isLoading={isLoadingMatchDetails}
-        smallSkeleton={true}
-      >
-        {matchDetails?.mapLink && (
-          <SmartMapEmbed shareUrl={matchDetails.mapLink} />
-        )}
-        <SmartTextView
-          data={[{ label: "Address", value: matchDetails?.address ?? "-" }]}
-          nowrap={false}
-          columns={1}
-        />
-      </SmartCard>
-      <SmartTab
-        tabs={tabs}
-        defaultValue="active"
-        isLoading={isLoadingMatchDetails || isLoadingPlayerList}
-      />
-      {!isLoadingMatchDetails &&
-        !isLoadingPlayerList &&
-        matchDetails.status.statusId === AppConstant.GSTS_ACTIVE && (
-          <div style={{ textAlign: "right" }}>
-            <SmartButton
-              text={isUserJoined ? "Cancel Join" : "Join"}
-              buttonType={isUserJoined ? "cancel" : "default"}
-              icon={
-                isUserJoined ? (
-                  <IconX size={14} />
-                ) : (
-                  <IconArrowRight size={14} />
-                )
-              }
-              submitHandler={openModal}
-              loading={isLoadingUpdateJoinMatch}
-            />
-          </div>
-        )}
+      <Grid>
+        <Grid.Col span={{ base: 12, md: 6, lg: 8 }}>
+          {matchDetails?.remark && (
+            <SmartCard isLoading={isLoadingMatchDetails} smallSkeleton={true}>
+              <Title order={3} mb="sm">
+                Description
+              </Title>
+              <Text size="md">{matchDetails?.remark}</Text>
+            </SmartCard>
+          )}
+          <SmartCard isLoading={isLoadingPlayerList} smallSkeleton={true}>
+            <SmartDataDisplay data={playerListViewData} />
+          </SmartCard>
+          <SmartTab
+            tabs={tabs}
+            defaultValue="active"
+            isLoading={isLoadingMatchDetails}
+          />
+        </Grid.Col>
+        <Grid.Col span={12} hiddenFrom={"md"}>
+          <Divider />
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
+          <SmartCard isLoading={isLoadingMatchDetails}>
+            <Title order={3} mb="sm">
+              Location
+            </Title>
+            <Text size="md" fw={600}>
+              {matchDetails?.venue}
+            </Text>
+            <Text size="md" c="dimmed" mb={"sm"}>
+              {matchDetails?.address}
+            </Text>
+            {matchDetails?.mapEmbedLink && (
+              <>
+                <SmartMapEmbed shareUrl={matchDetails.mapEmbedLink} />
+                <SmartButton
+                  variant="light"
+                  text="View on Map"
+                  submitHandler={() => {
+                    window.open(matchDetails.mapShortLink, "_blank");
+                  }}
+                  icon={<IconMapPin />}
+                />
+              </>
+            )}
+          </SmartCard>
+          {session?.user?.userId === matchDetails?.createdByUserId && (
+            <SmartCard isLoading={isLoadingMatchDetails}>
+              <Title order={3} mb="sm">
+                Action
+              </Title>
+              <SmartButton
+                variant="light"
+                text="Edit"
+                submitHandler={() => {}}
+                icon={<IconEdit />}
+              />
+              <Space h="xs" />
+              <SmartButton
+                variant="light"
+                text="Delete"
+                buttonType="cancel"
+                submitHandler={() => {}}
+                icon={<IconTrash />}
+              />
+            </SmartCard>
+          )}
+        </Grid.Col>
+      </Grid>
       <SmartModal
         isOpen={openedModal}
         onClose={closeModal}

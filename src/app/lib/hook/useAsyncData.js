@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 
 export function useAsyncData(
   fetcher,
-  { interval, deps = [], autoFetch = true } = {}
+  { interval, deps = [], autoFetch = true, noLoading = false } = {}
 ) {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(autoFetch);
@@ -35,11 +35,12 @@ export function useAsyncData(
       if (isFetchingRef.current) return;
       isFetchingRef.current = true;
 
-      if (!hasLoadedOnceRef.current || !interval || argsChanged)
+      if ((!hasLoadedOnceRef.current || !interval || argsChanged) && !noLoading)
         setIsLoading(true);
 
       try {
         const result = await fetcher(...latestArgsRef.current);
+
         setData(result);
         setError(null);
         hasLoadedOnceRef.current = true;
@@ -49,6 +50,8 @@ export function useAsyncData(
             request(...latestArgsRef.current);
           }, interval);
         }
+
+        return result;
       } catch (err) {
         setError(err);
         stopPolling();

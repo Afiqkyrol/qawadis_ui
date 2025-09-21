@@ -48,3 +48,11 @@ export async function saveUserMatch(body, token) {
     token,
   });
 }
+
+export async function saveMatch(body, token) {
+  return await proxyRequest("match/saveMatch", {
+    method: "POST",
+    body: body,
+    token,
+  });
+}

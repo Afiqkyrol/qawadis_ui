@@ -3,7 +3,7 @@ import classes from "./smartDataDisplay.module.css";
 
 export default function SmartDataDisplay({ data }) {
   return (
-    <Grid>
+    <Grid className={classes.parentContainer}>
       {data.map((item, index) => (
         <Grid.Col key={index} span={item.span || 4}>
           <div className={classes.dataContainer}>
@@ -18,12 +18,16 @@ export default function SmartDataDisplay({ data }) {
               </ActionIcon>
             </div>
             <div className={classes.dataTextContainer}>
-              <Text size="sm" c="dimmed">
+              <Text size="sm" c="dimmed" fw={500}>
                 {item.label}
               </Text>
-              <Text size="md" fw={500}>
-                {item.value}
-              </Text>
+              {item.isValueText ? (
+                <Text size="md" fw={500}>
+                  {item.value}
+                </Text>
+              ) : (
+                item.value
+              )}
             </div>
           </div>
         </Grid.Col>

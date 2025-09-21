@@ -10,12 +10,12 @@ import { IconPlus } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "@mantine/hooks";
 import MatchDetailsForm from "@/app/lib/component/form/new-activity/matchDetailsForm";
-import { saveMatch } from "./new-activity.service";
 import { useAsyncData } from "@/app/lib/hook/useAsyncData";
 import { useSession } from "@/app/lib/component/layout/innerLayout";
 import LocationDetailsForm from "@/app/lib/component/form/new-activity/locationDetailsForm";
 import { AppConstant } from "@/app/lib/constant/AppConstant";
 import { useNavigate } from "@/app/lib/hook/useNavigate";
+import { saveMatch } from "../activity.service";
 
 const items = [
   { title: "Activity", href: "/home/activity" },
@@ -35,8 +35,8 @@ export default function NewActivityClient() {
     maxPlayer: "",
     remark: "",
     withMapsLink: false,
-    mapLink: "",
-    rawMapLink: "",
+    mapEmbedLink: "",
+    mapShortLink: "",
     venue: "",
     address: "",
   });
@@ -47,7 +47,7 @@ export default function NewActivityClient() {
     time: "",
     maxPlayer: "",
     remark: "",
-    rawMapLink: "",
+    mapShortLink: "",
     venue: "",
     address: "",
   });
@@ -79,13 +79,13 @@ export default function NewActivityClient() {
       if (!value) error = "Address is required";
     }
 
-    if (controlName === "rawMapLink" && form.withMapsLink) {
+    if (controlName === "mapShortLink" && form.withMapsLink) {
       if (!value) error = "Google Maps Link is required";
     }
 
-    if (controlName === "mapLink" && form.withMapsLink) {
-      controlName = "rawMapLink";
-      if (!form.rawMapLink) error = "Google Maps Link is required";
+    if (controlName === "mapEmbedLink" && form.withMapsLink) {
+      controlName = "mapShortLink";
+      if (!form.mapShortLink) error = "Google Maps Link is required";
       else if (!value)
         error =
           "Please click the Map Button on the right first to check the map";
@@ -108,8 +108,8 @@ export default function NewActivityClient() {
     return (
       validateField("venue", form.venue) &&
       validateField("address", form.address) &&
-      validateField("rawMapLink", form.rawMapLink) &&
-      validateField("mapLink", form.mapLink)
+      validateField("mapShortLink", form.mapShortLink) &&
+      validateField("mapEmbedLink", form.mapEmbedLink)
     );
   };
 
@@ -129,7 +129,8 @@ export default function NewActivityClient() {
         maxPlayer: form.maxPlayer,
         date: form.date,
         time: form.time,
-        mapLink: form.mapLink,
+        mapShortLink: form.mapShortLink,
+        mapEmbedLink: form.mapEmbedLink,
         remark: form.remark,
         status: {
           statusId: AppConstant.GSTS_ACTIVE,
@@ -142,8 +143,8 @@ export default function NewActivityClient() {
   );
 
   const submitHandler = async () => {
-    await triggerSaveMatch();
-    goTo("/home/activity");
+    const matchId = await triggerSaveMatch();
+    goTo(`/home/activity/${matchId}`);
   };
 
   useEffect(() => {

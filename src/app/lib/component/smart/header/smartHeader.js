@@ -5,9 +5,15 @@ import SmartStatusBadge from "../smartStatusBadge/smartStatusBadge";
 import { IconUser } from "@tabler/icons-react";
 import SmartDataDisplay from "../dataDisplay/smartDataDisplay";
 
-export default function SmartHeader({ title, description, status, data }) {
+export default function SmartHeader({
+  title,
+  description,
+  status,
+  data,
+  isLoading,
+}) {
   return (
-    <SmartCard>
+    <SmartCard isLoading={isLoading}>
       <div className={classes.parentContainer}>
         <div className={classes.statusContainer}>
           <SmartStatusBadge value={status} />

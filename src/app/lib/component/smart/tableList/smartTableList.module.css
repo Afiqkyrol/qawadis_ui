@@ -148,10 +148,17 @@
 
 .paginationContainer {
   display: flex;
-  justify-content: flex-start;
-  margin-top: 1rem;
+  justify-content: center;
+  align-items: center;
 }
 
 .card {
   margin-bottom: 1rem;
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 38px;
 }

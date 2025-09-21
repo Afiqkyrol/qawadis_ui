@@ -28,6 +28,7 @@ export default function SmartTableList({
   isLoading = false,
   noDataText = "No data available",
   theme = "primary",
+  footerContent = <></>,
 }) {
   const [activePage, setActivePage] = useState(1);
   const [activeRow, setActiveRow] = useState(null);
@@ -53,7 +54,7 @@ export default function SmartTableList({
       radius="md"
       withBorder
     >
-      <ScrollArea>
+      <ScrollArea scrollbars="x">
         <Table
           highlightOnHover
           striped="odd"
@@ -232,7 +233,7 @@ export default function SmartTableList({
                       colSpan={extendedColumns.length}
                       style={{
                         textAlign: "center",
-                        padding: "24.5px",
+                        padding: "12px",
                         color: "var(--app-muted, var(--mantine-color-gray-6))", // use centralized token
                       }}
                     >
@@ -255,17 +256,20 @@ export default function SmartTableList({
         </Table>
       </ScrollArea>
 
-      <div className={classes.paginationContainer}>
-        {isLoading || dataList == null ? (
-          <Skeleton height={20} width={200} radius="md" />
-        ) : dataList.length > 0 ? (
-          <Pagination
-            total={totalPages}
-            value={activePage}
-            onChange={setActivePage}
-            size="xs"
-          />
-        ) : null}
+      <div className={classes.footerContainer}>
+        <div className={classes.paginationContainer}>
+          {isLoading || dataList == null ? (
+            <Skeleton height={20} width={200} radius="md" />
+          ) : dataList.length > 0 ? (
+            <Pagination
+              total={totalPages}
+              value={activePage}
+              onChange={setActivePage}
+              size="xs"
+            />
+          ) : null}
+        </div>
+        {footerContent}
       </div>
     </Card>
   );
