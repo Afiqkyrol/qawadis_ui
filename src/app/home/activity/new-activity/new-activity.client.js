@@ -36,7 +36,7 @@ export default function NewActivityClient() {
     remark: "",
     withMapsLink: false,
     mapEmbedLink: "",
-    mapShortLink: "",
+    mapShareLink: "",
     venue: "",
     address: "",
   });
@@ -47,7 +47,7 @@ export default function NewActivityClient() {
     time: "",
     maxPlayer: "",
     remark: "",
-    mapShortLink: "",
+    mapShareLink: "",
     venue: "",
     address: "",
   });
@@ -79,13 +79,13 @@ export default function NewActivityClient() {
       if (!value) error = "Address is required";
     }
 
-    if (controlName === "mapShortLink" && form.withMapsLink) {
+    if (controlName === "mapShareLink" && form.withMapsLink) {
       if (!value) error = "Google Maps Link is required";
     }
 
     if (controlName === "mapEmbedLink" && form.withMapsLink) {
-      controlName = "mapShortLink";
-      if (!form.mapShortLink) error = "Google Maps Link is required";
+      controlName = "mapShareLink";
+      if (!form.mapShareLink) error = "Google Maps Link is required";
       else if (!value)
         error =
           "Please click the Map Button on the right first to check the map";
@@ -108,7 +108,7 @@ export default function NewActivityClient() {
     return (
       validateField("venue", form.venue) &&
       validateField("address", form.address) &&
-      validateField("mapShortLink", form.mapShortLink) &&
+      validateField("mapShareLink", form.mapShareLink) &&
       validateField("mapEmbedLink", form.mapEmbedLink)
     );
   };
@@ -129,7 +129,7 @@ export default function NewActivityClient() {
         maxPlayer: form.maxPlayer,
         date: form.date,
         time: form.time,
-        mapShortLink: form.mapShortLink,
+        mapShareLink: form.mapShareLink,
         mapEmbedLink: form.mapEmbedLink,
         remark: form.remark,
         status: {
@@ -144,7 +144,7 @@ export default function NewActivityClient() {
 
   const submitHandler = async () => {
     const matchId = await triggerSaveMatch();
-    goTo(`/home/activity/${matchId}`);
+    goTo(`/home/activity/details-activity/${matchId}`);
   };
 
   useEffect(() => {

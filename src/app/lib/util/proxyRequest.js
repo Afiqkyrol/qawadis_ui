@@ -69,7 +69,7 @@ export function createProxyRequest({
           "Unable to process request. Please try again later.";
         throw new BackendError(message, result ?? null, res.status ?? null);
       }
-      return result.data ?? [];
+      return result.data;
     } catch (err) {
       const out = err instanceof Error ? err : new Error(String(err));
       // notify and rethrow

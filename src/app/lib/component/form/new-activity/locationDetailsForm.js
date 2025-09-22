@@ -16,7 +16,7 @@ export default function LocationDetailsForm({
 }) {
   const [isMapLoading, setIsMapLoading] = useState(false);
   const inputHandler = ({ controlName, value }) => {
-    if (controlName === "mapShortLink") {
+    if (controlName === "mapShareLink") {
       setForm({
         ...form,
         [controlName]: value ?? "",
@@ -25,7 +25,7 @@ export default function LocationDetailsForm({
     } else if (controlName === "withMapsLink") {
       setForm({
         ...form,
-        mapShortLink: "",
+        mapShareLink: "",
         mapEmbedLink: "",
         [controlName]: value ?? "",
       });
@@ -43,7 +43,7 @@ export default function LocationDetailsForm({
     try {
       setIsMapLoading(true);
       const embedUrl = await DataFormatter.googleMapsLinkToEmbedLinks(
-        form.mapShortLink
+        form.mapShareLink
       );
 
       setForm({
@@ -55,7 +55,7 @@ export default function LocationDetailsForm({
     } catch (err) {
       setErrors((prev) => ({
         ...prev,
-        mapShortLink: "Please enter a valid Google Maps Link",
+        mapShareLink: "Please enter a valid Google Maps Link",
       }));
       setForm({
         ...form,
@@ -149,11 +149,11 @@ export default function LocationDetailsForm({
             }}
           >
             <SmartTextInput
-              controlName="mapShortLink"
+              controlName="mapShareLink"
               label="Google Maps Link"
               placeholder="Enter Link"
-              value={form.mapShortLink}
-              error={errors.mapShortLink}
+              value={form.mapShareLink}
+              error={errors.mapShareLink}
               required={true}
               readOnly={readOnly}
               onChange={inputHandler}

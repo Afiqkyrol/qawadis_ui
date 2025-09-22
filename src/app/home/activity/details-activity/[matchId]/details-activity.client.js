@@ -6,7 +6,7 @@ import {
   findMatchById,
   getPlayerListByMatchId,
   saveUserMatch,
-} from "../activity.service";
+} from "../../activity.service";
 import { DataFormatter } from "@/app/lib/util/dataFormatter";
 import { AppConstant } from "@/app/lib/constant/AppConstant";
 import { useEffect, useState } from "react";
@@ -48,6 +48,8 @@ import { useDisclosure } from "@mantine/hooks";
 import SmartCard from "@/app/lib/component/smart/card/smartCard";
 import SmartRingProgress from "@/app/lib/component/smart/ringProgress/smartRingProgress";
 import SmartProgress from "@/app/lib/component/smart/progress/smartProgress";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
+import { notificationError } from "@/app/lib/util/notification";
 
 const safe = (val) => val ?? "-";
 
@@ -95,7 +97,7 @@ export default function DetailsActivityClient({ matchId }) {
     { title: "Details", href: `/home/activity/${matchId}` },
   ];
   const session = useSession();
-
+  const { goTo } = useNavigate();
   const [isUserJoined, setIsUserJoined] = useState(false);
   const [joinedUserMatchId, setJoinedUserMatchId] = useState(null);
   const [openedModal, { open: openModal, close: closeModal }] =
@@ -108,6 +110,11 @@ export default function DetailsActivityClient({ matchId }) {
   } = useAsyncData(
     async () => {
       const response = await findMatchById(matchId, true, session?.apiToken);
+      if (response === null) {
+        goTo("/home/activity");
+        notificationError("Data not found", "Match data not found");
+        return;
+      }
       return {
         ...response,
         sport: response.sport.description,
@@ -133,6 +140,7 @@ export default function DetailsActivityClient({ matchId }) {
         true,
         session?.apiToken
       );
+
       const um = response.find(
         (um) => um.player.userId === session.user.userId
       );
@@ -192,10 +200,12 @@ export default function DetailsActivityClient({ matchId }) {
     }
   };
 
+  console.log("matchDetails", matchDetails);
+
   const actionJoinCancelButton =
     !isLoadingMatchDetails &&
     !isLoadingPlayerList &&
-    matchDetails.status.statusId === AppConstant.GSTS_ACTIVE ? (
+    matchDetails?.status?.statusId === AppConstant.GSTS_ACTIVE ? (
       <SmartButton
         text={isUserJoined ? "Cancel Join" : "Join"}
         buttonType={isUserJoined ? "cancel" : "default"}
@@ -323,7 +333,7 @@ export default function DetailsActivityClient({ matchId }) {
     nprogress.complete();
   }, []);
 
-  return (
+  return matchDetails ? (
     <>
       <SmartTitle title="Activity Details" Icon={IconBallFootball} />
       <SmartBreadcrumbs itemList={items} />
@@ -379,7 +389,7 @@ export default function DetailsActivityClient({ matchId }) {
                   variant="light"
                   text="View on Map"
                   submitHandler={() => {
-                    window.open(matchDetails.mapShortLink, "_blank");
+                    window.open(matchDetails.mapShareLink, "_blank");
                   }}
                   icon={<IconMapPin />}
                 />
@@ -424,5 +434,7 @@ export default function DetailsActivityClient({ matchId }) {
         }}
       />
     </>
+  ) : (
+    <></>
   );
 }

@@ -87,7 +87,7 @@ export default function ActivityClient() {
   );
 
   const onClickRow = async (matchId) => {
-    goTo(`/home/activity/${matchId}`);
+    goTo(`/home/activity/details-activity/${matchId}`);
   };
 
   useEffect(() => {
