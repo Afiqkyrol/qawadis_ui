@@ -19,7 +19,7 @@ import { saveMatch } from "../activity.service";
 
 const items = [
   { title: "Activity", href: "/home/activity" },
-  { title: "New Activity", href: "/home/activity/new-activity" },
+  { title: "New", href: "/home/activity/new-activity" },
 ];
 
 export default function NewActivityClient() {

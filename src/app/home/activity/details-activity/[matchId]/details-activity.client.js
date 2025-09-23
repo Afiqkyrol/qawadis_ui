@@ -340,7 +340,7 @@ export default function DetailsActivityClient({ matchId }) {
       <Divider my="xs" label="Details" labelPosition="center" />
       <SmartHeader
         isLoading={isLoadingMatchDetails}
-        title="Football"
+        title={matchDetails?.sport}
         description={
           <>
             Created by <strong>{matchDetails?.createdBy}</strong>
