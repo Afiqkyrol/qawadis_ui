@@ -5,6 +5,7 @@ import { useAsyncData } from "@/app/lib/hook/useAsyncData";
 import {
   findMatchById,
   getPlayerListByMatchId,
+  saveMatch,
   saveUserMatch,
 } from "../../activity.service";
 import { DataFormatter } from "@/app/lib/util/dataFormatter";
@@ -17,6 +18,8 @@ import {
   IconArrowRight,
   IconBallFootball,
   IconCalendar,
+  IconCalendarCancel,
+  IconCancel,
   IconClock,
   IconEdit,
   IconMapPin,
@@ -94,14 +97,33 @@ const columnCanceledPlayerList = [
 export default function DetailsActivityClient({ matchId }) {
   const items = [
     { title: "Activity", href: "/home/activity" },
-    { title: "Details", href: `/home/activity/${matchId}` },
+    { title: "Details", href: `/home/activity/details-activity/${matchId}` },
   ];
   const session = useSession();
   const { goTo } = useNavigate();
+  const [statusColor, setStatusColor] = useState("");
   const [isUserJoined, setIsUserJoined] = useState(false);
   const [joinedUserMatchId, setJoinedUserMatchId] = useState(null);
-  const [openedModal, { open: openModal, close: closeModal }] =
+  const [openedModalJoin, { open: openModalJoin, close: closeModalJoin }] =
     useDisclosure(false);
+  const [
+    openedModalCancel,
+    { open: openModalCancel, close: closeModalCancel },
+  ] = useDisclosure(false);
+
+  const {
+    data: newMatchId,
+    isLoading: isLoadingMatch,
+    request: triggerSaveMatch,
+  } = useAsyncData(
+    async () => {
+      const body = matchDetails;
+      body.status = { statusId: AppConstant.GSTS_CANCELED };
+      const response = await saveMatch({ body }, session?.apiToken);
+      return response;
+    },
+    { autoFetch: false }
+  );
 
   const {
     data: matchDetails,
@@ -115,13 +137,21 @@ export default function DetailsActivityClient({ matchId }) {
         notificationError("Data not found", "Match data not found");
         return;
       }
+
+      if (response.status.statusId === AppConstant.GSTS_CANCELED) {
+        setStatusColor("red");
+      }
+      if (response.status.statusId === AppConstant.GSTS_CLOSED) {
+        setStatusColor("gray");
+      }
+
       return {
         ...response,
-        sport: response.sport.description,
+        sportDesc: response.sport.description,
         statusDesc: response.status.description,
-        date: DataFormatter.formatDate(response.date),
-        time: DataFormatter.formatTime(response.time),
-        createdBy: response.createdBy.username,
+        formattedDate: DataFormatter.formatDate(response.date),
+        formattedTime: DataFormatter.formatTime(response.time),
+        createdByUsername: response.createdBy.username,
         createdByUserId: response.createdBy.userId,
       };
     },
@@ -200,8 +230,6 @@ export default function DetailsActivityClient({ matchId }) {
     }
   };
 
-  console.log("matchDetails", matchDetails);
-
   const actionJoinCancelButton =
     !isLoadingMatchDetails &&
     !isLoadingPlayerList &&
@@ -211,7 +239,7 @@ export default function DetailsActivityClient({ matchId }) {
         buttonType={isUserJoined ? "cancel" : "default"}
         variant={isUserJoined ? "outline" : "filled"}
         icon={isUserJoined ? <IconX size={14} /> : <IconArrowRight size={14} />}
-        submitHandler={openModal}
+        submitHandler={openModalJoin}
         loading={isLoadingUpdateJoinMatch}
       />
     ) : (
@@ -229,7 +257,7 @@ export default function DetailsActivityClient({ matchId }) {
     },
     {
       label: "Date",
-      value: safe(matchDetails?.date),
+      value: safe(matchDetails?.formattedDate),
       isValueText: true,
       icon: <IconCalendar />,
       iconColor: "green",
@@ -237,7 +265,7 @@ export default function DetailsActivityClient({ matchId }) {
     },
     {
       label: "Time",
-      value: safe(matchDetails?.time),
+      value: safe(matchDetails?.formattedTime),
       isValueText: true,
       icon: <IconClock />,
       iconColor: "orange",
@@ -340,14 +368,15 @@ export default function DetailsActivityClient({ matchId }) {
       <Divider my="xs" label="Details" labelPosition="center" />
       <SmartHeader
         isLoading={isLoadingMatchDetails}
-        title={matchDetails?.sport}
+        title={matchDetails?.sportDesc}
         description={
           <>
-            Created by <strong>{matchDetails?.createdBy}</strong>
+            Created by <strong>{matchDetails?.createdByUsername}</strong>
           </>
         }
         status={matchDetails?.statusDesc}
         data={<SmartDataDisplay data={viewData} />}
+        color={statusColor}
       />
       <Grid>
         <Grid.Col span={{ base: 12, md: 6, lg: 8 }}>
@@ -396,32 +425,37 @@ export default function DetailsActivityClient({ matchId }) {
               </>
             )}
           </SmartCard>
-          {session?.user?.userId === matchDetails?.createdByUserId && (
-            <SmartCard isLoading={isLoadingMatchDetails}>
-              <Title order={3} mb="sm">
-                Action
-              </Title>
-              <SmartButton
-                variant="light"
-                text="Edit"
-                submitHandler={() => {}}
-                icon={<IconEdit />}
-              />
-              <Space h="xs" />
-              <SmartButton
-                variant="light"
-                text="Delete"
-                buttonType="cancel"
-                submitHandler={() => {}}
-                icon={<IconTrash />}
-              />
-            </SmartCard>
-          )}
+          {matchDetails?.status?.statusId === AppConstant.GSTS_ACTIVE &&
+            session?.user?.userId === matchDetails?.createdByUserId && (
+              <SmartCard isLoading={isLoadingMatchDetails}>
+                <Title order={3} mb="sm">
+                  Action
+                </Title>
+                <SmartButton
+                  variant="light"
+                  text="Edit Activity"
+                  submitHandler={() => {
+                    goTo(`/home/activity/edit-activity/${matchId}`);
+                  }}
+                  icon={<IconEdit />}
+                />
+                <Space h="xs" />
+                <SmartButton
+                  variant="light"
+                  text="Cancel Activity"
+                  buttonType="cancel"
+                  submitHandler={() => {
+                    openModalCancel();
+                  }}
+                  icon={<IconCalendarCancel />}
+                />
+              </SmartCard>
+            )}
         </Grid.Col>
       </Grid>
       <SmartModal
-        isOpen={openedModal}
-        onClose={closeModal}
+        isOpen={openedModalJoin}
+        onClose={closeModalJoin}
         type="confirmation"
         title="Confirmation"
         description="Are you sure you want to proceed?"
@@ -430,7 +464,20 @@ export default function DetailsActivityClient({ matchId }) {
         }
         confirmAction={() => {
           onClickCancelOrJoinMatch(joinedUserMatchId, matchDetails.matchId);
-          closeModal();
+          closeModalJoin();
+        }}
+      />
+      <SmartModal
+        isOpen={openedModalCancel}
+        onClose={closeModalCancel}
+        type="confirmation"
+        title="Confirmation"
+        description="Are you sure you want to cancel activity?"
+        actionButtonColor="var(--mantine-color-red-5)"
+        confirmAction={async () => {
+          await triggerSaveMatch();
+          await fetchMatchDetails();
+          closeModalCancel();
         }}
       />
     </>

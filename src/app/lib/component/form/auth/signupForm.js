@@ -175,7 +175,7 @@ export default function SignupForm() {
           }
         />
         <SmartButton
-          buttonType="submit"
+          buttonType="signIn"
           loading={loading}
           submitHandler={submitHandler}
           icon={<IconArrowRight size={14} />}

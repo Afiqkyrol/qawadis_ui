@@ -11,9 +11,14 @@ export default function SmartHeader({
   status,
   data,
   isLoading,
+  color = "",
 }) {
   return (
-    <SmartCard isLoading={isLoading}>
+    <SmartCard
+      color={color}
+      isLoading={isLoading}
+      style={{ backgroundColor: color }}
+    >
       <div className={classes.parentContainer}>
         <div className={classes.statusContainer}>
           <SmartStatusBadge value={status} />
