@@ -137,6 +137,7 @@
   text-overflow: ellipsis;
   max-height: 52px; /* ✅ match row height */
   line-height: 1.4;
+  border-bottom: 1px solid white;
 }
 
 /* Sticky header */

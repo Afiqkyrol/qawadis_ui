@@ -17,6 +17,7 @@ import SmartCard from "@/app/lib/component/smart/card/smartCard";
 import SmartStepper from "@/app/lib/component/smart/stepper/smartStepper";
 import { DataFormatter } from "@/app/lib/util/dataFormatter";
 import { AppConstant } from "@/app/lib/constant/AppConstant";
+import { notificationError } from "@/app/lib/util/notification";
 
 export default function EditActivityClient({ matchId }) {
   const items = [
@@ -40,6 +41,7 @@ export default function EditActivityClient({ matchId }) {
     mapShareLink: "",
     venue: "",
     address: "",
+    createdBy: {},
   });
 
   const [errors, setErrors] = useState({
@@ -66,13 +68,6 @@ export default function EditActivityClient({ matchId }) {
         return;
       }
 
-      if (response.status.statusId === AppConstant.GSTS_CANCELED) {
-        setStatusColor("red");
-      }
-      if (response.status.statusId === AppConstant.GSTS_CLOSED) {
-        setStatusColor("gray");
-      }
-
       setForm((prev) => ({
         ...prev,
         matchId: response.matchId,
@@ -86,6 +81,7 @@ export default function EditActivityClient({ matchId }) {
         mapShareLink: response.mapShareLink,
         venue: response.venue,
         address: response.address,
+        createdBy: response.createdBy,
       }));
 
       if (response.mapEmbedLink) {
@@ -188,11 +184,12 @@ export default function EditActivityClient({ matchId }) {
         status: {
           statusId: AppConstant.GSTS_ACTIVE,
         },
+        createdBy: matchDetails.createdBy,
       };
       const response = await saveMatch({ body }, session?.apiToken);
       return response;
     },
-    { autoFetch: false }
+    { autoFetch: false, redirectIfError: true }
   );
 
   const submitHandler = async () => {
