@@ -280,7 +280,6 @@ export default function DetailsActivityClient({ matchId }) {
       span: { base: 12, md: 4, lg: 3 },
     },
   ];
-  ``;
   const playerListViewData = [
     {
       label:
