@@ -35,7 +35,6 @@ export default function SmartStatusBadge({
     color = "red";
   } else {
     status = value;
-    color = color;
   }
 
   return (
