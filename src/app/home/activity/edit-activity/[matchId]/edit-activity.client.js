@@ -1,28 +1,30 @@
 "use client";
 
+import { useSession } from "@/app/lib/component/layout/innerLayout";
 import SmartBreadcrumbs from "@/app/lib/component/smart/breadCrumbs/smartBreadCrumbs";
+import SmartTitle from "@/app/lib/component/smart/title/smartTitle";
+import { useAsyncData } from "@/app/lib/hook/useAsyncData";
+import { useNavigate } from "@/app/lib/hook/useNavigate";
+import { Divider } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { nprogress } from "@mantine/nprogress";
+import { IconEdit } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { findMatchById, saveMatch } from "../../activity.service";
+import MatchDetailsForm from "@/app/lib/component/form/new-activity/matchDetailsForm";
+import LocationDetailsForm from "@/app/lib/component/form/new-activity/locationDetailsForm";
 import SmartCard from "@/app/lib/component/smart/card/smartCard";
 import SmartStepper from "@/app/lib/component/smart/stepper/smartStepper";
-import SmartTitle from "@/app/lib/component/smart/title/smartTitle";
-import { Divider } from "@mantine/core";
-import { nprogress } from "@mantine/nprogress";
-import { IconPlus } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
-import { useMediaQuery } from "@mantine/hooks";
-import MatchDetailsForm from "@/app/lib/component/form/new-activity/matchDetailsForm";
-import { useAsyncData } from "@/app/lib/hook/useAsyncData";
-import { useSession } from "@/app/lib/component/layout/innerLayout";
-import LocationDetailsForm from "@/app/lib/component/form/new-activity/locationDetailsForm";
+import { DataFormatter } from "@/app/lib/util/dataFormatter";
 import { AppConstant } from "@/app/lib/constant/AppConstant";
-import { useNavigate } from "@/app/lib/hook/useNavigate";
-import { saveMatch } from "../activity.service";
+import { notificationError } from "@/app/lib/util/notification";
 
-const items = [
-  { title: "Activity", href: "/home/activity" },
-  { title: "New", href: "/home/activity/new-activity" },
-];
+export default function EditActivityClient({ matchId }) {
+  const items = [
+    { title: "Activity", href: "/home/activity" },
+    { title: "Edit", href: `/home/activity/edit-activity/${matchId}` },
+  ];
 
-export default function NewActivityClient() {
   const session = useSession();
   const isVertical = useMediaQuery("(max-width: 48em)"); // 48em = 768px (Mantine base breakpoint)
   const { goTo } = useNavigate();
@@ -39,6 +41,7 @@ export default function NewActivityClient() {
     mapShareLink: "",
     venue: "",
     address: "",
+    createdBy: {},
   });
 
   const [errors, setErrors] = useState({
@@ -51,6 +54,52 @@ export default function NewActivityClient() {
     venue: "",
     address: "",
   });
+
+  const {
+    data: matchDetails,
+    isLoading: isLoadingMatchDetails,
+    request: fetchMatchDetails,
+  } = useAsyncData(
+    async () => {
+      const response = await findMatchById(matchId, true, session?.apiToken);
+      if (response === null) {
+        goTo("/home/activity");
+        notificationError("Data not found", "Match data not found");
+        return;
+      }
+
+      setForm((prev) => ({
+        ...prev,
+        matchId: response.matchId,
+        sportId: response.sport.sportId,
+        date: response.date,
+        time: response.time,
+        maxPlayer: response.maxPlayer,
+        remark: response.remark,
+        // withMapsLink: response.withMapsLink,
+        mapEmbedLink: response.mapEmbedLink,
+        mapShareLink: response.mapShareLink,
+        venue: response.venue,
+        address: response.address,
+        createdBy: response.createdBy,
+      }));
+
+      if (response.mapEmbedLink) {
+        setForm((prev) => ({ ...prev, withMapsLink: true }));
+      }
+
+      return {
+        ...response,
+        sportDesc: response.sport.description,
+        statusDesc: response.status.description,
+        formattedDate: DataFormatter.formatDate(response.date),
+        formattedTime: DataFormatter.formatTime(response.time),
+        createdByUsername: response.createdBy.username,
+        createdByUserId: response.createdBy.userId,
+      };
+    },
+    { autoFetch: true, deps: [session] }
+  );
 
   function validateField(controlName, value) {
     let error = "";
@@ -135,21 +184,18 @@ export default function NewActivityClient() {
         status: {
           statusId: AppConstant.GSTS_ACTIVE,
         },
+        createdBy: matchDetails.createdBy,
       };
       const response = await saveMatch({ body }, session?.apiToken);
       return response;
     },
-    { autoFetch: false }
+    { autoFetch: false, redirectIfError: true }
   );
 
   const submitHandler = async () => {
     const matchId = await triggerSaveMatch();
     goTo(`/home/activity/details-activity/${matchId}`);
   };
-
-  useEffect(() => {
-    nprogress.complete();
-  }, []);
 
   const matchDetailsStep = () => (
     <MatchDetailsForm
@@ -205,20 +251,24 @@ export default function NewActivityClient() {
     },
     {
       label: "Final step",
-      description: "Confirm and Create",
+      description: "Confirm and Save",
       content: confirmationStep(),
     },
   ];
 
+  useEffect(() => {
+    nprogress.complete();
+  }, []);
   return (
     <>
-      <SmartTitle title="New Activity" Icon={IconPlus} />
+      <SmartTitle title="Edit Activity" Icon={IconEdit} />
       <SmartBreadcrumbs itemList={items} />
-      <Divider my="xs" label="Create Activity" labelPosition="center" />
+      <Divider my="xs" label="Edit Activity" labelPosition="center" />
       <SmartCard>
         <SmartStepper
           submitHandler={submitHandler}
           stepList={stepList}
+          isLoading={isLoadingMatchDetails}
           orientation={isVertical ? "vertical" : "horizontal"}
         />
       </SmartCard>

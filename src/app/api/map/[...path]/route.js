@@ -7,7 +7,7 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const shareUrl = searchParams.get("url");
   if (!shareUrl) {
-    return new Response(JSON.stringify({ error: "Missing url query" }), {
+    throw new Response(JSON.stringify({ error: "Missing url query" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
@@ -37,12 +37,12 @@ export async function GET(req) {
       });
     }
 
-    return new Response(
-      JSON.stringify({ error: "Could not build embed url" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    throw new Response(JSON.stringify({ error: "Could not build embed url" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (err) {
-    return new Response(
+    throw new Response(
       JSON.stringify({ error: err.message || "Failed to resolve map" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );

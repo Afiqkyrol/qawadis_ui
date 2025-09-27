@@ -16,17 +16,17 @@ export default function LocationDetailsForm({
 }) {
   const [isMapLoading, setIsMapLoading] = useState(false);
   const inputHandler = ({ controlName, value }) => {
-    if (controlName === "rawMapLink") {
+    if (controlName === "mapShareLink") {
       setForm({
         ...form,
         [controlName]: value ?? "",
-        mapLink: "",
+        mapEmbedLink: "",
       });
     } else if (controlName === "withMapsLink") {
       setForm({
         ...form,
-        rawMapLink: "",
-        mapLink: "",
+        mapShareLink: "",
+        mapEmbedLink: "",
         [controlName]: value ?? "",
       });
     } else {
@@ -43,23 +43,23 @@ export default function LocationDetailsForm({
     try {
       setIsMapLoading(true);
       const embedUrl = await DataFormatter.googleMapsLinkToEmbedLinks(
-        form.rawMapLink
+        form.mapShareLink
       );
 
       setForm({
         ...form,
-        mapLink: embedUrl,
+        mapEmbedLink: embedUrl,
       });
 
-      validateField("mapLink", embedUrl);
+      validateField("mapEmbedLink", embedUrl);
     } catch (err) {
       setErrors((prev) => ({
         ...prev,
-        rawMapLink: "Please enter a valid Google Maps Link",
+        mapShareLink: "Please enter a valid Google Maps Link",
       }));
       setForm({
         ...form,
-        mapLink: "",
+        mapEmbedLink: "",
       });
     } finally {
       setIsMapLoading(false);
@@ -149,11 +149,11 @@ export default function LocationDetailsForm({
             }}
           >
             <SmartTextInput
-              controlName="rawMapLink"
+              controlName="mapShareLink"
               label="Google Maps Link"
               placeholder="Enter Link"
-              value={form.rawMapLink}
-              error={errors.rawMapLink}
+              value={form.mapShareLink}
+              error={errors.mapShareLink}
               required={true}
               readOnly={readOnly}
               onChange={inputHandler}
@@ -175,8 +175,8 @@ export default function LocationDetailsForm({
           </div>
         </Grid.Col>
       )}
-      {form?.mapLink && (
-        <SmartMapEmbed shareUrl={form.mapLink} isLoading={isMapLoading} />
+      {form?.mapEmbedLink && (
+        <SmartMapEmbed shareUrl={form.mapEmbedLink} isLoading={isMapLoading} />
       )}
     </Grid>
   );

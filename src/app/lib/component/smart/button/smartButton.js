@@ -49,6 +49,7 @@ export default function SmartButton({
       <Button
         style={{ ...style }}
         color="red"
+        variant={variant}
         rightSection={icon}
         onClick={submitHandler}
         loading={loading}

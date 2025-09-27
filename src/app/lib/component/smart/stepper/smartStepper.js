@@ -7,6 +7,7 @@ import {
   Box,
   LoadingOverlay,
   Loader,
+  Skeleton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import SmartModal from "../modal/smartModal";
@@ -17,10 +18,11 @@ export default function SmartStepper({
   submitHandler = () => {},
   size = "md",
   orientation = "horizontal",
+  isLoading = false,
 }) {
   const [active, setActive] = useState(0);
   const [highestStepVisited, setHighestStepVisited] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [openedModal, { open: openModal, close: closeModal }] =
     useDisclosure(false);
 
@@ -50,7 +52,11 @@ export default function SmartStepper({
             allowStepSelect={highestStepVisited >= idx && active !== idx}
           >
             <Divider my="xs" />
-            {step.content}
+            {isLoading ? (
+              <Skeleton height={300} radius="md" animate={true} />
+            ) : (
+              step.content
+            )}
           </Stepper.Step>
         ))}
         <Stepper.Completed>
@@ -64,7 +70,7 @@ export default function SmartStepper({
         {active > 0 && (
           <Button
             variant="default"
-            disabled={isCompleted}
+            disabled={isCompleted || isLoading}
             onClick={() => handleStepChange(active - 1)}
           >
             Prev
@@ -74,6 +80,7 @@ export default function SmartStepper({
         {/* Next button: show on all steps except last and completed */}
         {!isLastStep && !isCompleted && (
           <Button
+            disabled={isLoading}
             onClick={() => {
               if (stepList[active].validation()) handleStepChange(active + 1);
             }}
@@ -89,7 +96,8 @@ export default function SmartStepper({
               openModal();
             }}
             // disabled={isCompleted}
-            loading={isLoading}
+            loading={isLoadingButton}
+            disabled={isLoading}
           >
             Submit
           </Button>
@@ -102,7 +110,7 @@ export default function SmartStepper({
         title="Confirmation"
         description="Are you sure you want to proceed?"
         confirmAction={async () => {
-          setIsLoading(true);
+          setIsLoadingButton(true);
           if (isCompleted) return;
           const prevActive = active;
           try {
@@ -112,7 +120,7 @@ export default function SmartStepper({
           } catch (err) {
             handleStepChange(prevActive);
           } finally {
-            setIsLoading(false);
+            setIsLoadingButton(false);
           }
         }}
       />

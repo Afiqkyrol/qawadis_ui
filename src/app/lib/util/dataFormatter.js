@@ -67,15 +67,9 @@ export const DataFormatter = {
   },
 
   googleMapsLinkToEmbedLinks: async (url) => {
-    try {
-      const resp = await fetch(
-        `/api/map/resolve?url=${encodeURIComponent(url)}`
-      );
-      const { embedUrl } = await resp.json();
+    const resp = await fetch(`/api/map/resolve?url=${encodeURIComponent(url)}`);
+    const { embedUrl } = await resp.json();
 
-      return embedUrl ?? "";
-    } catch (err) {
-      throw err;
-    }
+    return embedUrl ?? "";
   },
 };

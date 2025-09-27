@@ -1,9 +1,18 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useNavigate } from "./useNavigate";
 
 export function useAsyncData(
   fetcher,
-  { interval, deps = [], autoFetch = true } = {}
+  {
+    interval,
+    deps = [],
+    autoFetch = true,
+    noLoading = false,
+    redirectIfError = false,
+    redirectTo = "/error",
+  } = {}
 ) {
+  const { goTo } = useNavigate();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(autoFetch);
   const [error, setError] = useState(null);
@@ -35,11 +44,12 @@ export function useAsyncData(
       if (isFetchingRef.current) return;
       isFetchingRef.current = true;
 
-      if (!hasLoadedOnceRef.current || !interval || argsChanged)
+      if ((!hasLoadedOnceRef.current || !interval || argsChanged) && !noLoading)
         setIsLoading(true);
 
       try {
         const result = await fetcher(...latestArgsRef.current);
+
         setData(result);
         setError(null);
         hasLoadedOnceRef.current = true;
@@ -49,10 +59,15 @@ export function useAsyncData(
             request(...latestArgsRef.current);
           }, interval);
         }
+
+        return result;
       } catch (err) {
         setError(err);
         stopPolling();
         setData([]);
+        if (redirectIfError) {
+          goTo(redirectTo + "?error=" + encodeURIComponent(err.message));
+        }
         throw err;
       } finally {
         isFetchingRef.current = false;

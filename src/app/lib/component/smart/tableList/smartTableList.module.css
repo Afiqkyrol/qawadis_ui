@@ -137,6 +137,7 @@
   text-overflow: ellipsis;
   max-height: 52px; /* ✅ match row height */
   line-height: 1.4;
+  border-bottom: 1px solid white;
 }
 
 /* Sticky header */
@@ -148,10 +149,17 @@
 
 .paginationContainer {
   display: flex;
-  justify-content: flex-start;
-  margin-top: 1rem;
+  justify-content: center;
+  align-items: center;
 }
 
 .card {
   margin-bottom: 1rem;
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 38px;
 }

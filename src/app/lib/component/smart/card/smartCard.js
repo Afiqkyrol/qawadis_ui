@@ -8,27 +8,24 @@ export default function SmartCard({
   id = "",
   theme = "primary",
   smallSkeleton = false,
+  color,
 }) {
+  const colorClasses = {
+    green: classes.cardGreen,
+    red: classes.cardRed,
+    gray: classes.cardGray,
+  };
   return (
     <Card
       id={id}
-      className={classes.card}
-      style={{
-        marginBottom: "1rem",
-        ...(theme === "primary"
-          ? { backgroundColor: "white" }
-          : theme === "secondary"
-          ? { backgroundColor: "var(--mantine-color-blue-0)" }
-          : { backgroundColor: "white" }),
-        ...style,
-      }}
+      className={colorClasses[color] || classes.card}
       shadow="sm"
       padding={isLoading ? 0 : "lg"}
       radius="md"
       withBorder
     >
       {isLoading ? (
-        <Skeleton height={smallSkeleton ? 80 : 200} radius="md" animate />
+        <Skeleton height={smallSkeleton ? 80 : 250} radius="md" animate />
       ) : (
         children
       )}

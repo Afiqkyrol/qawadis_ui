@@ -1,0 +1,19 @@
+.card {
+  background-color: white;
+  margin-bottom: 1rem;
+}
+
+.cardGreen {
+  background-color: var(--mantine-color-green-1);
+  margin-bottom: 1rem;
+}
+
+.cardRed {
+  background-color: var(--mantine-color-red-1);
+  margin-bottom: 1rem;
+}
+
+.cardGray {
+  background-color: var(--mantine-color-gray-1);
+  margin-bottom: 1rem;
+}
